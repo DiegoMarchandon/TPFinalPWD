@@ -136,7 +136,7 @@ class UsuarioRol{
         return $resp;
     }
 
-    /* public function modificar(){
+     public function modificar(){
         $resp = false;
         $base = new BaseDatos();
         $sql = "UPDATE usuariorol SET idusuario = ".$this->getObjUsuario()->getIdusuario().",".$this->getObjRol()->getIdrol()." WHERE idusuario = ".$this->getobjUsuario()->getIdusuario()." AND idrol= ".$this->getobjRol()->getIdrol().";";
@@ -151,7 +151,7 @@ class UsuarioRol{
             $this->setmensajeoperacion("usuariorol->insertar: ".$base->getError());
         }
         return $resp;
-    } */
+    } 
 
     public function eliminar(){
         $resp = false;

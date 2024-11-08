@@ -191,5 +191,21 @@ class MenuRol{
         return $arreglo;
     }
 
+    public function modificar() {
+        $resp = false;
+        $base = new BaseDatos();
+        $sql = "UPDATE menurol SET idmenu = " . $this->getObjMenu()->getIdmenu() . ", idrol = " . $this->getObjRol()->getIdrol() . " WHERE idmenu = " . $this->getObjMenu()->getIdmenu() . " AND idrol = " . $this->getObjRol()->getIdrol() . ";";
+        if ($base->Iniciar()) {
+            if ($base->Ejecutar($sql)) {
+                $resp = true;
+            } else {
+                $this->setmensajeoperacion("menurol->modificar: " . $base->getError());
+            }
+        } else {
+            $this->setmensajeoperacion("menurol->modificar: " . $base->getError());
+        }
+        return $resp;
+    }
+
 }
 ?>

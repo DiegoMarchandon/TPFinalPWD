@@ -1,7 +1,12 @@
 <?php
-include_once("../../configuracion.php");
-// $objSession = new Session();
-// $usuario = $objSession->getUsuario(); 
+include_once '../../configuracion.php';
+// Verificamos si la sesión está activa y es válida
+$session = new Session();
+if (!$session->activa() || !$session->validar()) {
+    header('Location: ../index/login.php');
+    exit();
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,7 +21,7 @@ include_once("../../configuracion.php");
     <!--ESTO ES LO QUE YO TENIA EN MI HEADER DESPUES LO VAMO VIENDO-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
     <script src="../js/script.js"></script>
-
+    
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -37,7 +42,7 @@ include_once("../../configuracion.php");
                         <a class="nav-link" href="#">Contacto</a>
                     </li>
                     <li class="nav-item">
-                    <a class="nav-link" href="../Home/login.php">Iniciar Sesion</a>
+                        <a class="nav-link" href="../Action/logout.php">Cerrar Sesion</a>
                     </li>
                 </ul>
             </div>

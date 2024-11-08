@@ -184,7 +184,7 @@ class Usuario{
         }
         return $resp;
     }
-
+    /*
     public function modificar(){
         $resp = false;
         $base=new BaseDatos();
@@ -199,7 +199,23 @@ class Usuario{
             $this->setmensajeoperacion("usuario->modificar: ".$base->getError());
         }
         return $resp;
+    }*/
+    
+public function modificar() {
+    $resp = false;
+    $base = new BaseDatos();
+    $sql = "UPDATE usuario SET usnombre = '" . $this->getUsnombre() . "', uspass = '" . $this->getUspass() . "', usmail = '" . $this->getUsmail() . "', usdeshabilitado = '" . $this->getUsdeshabilitado() . "' WHERE idusuario = " . $this->getIdusuario() . ";";
+    if ($base->Iniciar()) {
+        if ($base->Ejecutar($sql)) {
+            $resp = true;
+        } else {
+            $this->setMensajeoperacion("usuario->modificar: " . $base->getError());
+        }
+    } else {
+        $this->setMensajeoperacion("usuario->modificar: " . $base->getError());
     }
+    return $resp;
+}
 
     public function eliminar(){
         $resp = false;
