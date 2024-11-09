@@ -7,10 +7,18 @@ class Producto{
     private $procantstock;
     private $mensajeoperacion;
 
+
+    public function __construct(){
+        $this->idproducto = 0;
+        $this->pronombre = '';
+        $this->prodetalle = '';
+        $this->procantstock = 0;
+
+    }
     
 
     /**
-     * Get the value of idproducto
+     * obtener el valor de idproducto
      */ 
     public function getIdproducto()
     {
@@ -18,9 +26,8 @@ class Producto{
     }
 
     /**
-     * Set the value of idproducto
+     * enviar el valor de idproducto
      *
-     * @return  self
      */ 
     public function setIdproducto($idproducto)
     {
@@ -30,7 +37,7 @@ class Producto{
     }
 
     /**
-     * Get the value of pronombre
+     * obtener el valor de pronombre
      */ 
     public function getPronombre()
     {
@@ -38,9 +45,8 @@ class Producto{
     }
 
     /**
-     * Set the value of pronombre
+     * enviar el valor de pronombre
      *
-     * @return  self
      */ 
     public function setPronombre($pronombre)
     {
@@ -50,7 +56,7 @@ class Producto{
     }
 
     /**
-     * Get the value of prodetalle
+     * obtener el valor de prodetalle
      */ 
     public function getProdetalle()
     {
@@ -58,9 +64,8 @@ class Producto{
     }
 
     /**
-     * Set the value of prodetalle
+     * enviar el valor de prodetalle
      *
-     * @return  self
      */ 
     public function setProdetalle($prodetalle)
     {
@@ -70,7 +75,7 @@ class Producto{
     }
 
     /**
-     * Get the value of procantstock
+     * obtener el valor de procantstock
      */ 
     public function getProcantstock()
     {
@@ -78,9 +83,8 @@ class Producto{
     }
 
     /**
-     * Set the value of procantstock
+     * enviar el valor de procantstock
      *
-     * @return  self
      */ 
     public function setProcantstock($procantstock)
     {
@@ -90,7 +94,7 @@ class Producto{
     }
 
     /**
-     * Get the value of mensajeoperacion
+     * obtener el valor de mensajeoperacion
      */ 
     public function getMensajeoperacion()
     {
@@ -98,9 +102,8 @@ class Producto{
     }
 
     /**
-     * Set the value of mensajeoperacion
+     * enviar el valor de mensajeoperacion
      *
-     * @return  self
      */ 
     public function setMensajeoperacion($mensajeoperacion)
     {
@@ -109,13 +112,6 @@ class Producto{
         
     }
 
-    public function __construct(){
-        $this->idproducto = 0;
-        $this->pronombre = '';
-        $this->prodetalle = '';
-        $this->procantstock = 0;
-
-    }
 
     public function setear($idproducto,$pronombre,$prodetalle,$procantstock){
         $this->setIdproducto($idproducto);
@@ -223,6 +219,18 @@ class Producto{
         }
         
         return $arreglo;
+    }
+
+    /**
+     * to string del objeto Producto
+     *
+     * @return string
+     */
+    public function __toString() {
+        return "ID Producto: " . $this->getIdproducto() . 
+               ", Nombre: " . $this->getPronombre() . 
+               ", Detalle: " . $this->getProdetalle() . 
+               ", Cantidad en Stock: " . $this->getProcantstock();
     }
 
 }

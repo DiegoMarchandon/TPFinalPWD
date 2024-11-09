@@ -9,6 +9,16 @@ class Menu{
     private $medeshabilitado;
     private $mensajeoperacion;
 
+
+    public function __construct(){
+        $this->idmenu = 0;
+        $this->menombre = '';
+        $this->medescripcion = '';
+        $this->objPadre = new Menu();
+        $this->medeshabilitado = null;
+        $this->mensajeoperacion = '';
+    }
+
     
 
 
@@ -23,7 +33,6 @@ class Menu{
     /**
      * Set the value of idmenu
      *
-     * @return  self
      */ 
     public function setIdmenu($idmenu)
     {
@@ -43,7 +52,6 @@ class Menu{
     /**
      * Set the value of menombre
      *
-     * @return  self
      */ 
     public function setMenombre($menombre)
     {
@@ -63,7 +71,6 @@ class Menu{
     /**
      * Set the value of medescripcion
      *
-     * @return  self
      */ 
     public function setMedescripcion($medescripcion)
     {
@@ -83,7 +90,6 @@ class Menu{
     /**
      * Set the value of idpadre
      *
-     * @return  self
      */ 
     public function setObjpadre($objPadre)
     {
@@ -103,7 +109,6 @@ class Menu{
     /**
      * Set the value of medeshabilitado
      *
-     * @return  self
      */ 
     public function setMedeshabilitado($medeshabilitado)
     {
@@ -123,7 +128,6 @@ class Menu{
     /**
      * Set the value of mensajeoperacion
      *
-     * @return  self
      */ 
     public function setMensajeoperacion($mensajeoperacion)
     {
@@ -132,14 +136,6 @@ class Menu{
          
     }
 
-    public function __construct(){
-        $this->idmenu = 0;
-        $this->menombre = '';
-        $this->medescripcion = '';
-        $this->objPadre = new Menu();
-        $this->medeshabilitado = null;
-        $this->mensajeoperacion = '';
-    }
 
     public function setear($idmenu,$menombre,$medescripcion,$objPadre,$medeshabilitado){
         $this->setIdmenu($idmenu);
@@ -252,6 +248,19 @@ class Menu{
         }
         
         return $arreglo;
+    }
+
+    /**
+     * tostring del objeto Menu
+     *
+     * @return string
+     */
+    public function __toString() {
+        return "ID Menu: " . $this->getIdmenu() . 
+               ", Nombre: " . $this->getMenombre() . 
+               ", Descripción: " . $this->getMedescripcion() . 
+               ", ID Padre: " . $this->getObjpadre()->getIdmenu() . 
+               ", Deshabilitado: " . $this->getMedeshabilitado();
     }
 
 }

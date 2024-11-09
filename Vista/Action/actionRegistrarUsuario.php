@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Asignar el rol de "Usuario" por defecto
         $abmUsuarioRol = new ABMUsuarioRol();
-        $abmUsuarioRol->alta(['idusuario' => $idUsuario, 'idrol' => 3]); // el id 3 es de "usuario" que se le asignara a todos los que se registren por defecto
+        $abmUsuarioRol->alta(['idusuario' => $idUsuario, 'idrol' => 3]); // el id 3 es de "Cliente" que se le asignara a todos los que se registren por defecto
 
         header('Location: ../Home/login.php?mensaje=cuenta_creada'); // Redirigir al login con mensaje de éxito
     } else {

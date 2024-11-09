@@ -6,6 +6,14 @@ class MenuRol{
     private $objRol;
     private $mensajeoperacion;
 
+
+    public function __construct()
+    {
+        $this->objMenu = new Menu();
+        $this->objRol = new Rol();
+        $this->mensajeoperacion = '';
+    }
+
     
 
 
@@ -20,7 +28,6 @@ class MenuRol{
     /**
      * Set the value of objMenu
      *
-     * @return  self
      */ 
     public function setObjMenu($objMenu)
     {
@@ -40,7 +47,6 @@ class MenuRol{
     /**
      * Set the value of objRol
      *
-     * @return  self
      */ 
     public function setObjRol($objRol)
     {
@@ -60,7 +66,6 @@ class MenuRol{
     /**
      * Set the value of mensajeoperacion
      *
-     * @return  self
      */ 
     public function setMensajeoperacion($mensajeoperacion)
     {
@@ -69,12 +74,7 @@ class MenuRol{
         
     }
 
-    public function __construct()
-    {
-        $this->objMenu = new Menu();
-        $this->objRol = new Rol();
-        $this->mensajeoperacion = '';
-    }
+    
 
     public function setear($objMenu,$objRol){
         $this->setObjMenu($objMenu);
@@ -205,6 +205,16 @@ class MenuRol{
             $this->setmensajeoperacion("menurol->modificar: " . $base->getError());
         }
         return $resp;
+    }
+
+    /**
+     * to string del objeto MenuRol
+     *
+     * @return string
+     */
+    public function __toString() {
+        return "Menu: " . $this->getObjMenu()->getMenombre() . 
+               ", Rol: " . $this->getObjRol()->getRodescripcion();
     }
 
 }

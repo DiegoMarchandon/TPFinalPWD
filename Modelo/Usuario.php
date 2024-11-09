@@ -9,10 +9,20 @@ class Usuario{
     private $usdeshabilitado;
     private $mensajeoperacion;
 
+    public function __construct()
+    {
+        $this->idusuario = 0;
+        $this->usnombre = '';
+        $this->uspass = '';
+        $this->usmail = '';
+        $this->usdeshabilitado = null;
+        $this->mensajeoperacion = '';
+    }
+
     
 
     /**
-     * Get the value of idusuario
+     * obtener el valor de idusuario
      */ 
     public function getIdusuario()
     {
@@ -20,7 +30,7 @@ class Usuario{
     }
 
     /**
-     * Set the value of idusuario
+     * enviar el valor de idusuario
      *
      * @return  self
      */ 
@@ -32,7 +42,7 @@ class Usuario{
     }
 
     /**
-     * Get the value of usnombre
+     * obtner el valor de usnombre
      */ 
     public function getUsnombre()
     {
@@ -40,9 +50,8 @@ class Usuario{
     }
 
     /**
-     * Set the value of usnombre
+     * enviar el valor de usnombre
      *
-     * @return  self
      */ 
     public function setUsnombre($usnombre)
     {
@@ -52,7 +61,7 @@ class Usuario{
     }
 
     /**
-     * Get the value of uspass
+     * obtener el valor de uspass
      */ 
     public function getUspass()
     {
@@ -60,9 +69,8 @@ class Usuario{
     }
 
     /**
-     * Set the value of uspass
+     * enviar el valor de uspass
      *
-     * @return  self
      */ 
     public function setUspass($uspass)
     {
@@ -72,7 +80,7 @@ class Usuario{
     }
 
     /**
-     * Get the value of usmail
+     * obtener el valor de usmail
      */ 
     public function getUsmail()
     {
@@ -80,9 +88,8 @@ class Usuario{
     }
 
     /**
-     * Set the value of usmail
+     * enviar el valor de usmail
      *
-     * @return  self
      */ 
     public function setUsmail($usmail)
     {
@@ -92,7 +99,7 @@ class Usuario{
     }
 
     /**
-     * Get the value of usdeshabilitado
+     * obtener el valor de usdeshabilitado
      */ 
     public function getUsdeshabilitado()
     {
@@ -100,9 +107,8 @@ class Usuario{
     }
 
     /**
-     * Set the value of usdeshabilitado
+     * enviar el valor de usdeshabilitado
      *
-     * @return  self
      */ 
     public function setUsdeshabilitado($usdeshabilitado)
     {
@@ -112,7 +118,7 @@ class Usuario{
     }
 
     /**
-     * Get the value of mensajeoperacion
+     * obtener el valor de mensajeoperacion
      */ 
     public function getMensajeoperacion()
     {
@@ -120,9 +126,8 @@ class Usuario{
     }
 
     /**
-     * Set the value of mensajeoperacion
+     * enviar el valor de mensajeoperacion
      *
-     * @return  self
      */ 
     public function setMensajeoperacion($mensajeoperacion)
     {
@@ -131,15 +136,7 @@ class Usuario{
         
     }
 
-    public function __construct()
-    {
-        $this->idusuario = 0;
-        $this->usnombre = '';
-        $this->uspass = '';
-        $this->usmail = '';
-        $this->usdeshabilitado = null;
-        $this->mensajeoperacion = '';
-    }
+   
 
     public function setear($idusuario,$usnombre,$uspass,$usmail,$usdeshabilitado){
         $this->setIdusuario($idusuario);
@@ -263,6 +260,18 @@ public function modificar() {
         }
         
         return $arreglo;
+    }
+
+    /**
+     * Tostring del objeto Usuario
+     *
+     * @return string
+     */
+    public function __toString() {
+        return "ID Usuario: " . $this->getIdusuario() . 
+               ", Nombre: " . $this->getUsnombre() . 
+               ", Email: " . $this->getUsmail() . 
+               ", Deshabilitado: " . $this->getUsdeshabilitado();
     }
 
 }

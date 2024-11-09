@@ -6,9 +6,15 @@ class UsuarioRol{
     private $objRol;
     private $mensajeoperacion;
 
+    public function __construct() {
+        $this->objUsuario = new Usuario();
+        $this->objRol = new Rol();
+        $this->mensajeoperacion='';
+    } 
+
 
     /**
-     * Get the value of objUsuario
+     * obtener el valor de objUsuario
      */ 
     public function getObjUsuario()
     {
@@ -16,9 +22,8 @@ class UsuarioRol{
     }
 
     /**
-     * Set the value of objUsuario
+     * enviar el valor de objUsuario
      *
-     * @return  self
      */ 
     public function setObjUsuario($objUsuario)
     {
@@ -28,7 +33,7 @@ class UsuarioRol{
     }
 
     /**
-     * Get the value of objRol
+     * obtener el valor de objRol
      */ 
     public function getObjRol()
     {
@@ -36,9 +41,8 @@ class UsuarioRol{
     }
 
     /**
-     * Set the value of objRol
+     * enviar el valor de objRol
      *
-     * @return  self
      */ 
     public function setObjRol($objRol)
     {
@@ -48,7 +52,7 @@ class UsuarioRol{
     }
 
     /**
-     * Get the value of mensajeoperacion
+     * obtener el valor de mensajeoperacion
      */ 
     public function getMensajeoperacion()
     {
@@ -56,9 +60,8 @@ class UsuarioRol{
     }
 
     /**
-     * Set the value of mensajeoperacion
+     * enviar el valor de mensajeoperacion
      *
-     * @return  self
      */ 
     public function setMensajeoperacion($mensajeoperacion)
     {
@@ -67,11 +70,7 @@ class UsuarioRol{
         
     }
 
-    public function __construct() {
-        $this->objUsuario = new Usuario();
-        $this->objRol = new Rol();
-        $this->mensajeoperacion='';
-    } 
+   
 
     public function setear($objUsuario, $objRol){
         $this->setObjRol($objRol);
@@ -205,6 +204,17 @@ class UsuarioRol{
  
         return $arreglo;
     }
+
+    /**
+     * toString del objeto UsuarioRol
+     *
+     * @return string
+     */
+    public function __toString() {
+        return "Usuario: " . $this->getObjUsuario()->getUsnombre() . 
+               ", Rol: " . $this->getObjRol()->getRodescripcion();
+    }
+    
 
 }
 

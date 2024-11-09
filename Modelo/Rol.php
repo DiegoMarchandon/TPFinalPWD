@@ -5,8 +5,16 @@ class Rol{
     private $rodescripcion;
     private $mensajeoperacion;
 
+
+    public function __construct()
+    {
+        $this->idrol = 0;
+        $this->rodescripcion = '';
+
+    }
+
     /**
-     * Get the value of idrol
+     * obtener el valor de idrol
      */ 
     public function getIdrol()
     {
@@ -14,9 +22,8 @@ class Rol{
     }
 
     /**
-     * Set the value of idrol
+     * enviar el valor de idrol
      *
-     * @return  self
      */ 
     public function setIdrol($idrol)
     {
@@ -26,7 +33,7 @@ class Rol{
     }
 
     /**
-     * Get the value of rodescripcion
+     * obtener el valor de rodescripcion
      */ 
     public function getRodescripcion()
     {
@@ -34,9 +41,8 @@ class Rol{
     }
 
     /**
-     * Set the value of rodescripcion
+     * enviar el valor de rodescripcion
      *
-     * @return  self
      */ 
     public function setRodescripcion($rodescripcion)
     {
@@ -46,7 +52,7 @@ class Rol{
     }
 
     /**
-     * Get the value of mensajeoperacion
+     * obtener el valor de mensajeoperacion
      */ 
     public function getMensajeoperacion()
     {
@@ -54,9 +60,8 @@ class Rol{
     }
 
     /**
-     * Set the value of mensajeoperacion
+     * enviar el valor de mensajeoperacion
      *
-     * @return  self
      */ 
     public function setMensajeoperacion($mensajeoperacion)
     {
@@ -65,12 +70,6 @@ class Rol{
         
     }
 
-    public function __construct()
-    {
-        $this->idrol = 0;
-        $this->rodescripcion = '';
-
-    }
 
     public function setear($idrol,$rodescripcion){
         $this->setIdrol($idrol);
@@ -176,6 +175,16 @@ class Rol{
         }
         
         return $arreglo;
+    }
+
+    /**
+     * toString del objeto Rol
+     *
+     * @return string
+     */
+    public function __toString() {
+        return "ID Rol: " . $this->getIdrol() . 
+               ", Descripción: " . $this->getRodescripcion();
     }
 }
 

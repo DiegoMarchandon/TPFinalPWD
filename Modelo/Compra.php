@@ -7,9 +7,15 @@ class Compra{
     private $objUsuario;
     private $mensajeoperacion;
 
+    public function __construct(){
+        $this->idcompra = 0;
+        $this->cofecha = null;
+        $this->objUsuario = new Usuario();
+        $this->mensajeoperacion = '';
+    }
 
     /**
-     * Get the value of idcompra
+     * obtenemos el valor de idcompra
      */ 
     public function getIdcompra()
     {
@@ -17,9 +23,8 @@ class Compra{
     }
 
     /**
-     * Set the value of idcompra
+     * enviamos el valor de idcompra
      *
-     * @return  self
      */ 
     public function setIdcompra($idcompra)
     {
@@ -29,7 +34,7 @@ class Compra{
     }
 
     /**
-     * Get the value of cofecha
+     * obtenemos el valor de cofecha
      */ 
     public function getCofecha()
     {
@@ -37,7 +42,7 @@ class Compra{
     }
 
     /**
-     * Set the value of cofecha
+     * enviarmos el valor de cofecha
      *
      * @return  self
      */ 
@@ -49,7 +54,7 @@ class Compra{
     }
 
     /**
-     * Get the value of objUsuario
+     * obtenemos el valor de objUsuario
      */ 
     public function getObjUsuario()
     {
@@ -57,7 +62,7 @@ class Compra{
     }
 
     /**
-     * Set the value of objUsuario
+     * enviarmos el valor de objUsuario
      *
      * @return  self
      */ 
@@ -69,7 +74,7 @@ class Compra{
     }
 
     /**
-     * Get the value of mensajeoperacion
+     * obtenemos el valor de mensajeoperacion
      */ 
     public function getMensajeoperacion()
     {
@@ -77,7 +82,7 @@ class Compra{
     }
 
     /**
-     * Set the value of mensajeoperacion
+     * enviarmos el valor de mensajeoperacion
      *
      * @return  self
      */ 
@@ -86,13 +91,6 @@ class Compra{
         $this->mensajeoperacion = $mensajeoperacion;
 
          
-    }
-
-    public function __construct(){
-        $this->idcompra = 0;
-        $this->cofecha = null;
-        $this->objUsuario = new Usuario();
-        $this->mensajeoperacion = '';
     }
 
 
@@ -205,6 +203,17 @@ class Compra{
         }
         
         return $arreglo;
+    }
+
+    /**
+     * toString del objeto Compra
+     *
+     * @return string
+     */
+    public function __toString() {
+        return "ID Compra: " . $this->getIdcompra() . 
+               ", Fecha: " . $this->getCofecha() . 
+               ", Usuario: " . $this->getObjUsuario()->getUsnombre();
     }
 
 }
