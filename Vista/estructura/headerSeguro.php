@@ -42,6 +42,12 @@ if (!$session->activa() || !$session->validar()) {
                         <a class="nav-link" href="#">Contacto</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="#">Mi carrito</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Mi Perfil</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="../Action/logout.php">Cerrar Sesion</a>
                     </li>
                 </ul>
