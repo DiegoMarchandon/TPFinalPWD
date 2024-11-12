@@ -25,6 +25,20 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `producto`
+--
+
+CREATE TABLE `producto` (
+  `idproducto` bigint(20) NOT NULL,
+  `pronombre` varchar(100) NOT NULL,
+  `prodetalle` varchar(512) NOT NULL,
+  `procantstock` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+
+--
 -- Estructura de tabla para la tabla `compra`
 --
 
@@ -98,15 +112,23 @@ CREATE TABLE `menu` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Volcado de datos para la tabla `menu`
+-- Volcado de datos para la tabla `menu` subi solo las opciones para el cliente
 --
 
-INSERT INTO `menu` (`idmenu`, `menombre`, `medescripcion`, `idpadre`, `medeshabilitado`) VALUES
-(7, 'nuevo', 'kkkkk', NULL, NULL),
-(8, 'nuevo', 'kkkkk', NULL, NULL),
-(9, 'nuevo', 'kkkkk', 7, NULL),
-(10, 'nuevo', 'kkkkk', NULL, NULL),
-(11, 'nuevo', 'kkkkk', NULL, NULL);
+--esta serian en un principio para el cliente
+INSERT INTO `menu` (`menombre`, `medescripcion`, `idpadre`, `medeshabilitado`) VALUES
+('Home', 'home.php', NULL, NULL),
+('Productos', 'productos.php', NULL, NULL),
+('Mi Carrito', 'carrito.php', NULL, NULL),
+('Mi Perfil', 'perfil.php', NULL, NULL),
+('Cerrar Sesión', 'logout.php', NULL, NULL);
+
+--agreagmos algunas opciones para el administrador
+INSERT INTO `menu` (`menombre`, `medescripcion`, `idpadre`, `medeshabilitado`) VALUES
+('Listar Usuarios', 'listarUsuarios.php', NULL, NULL),
+('Ventas Pendientes', 'ventasPendientes.php', NULL, NULL),
+('Asignar Roles', 'asignarRoles.php', NULL, NULL);
+
 
 -- --------------------------------------------------------
 
@@ -119,20 +141,27 @@ CREATE TABLE `menurol` (
   `idrol` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+
+
+-- Volcado de datos para la tabla `menurol` en este caso para las opciones de cliente id 3 es igual a rol cliente
+--primero le hacemos el insert del menu ya que este insert busca el menu segun el nombre
+INSERT INTO `menurol` (`idmenu`, `idrol`) VALUES
+((SELECT idmenu FROM menu WHERE menombre = 'Home'), 3),
+((SELECT idmenu FROM menu WHERE menombre = 'Productos'), 3),
+((SELECT idmenu FROM menu WHERE menombre = 'Mi Carrito'), 3),
+((SELECT idmenu FROM menu WHERE menombre = 'Mi Perfil'), 3),
+((SELECT idmenu FROM menu WHERE menombre = 'Cerrar Sesión'), 3);
+
+
+--Volcado de datos para la tabla `menu` subi solo las opciones para el administrador
+INSERT INTO `menurol` (`idmenu`, `idrol`) VALUES
+((SELECT idmenu FROM menu WHERE menombre = 'Cerrar Sesión'), 1), -- no cambniamos el cerrar sesion solo lo asignamos al que ya tenemos
+((SELECT idmenu FROM menu WHERE menombre = 'Listar Usuarios'), 1),
+((SELECT idmenu FROM menu WHERE menombre = 'Ventas Pendientes'), 1),
+((SELECT idmenu FROM menu WHERE menombre = 'Asignar Roles'), 1);
+
 -- --------------------------------------------------------
 
---
--- Estructura de tabla para la tabla `producto`
---
-
-CREATE TABLE `producto` (
-  `idproducto` bigint(20) NOT NULL,
-  `pronombre` varchar(100) NOT NULL,
-  `prodetalle` varchar(512) NOT NULL,
-  `procantstock` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `rol`
