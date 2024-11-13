@@ -28,7 +28,7 @@ $abmMenuRol = new ABMMenuRol();
 $param = ['idrol' => 1]; //cambiale el numerito a "3" si queres ver el del cliente
                         //o tambien "1" el de administrador (el de deposito todavia no subi ninguna opcion)
 
-$menus = $abmMenuRol->buscar($userID);
+$menus = $abmMenuRol->buscar(['idrol'=>$userID]);
 ?>
 
 <!DOCTYPE html>
