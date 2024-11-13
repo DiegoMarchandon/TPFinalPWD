@@ -24,6 +24,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($session->iniciar($nombreUsuario, $hashedPassword)) {
                 // Sesión iniciada correctamente
                 header('Location: ../Home/paginaSegura.php');
+
+                // creo una variable almacenada en la sesion actual para tener de referencia para las demás páginas
+                // $_SESSION['']
             } else {
                 // Error al iniciar sesión
                 header('Location: ../Home/login.php?error=credenciales');

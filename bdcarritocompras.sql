@@ -27,7 +27,7 @@ SET time_zone = "+00:00";
 --
 -- Estructura de tabla para la tabla `producto`
 --
-
+-- comenzamos cargando 5-10 notebooks y dejamos una carpeta con imagenes
 CREATE TABLE `producto` (
   `idproducto` bigint(20) NOT NULL,
   `pronombre` varchar(100) NOT NULL,
@@ -79,10 +79,10 @@ CREATE TABLE `compraestadotipo` (
 --
 
 INSERT INTO `compraestadotipo` (`idcompraestadotipo`, `cetdescripcion`, `cetdetalle`) VALUES
-(1, 'iniciada', 'cuando el usuario : cliente inicia la compra de uno o mas productos del carrito'),
-(2, 'aceptada', 'cuando el usuario administrador da ingreso a uno de las compras en estado = 1 '),
-(3, 'enviada', 'cuando el usuario administrador envia a uno de las compras en estado =2 '),
-(4, 'cancelada', 'un usuario administrador podra cancelar una compra en cualquier estado y un usuario cliente solo en estado=1 ');
+(1, 'iniciada', 'cuando el usuario : cliente inicia la compra de uno o mas productos del carrito'), --cliente le da a aceptar compra
+(2, 'aceptada', 'cuando el usuario administrador da ingreso a uno de las compras en estado = 1 '), --deposito indica que tiene la orden lista
+(3, 'enviada', 'cuando el usuario administrador envia a uno de las compras en estado =2 '), --deposito
+(4, 'cancelada', 'un usuario administrador podra cancelar una compra en cualquier estado y un usuario cliente solo en estado=1 '); --deposito
 
 -- --------------------------------------------------------
 
@@ -388,3 +388,26 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+
+INSERT INTO `producto` (`idproducto`,`pronombre`,`prodetalle`,`procantstock`) VALUES
+(1,'Dell XPS 13','Pantalla de 13.4", Intel Core i7, 16GB RAM, 512GB SSD, Windows 10',12),
+(2,'HP Spectre x360','13.5 Intel Core i5, 8GB RAM, 256GB SSD, convertible 2-en-1, Windows 11',22),
+(3,'Apple MacBook Air M1','Chip M1, 8GB RAM, 256GB SSD, macOS, Retina Display de 13.3',7),
+(4,'Lenovo ThinkPad X1 Carbon','Pantalla de 14", Intel Core i7, 16GB RAM, 512GB SSD, teclado retroiluminado',15),
+(5,'Asus ROG Zephyrus G14','Pantalla de 14", AMD Ryzen 9, 16GB RAM, 1TB SSD, GPU NVIDIA RTX 3060',31),
+(6,'Acer Aspire 5','15.6", Intel Core i5, 8GB RAM, 512GB SSD, Windows 10',42),
+(7,'Microsoft Surface Laptop 4','13.5", Intel Core i5, 8GB RAM, 512GB SSD, pantalla táctil',13),
+(8,'Razer Blade 15','Pantalla de 15.6", Intel Core i7, 16GB RAM, 1TB SSD, GPU NVIDIA RTX 3070',55),
+(9,'Lenovo IdeaPad 3','Pantalla de 15.6", AMD Ryzen 5, 8GB RAM, 256GB SSD, Windows 10',42),
+(10,'HP Pavilion 15','15.6", Intel Core i7, 16GB RAM, 512GB SSD, Windows 11',47),
+(11,'Acer Swift 3','Pantalla de 14", AMD Ryzen 7, 8GB RAM, 512GB SSD, Windows 10',44),
+(12,'Dell Inspiron 15 3000','Pantalla de 15.6", Intel Core i5, 8GB RAM, 256GB SSD, Windows 11',32),
+(13,'Asus ZenBook 14','Pantalla de 14", Intel Core i7, 16GB RAM, 512GB SSD, Windows 10, ultraligero',26),
+(14,'HP Envy 13','Pantalla de 13.3", Intel Core i7, 8GB RAM, 256GB SSD, pantalla táctil',25),
+(15,'Lenovo Yoga 7i','Pantalla de 14", Intel Core i5, 8GB RAM, 512GB SSD, convertible 2-en-1, Windows 10',21),
+(16,'Apple MacBook Pro 16"','Chip M1 Pro, 16GB RAM, 512GB SSD, macOS, pantalla Liquid Retina XDR',19),
+(17,'Samsung Galaxy Book Pro','Pantalla AMOLED de 15.6", Intel Core i7, 16GB RAM, 512GB SSD, diseño ultradelgado',33),
+(18,'MSI GF63 Thin','Pantalla de 15.6", Intel Core i5, 8GB RAM, 256GB SSD, GPU NVIDIA GTX 1650',32),
+(19,'Acer Nitro 5','Pantalla de 15.6", Intel Core i7, 16GB RAM, 1TB HDD + 256GB SSD, GPU NVIDIA RTX 3050',30),
+(20,'LG Gram 17','Pantalla de 17", Intel Core i7, 16GB RAM, 1TB SSD, ultraligero, batería de larga duración',28),

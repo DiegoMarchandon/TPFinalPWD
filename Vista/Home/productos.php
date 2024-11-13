@@ -1,5 +1,15 @@
 <?php
-include_once('../estructura/header.php');
+include_once '../../configuracion.php';
+// poner variable $_SESSION para verificar si hay un usuario logueado
+// darle funcionalidad al bootn de agregar carrito y usar $_SESSION de referencia
+// 
+$session = new Session();
+if (!$session->activa() || !$session->validar()) {
+    include_once('../estructura/header.php');
+}else{
+    include_once('../estructura/headerSeguro.php');
+}
+
 ?>
 
 <!DOCTYPE html>
