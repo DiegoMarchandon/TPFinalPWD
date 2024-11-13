@@ -14,7 +14,9 @@ include_once '../../configuracion.php';
 
 
 $session = new Session();
+$userID = $session->getRol()[0]->getObjRol()->getIdrol();
 if (!$session->activa() || !$session->validar()) {
+    
     header('Location: login.php');
     exit();
 }
@@ -26,7 +28,7 @@ $abmMenuRol = new ABMMenuRol();
 $param = ['idrol' => 1]; //cambiale el numerito a "3" si queres ver el del cliente
                         //o tambien "1" el de administrador (el de deposito todavia no subi ninguna opcion)
 
-$menus = $abmMenuRol->buscar($param);
+$menus = $abmMenuRol->buscar($userID);
 ?>
 
 <!DOCTYPE html>
