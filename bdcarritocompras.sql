@@ -119,16 +119,19 @@ CREATE TABLE `menu` (
 INSERT INTO `menu` (`menombre`, `medescripcion`, `idpadre`, `medeshabilitado`) VALUES
 ('Home', 'home.php', NULL, NULL),
 ('Productos', 'productos.php', NULL, NULL),
-('Mi Carrito', 'carrito.php', NULL, NULL),
-('Mi Perfil', 'perfil.php', NULL, NULL),
-('Cerrar Sesión', 'logout.php', NULL, NULL);
+('Contacto', 'contacto.php', NULL, NULL),
+('Carrito', 'carrito.php', NULL, NULL),
+('Mi Cuenta', 'cuenta.php', NULL, NULL),
 
---agreagmos algunas opciones para el administrador
-INSERT INTO `menu` (`menombre`, `medescripcion`, `idpadre`, `medeshabilitado`) VALUES
-('Listar Usuarios', 'listarUsuarios.php', NULL, NULL),
-('Ventas Pendientes', 'ventasPendientes.php', NULL, NULL),
-('Asignar Roles', 'asignarRoles.php', NULL, NULL);
+('Stock', 'stock.php', NULL, NULL),
+('Ordenes', 'ordenes.php', NULL, NULL),
+('Shipping', 'shipping.php', NULL, NULL),
 
+('Usuarios', 'usuarios.php', NULL, NULL),
+('Configuraciones', 'configuraciones.php', NULL, NULL),
+('Asignar Roles', 'asignarRoles.php', NULL, NULL),
+
+('Cerrar Sesión', '../Action/logout.php', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -148,17 +151,22 @@ CREATE TABLE `menurol` (
 INSERT INTO `menurol` (`idmenu`, `idrol`) VALUES
 ((SELECT idmenu FROM menu WHERE menombre = 'Home'), 3),
 ((SELECT idmenu FROM menu WHERE menombre = 'Productos'), 3),
-((SELECT idmenu FROM menu WHERE menombre = 'Mi Carrito'), 3),
-((SELECT idmenu FROM menu WHERE menombre = 'Mi Perfil'), 3),
+((SELECT idmenu FROM menu WHERE menombre = 'Productos'), 1),
+((SELECT idmenu FROM menu WHERE menombre = 'Contacto'), 3),
+((SELECT idmenu FROM menu WHERE menombre = 'Carrito'), 3),
+((SELECT idmenu FROM menu WHERE menombre = 'Mi Cuenta'), 3),
+((SELECT idmenu FROM menu WHERE menombre = 'Stock'), 2),
+((SELECT idmenu FROM menu WHERE menombre = 'Ordenes'), 2),
+((SELECT idmenu FROM menu WHERE menombre = 'Ordenes'), 1),
+((SELECT idmenu FROM menu WHERE menombre = 'Shipping'), 2),
+((SELECT idmenu FROM menu WHERE menombre = 'Usuarios'), 1),
+((SELECT idmenu FROM menu WHERE menombre = 'Configuraciones'), 1),
+((SELECT idmenu FROM menu WHERE menombre = 'Asignar Roles'), 1),
+((SELECT idmenu FROM menu WHERE menombre = 'Cerrar Sesión'), 1),
+((SELECT idmenu FROM menu WHERE menombre = 'Cerrar Sesión'), 2),
 ((SELECT idmenu FROM menu WHERE menombre = 'Cerrar Sesión'), 3);
 
 
---Volcado de datos para la tabla `menu` subi solo las opciones para el administrador
-INSERT INTO `menurol` (`idmenu`, `idrol`) VALUES
-((SELECT idmenu FROM menu WHERE menombre = 'Cerrar Sesión'), 1), -- no cambniamos el cerrar sesion solo lo asignamos al que ya tenemos
-((SELECT idmenu FROM menu WHERE menombre = 'Listar Usuarios'), 1),
-((SELECT idmenu FROM menu WHERE menombre = 'Ventas Pendientes'), 1),
-((SELECT idmenu FROM menu WHERE menombre = 'Asignar Roles'), 1);
 
 -- --------------------------------------------------------
 

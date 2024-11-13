@@ -23,7 +23,7 @@ $abmMenuRol = new ABMMenuRol();
 
 //aca tengo que colocar una funcion para obtener el id en base a la 
 //sesion iniciada para obtener el rol de cada cuenta por ahora esta asi para probar
-$param = ['idrol' => 3]; //cambiale el numerito a "3" si queres ver el del cliente
+$param = ['idrol' => 1]; //cambiale el numerito a "3" si queres ver el del cliente
                         //o tambien "1" el de administrador (el de deposito todavia no subi ninguna opcion)
 
 $menus = $abmMenuRol->buscar($param);
