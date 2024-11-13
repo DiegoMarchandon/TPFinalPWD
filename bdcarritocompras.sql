@@ -113,25 +113,25 @@ CREATE TABLE `menu` (
 
 --
 -- Volcado de datos para la tabla `menu` subi solo las opciones para el cliente
+-- esta serian en un principio para el cliente
 --
 
---esta serian en un principio para el cliente
-INSERT INTO `menu` (`menombre`, `medescripcion`, `idpadre`, `medeshabilitado`) VALUES
-('Home', 'home.php', NULL, NULL),
-('Productos', 'productos.php', NULL, NULL),
-('Contacto', 'contacto.php', NULL, NULL),
-('Carrito', 'carrito.php', NULL, NULL),
-('Mi Cuenta', 'cuenta.php', NULL, NULL),
+INSERT INTO `menu` (`idmenu`, `menombre`, `medescripcion`, `idpadre`, `medeshabilitado`) VALUES
+(1, 'Home', 'home.php', NULL, NULL),
+(2, 'Productos', 'productos.php', NULL, NULL),
+(3, 'Contacto', 'contacto.php', NULL, NULL),
+(4, 'Carrito', 'carrito.php', NULL, NULL),
+(5, 'Mi Cuenta', 'cuenta.php', NULL, NULL),
 
-('Stock', 'stock.php', NULL, NULL),
-('Ordenes', 'ordenes.php', NULL, NULL),
-('Shipping', 'shipping.php', NULL, NULL),
+(6, 'Stock', 'stock.php', NULL, NULL),
+(7, 'Ordenes', 'ordenes.php', NULL, NULL),
+(8, 'Shipping', 'shipping.php', NULL, NULL),
 
-('Usuarios', 'usuarios.php', NULL, NULL),
-('Configuraciones', 'configuraciones.php', NULL, NULL),
-('Asignar Roles', 'asignarRoles.php', NULL, NULL),
+(9, 'Usuarios', 'usuarios.php', NULL, NULL),
+(10, 'Configuraciones', 'configuraciones.php', NULL, NULL),
+(11, 'Asignar Roles', 'asignarRoles.php', NULL, NULL),
 
-('Cerrar Sesión', '../Action/logout.php', NULL, NULL);
+(12, 'Cerrar Sesión', '../Action/logout.php', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -145,9 +145,12 @@ CREATE TABLE `menurol` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
-
+--
 -- Volcado de datos para la tabla `menurol` en este caso para las opciones de cliente id 3 es igual a rol cliente
---primero le hacemos el insert del menu ya que este insert busca el menu segun el nombre
+-- primero le hacemos el insert del menu ya que este insert busca el menu segun el nombre
+--
+
+
 INSERT INTO `menurol` (`idmenu`, `idrol`) VALUES
 ((SELECT idmenu FROM menu WHERE menombre = 'Home'), 3),
 ((SELECT idmenu FROM menu WHERE menombre = 'Productos'), 3),
@@ -179,6 +182,12 @@ CREATE TABLE `rol` (
   `idrol` bigint(20) NOT NULL,
   `rodescripcion` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `rol` (`idrol`, `rodescripcion`) 
+VALUES
+(1, 'Administrador'),
+(2, 'Deposito'),
+(3, 'Cliente');
 
 -- --------------------------------------------------------
 

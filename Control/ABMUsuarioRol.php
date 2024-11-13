@@ -225,11 +225,20 @@ class ABMUsuarioRol {
      */
     public function modificarRol($param) {
         $resp = false;
-        $objUsuarioRol = $this->cargarObjeto($param);
-        if ($objUsuarioRol != null and $objUsuarioRol->modificar()) {
-            $resp = true;
+        $objUsuarioRol = $this->cargarObjetoConClave($param);
+        if ($objUsuarioRol != null) {
+            $objUsuarioRol->setObjRol(new Rol());
+            $objUsuarioRol->getObjRol()->setIdrol($param['idrol']);
+            //echo "Objeto UsuarioRol cargado: " . $objUsuarioRol->__toString() . "<br>";
+            if ($objUsuarioRol->modificar()) {
+                $resp = true;
+            } else {
+                //echo "Error al modificar el objeto UsuarioRol.<br>";
+                $resp=false;
+            }
         } else {
-            echo "Error al modificar el objeto<br>";
+            //echo "Error al cargar el objeto UsuarioRol.<br>";
+            $resp=false;
         }
         return $resp;
     }

@@ -14,12 +14,13 @@ include_once '../../configuracion.php';
 
 
 $session = new Session();
-$userID = $session->getRol()[0]->getObjRol()->getIdrol();
 if (!$session->activa() || !$session->validar()) {
     
     header('Location: login.php');
     exit();
 }
+
+$userID = $session->getRol()[0]->getObjRol()->getIdrol();
 
 $abmMenuRol = new ABMMenuRol();
 
@@ -38,6 +39,7 @@ $menus = $abmMenuRol->buscar(['idrol'=>$userID]);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menu</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
     <script src="../js/script.js"></script>
 </head>
 <body>

@@ -135,22 +135,25 @@ class UsuarioRol{
         return $resp;
     }
 
-     public function modificar(){
+    
+    public function modificar() {
         $resp = false;
         $base = new BaseDatos();
-        $sql = "UPDATE usuariorol SET idusuario = ".$this->getObjUsuario()->getIdusuario().",".$this->getObjRol()->getIdrol()." WHERE idusuario = ".$this->getobjUsuario()->getIdusuario()." AND idrol= ".$this->getobjRol()->getIdrol().";";
+        $sql = "UPDATE usuariorol SET idrol = " . $this->getObjRol()->getIdrol() . " WHERE idusuario = " . $this->getObjUsuario()->getIdusuario() . ";";
+        //echo "Consulta SQL: $sql<br>";
         if ($base->Iniciar()) {
             if ($base->Ejecutar($sql)) {
-                
                 $resp = true;
             } else {
-                $this->setmensajeoperacion("usuariorol->insertar: ".$base->getError());
+                $this->setMensajeoperacion("usuariorol->modificar: " . $base->getError());
+                //echo "Error en la ejecución de la consulta: " . $base->getError() . "<br>";
             }
         } else {
-            $this->setmensajeoperacion("usuariorol->insertar: ".$base->getError());
+            $this->setMensajeoperacion("usuariorol->modificar: " . $base->getError());
+            //echo "Error al iniciar la base de datos: " . $base->getError() . "<br>";
         }
         return $resp;
-    } 
+    }
 
     public function eliminar(){
         $resp = false;

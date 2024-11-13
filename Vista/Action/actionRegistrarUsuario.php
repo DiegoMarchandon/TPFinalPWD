@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Obtener la contraseña hasheada
-    $hashedPassword = $_POST['uspass'];
+    $hashedPassword = $datos['uspass'];
 
     $param = [
         'usnombre' => $datos['usnombre'],
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $abmUsuarioRol = new ABMUsuarioRol();
         $abmUsuarioRol->alta(['idusuario' => $idUsuario, 'idrol' => 3]); // el id 3 es de "Cliente" que se le asignara a todos los que se registren por defecto
 
-        header('Location: ../Home/login.php?mensaje=cuenta_creada'); // Redirigir al login con mensaje de éxito
+        header('Location: ../Home/login.php?registro=exitoso'); // Redirigir al login con mensaje de éxito
     } else {
         echo "Error al registrar el usuario.";
         echo '<br><a href="../Home/registrarUsuario.php">Volver al registro</a>';
