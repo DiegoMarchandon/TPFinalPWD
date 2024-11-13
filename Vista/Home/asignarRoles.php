@@ -30,7 +30,7 @@ $usuarios = $abmUsuario->buscar(null);
                     echo "<td>" . $usuario->getUsMail() . "</td>";
                     echo "<td>";
                     echo "<div class='btn-group' role='group'>";
-                    echo "<a href='../Action/asignarRol.php?id=" . $usuario->getIdUsuario() . "&rol=1' class='btn btn-primary btn-sm'>Administrador</a>";
+                    echo "<a href='../Action/asignarRol.php?id=" . $usuario->getIdUsuario() . "&rol=1' class='btn btn-warning btn-sm'>Administrador</a>";
                     echo "<a href='../Action/asignarRol.php?id=" . $usuario->getIdUsuario() . "&rol=2' class='btn btn-secondary btn-sm'>Deposito</a>";
                     echo "<a href='../Action/asignarRol.php?id=" . $usuario->getIdUsuario() . "&rol=3' class='btn btn-success btn-sm'>Cliente</a>";
                     echo "</div>";

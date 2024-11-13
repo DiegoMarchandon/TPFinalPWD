@@ -22,6 +22,15 @@ if (!$session->activa() || !$session->validar()) {
 
 $userID = $session->getRol()[0]->getObjRol()->getIdrol();
 
+/* estilos personalizados para el navbar dependiendo el rol */
+if($userID == 1){ #administrador
+    $colorFondo = ' bg-warning ';
+}elseif($userID == 2){ #deposito
+    $colorFondo = ' bg-secondary ';
+}else{ #cliente
+    $colorFondo = ' bg-success ';
+}
+
 $abmMenuRol = new ABMMenuRol();
 
 //aca tengo que colocar una funcion para obtener el id en base a la 
@@ -43,9 +52,9 @@ $menus = $abmMenuRol->buscar(['idrol'=>$userID]);
     <script src="../js/script.js"></script>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light <?= $colorFondo ?>">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">comahu<p class="text-primary d-inline">e-shop</p></a>
+        <a class="navbar-brand" href="#">comahu<p class="text-primary d-inline"><b>e-shop</b></p></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
