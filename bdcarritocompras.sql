@@ -411,3 +411,31 @@ INSERT INTO `producto` (`idproducto`,`pronombre`,`prodetalle`,`procantstock`) VA
 (18,'MSI GF63 Thin','Pantalla de 15.6", Intel Core i5, 8GB RAM, 256GB SSD, GPU NVIDIA GTX 1650',32),
 (19,'Acer Nitro 5','Pantalla de 15.6", Intel Core i7, 16GB RAM, 1TB HDD + 256GB SSD, GPU NVIDIA RTX 3050',30),
 (20,'LG Gram 17','Pantalla de 17", Intel Core i7, 16GB RAM, 1TB SSD, ultraligero, batería de larga duración',28),
+
+-- Ejecutar consultas en tabla producto (hacerlo por separado)
+-- primera:
+ALTER TABLE producto ADD COLUMN precio INT;
+-- segunda:
+UPDATE producto SET precio = CASE
+    WHEN idproducto = 1 THEN 1200
+    WHEN idproducto = 2 THEN 1000
+    WHEN idproducto = 3 THEN 999
+    WHEN idproducto = 4 THEN 1300
+    WHEN idproducto = 5 THEN 1500
+    WHEN idproducto = 6 THEN 700
+    WHEN idproducto = 7 THEN 1100
+    WHEN idproducto = 8 THEN 2000
+    WHEN idproducto = 9 THEN 600
+    WHEN idproducto = 10 THEN 800
+    WHEN idproducto = 11 THEN 750
+    WHEN idproducto = 12 THEN 650
+    WHEN idproducto = 13 THEN 900
+    WHEN idproducto = 14 THEN 950
+    WHEN idproducto = 15 THEN 850
+    WHEN idproducto = 16 THEN 2500
+    WHEN idproducto = 17 THEN 1200
+    WHEN idproducto = 18 THEN 750
+    WHEN idproducto = 19 THEN 1100
+    WHEN idproducto = 20 THEN 1400
+    ELSE precio
+END;

@@ -52,9 +52,9 @@ class ABMProducto {
     private function cargarObjeto($param) {
         $obj = null;
 
-        if (array_key_exists('idproducto', $param) && array_key_exists('pronombre', $param) && array_key_exists('prodetalle', $param) && array_key_exists('procantstock', $param)) {
+        if (array_key_exists('idproducto', $param) && array_key_exists('pronombre', $param) && array_key_exists('prodetalle', $param) && array_key_exists('precioprod', $param) && array_key_exists('procantstock', $param)) {
             $obj = new Producto();
-            $obj->setear($param['idproducto'], $param['pronombre'], $param['prodetalle'], $param['procantstock']);
+            $obj->setear($param['idproducto'], $param['pronombre'], $param['prodetalle'], $param['precioprod'], $param['procantstock']);
         }
 
         return $obj;
@@ -144,6 +144,7 @@ class ABMProducto {
             if (isset($param['idproducto'])) $where .= " and idproducto ='" . $param['idproducto'] . "'";
             if (isset($param['pronombre'])) $where .= " and pronombre ='" . $param['pronombre'] . "'";
             if (isset($param['prodetalle'])) $where .= " and prodetalle ='" . $param['prodetalle'] . "'";
+            if (isset($param['precioprod'])) $where .= " and precioprod ='" . $param['precioprod'] . "'";
             if (isset($param['procantstock'])) $where .= " and procantstock ='" . $param['procantstock'] . "'";
         }
         $producto = new Producto();
