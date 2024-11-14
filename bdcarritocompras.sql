@@ -416,7 +416,7 @@ INSERT INTO `producto` (`idproducto`,`pronombre`,`prodetalle`,`procantstock`) VA
 -- primera:
 ALTER TABLE producto ADD COLUMN precioprod INT;
 -- segunda:
-UPDATE producto SET precio = CASE
+UPDATE producto SET precioprod = CASE
     WHEN idproducto = 1 THEN 1200
     WHEN idproducto = 2 THEN 1000
     WHEN idproducto = 3 THEN 999
@@ -437,5 +437,5 @@ UPDATE producto SET precio = CASE
     WHEN idproducto = 18 THEN 750
     WHEN idproducto = 19 THEN 1100
     WHEN idproducto = 20 THEN 1400
-    ELSE precio
+    ELSE precioprod
 END;

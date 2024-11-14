@@ -1,24 +1,42 @@
 <?php
 include_once '../../configuracion.php';
 
-/* script que se encargará de recibir las órdenes en formato JSON que fueron enviadas desde producto.php a la espera de que el cliente confirme
-(y una vez confirmadas, se envíen a depósito para que las acepte o las rechace) */
-// echo "<h1>pagina del carrito que vería el cliente</h1>";
+session_start();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // 'php://input' es un flujo estándas para leer los datos enviados en una solicitud HTTP (especialmente enviados a través de un método POST).  
-    $input = file_get_contents('php://input'); // lee los datos del cuerpo de la solicitud
-    echo "datos crudos: $input";
+$carrito = isset($_SESSION['carrito']) ? $_SESSION['carrito'] : [];
 
-    // decodificar el JSON a un arreglo en PHP
-    // convertimos el JSON a un arreglo asociativo en PHP. El segundo parámetro "true" es para que se convierta el JSON a un arreglo en lugar de un objeto 
-    $productosRecibidos = json_decode($input, true);
-    echo "productos recibidos: <br>";
-    print_r($productosRecibidos);
-} else {
-    echo "Accede a esta página mediante una solicitud POST.";
-}
-
-// mensaje opcional que podemos usar para enviar una respuesta JSON de vuelta al cliente
-// echo json_encode(["mensaje" => "Productos recibidos correctamente", "productos" => $productos]);
 ?>
+
+<?php include_once("../estructura/headerSeguro.php"); ?>
+<div class="container mt-5">
+    <h1 class="text-center">Carrito de Compras</h1>
+    <div class="row">
+        <?php if (empty($carrito)): ?>
+            <p class="text-center">El carrito está vacío.</p>
+        <?php else: ?>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Detalle</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($carrito as $item): ?>
+                        <tr>
+                            <td><?php echo $item['pronombre']; ?></td>
+                            <td><?php echo $item['prodetalle']; ?></td>
+                            <td>$<?php echo $item['precioprod']; ?></td>
+                            <td><?php echo $item['cantidad']; ?></td>
+                            <td>$<?php echo $item['precioprod'] * $item['cantidad']; ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php endif; ?>
+    </div>
+</div>
+<?php include_once("../estructura/footer.php"); ?>
