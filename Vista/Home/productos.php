@@ -88,7 +88,7 @@ include_once('../estructura/headerSeguro.php');
                             <div class="card-body">
                                 <h5 class="card-title">`+producto.pronombre+`</h5>
                                 <p class="card-text">`+producto.prodetalle+`</p>
-                                <p class="text-success">precio (unidad): $...</p>
+                                <p class="text-success">precio (unidad): $`+producto.precioprod+`.00</p>
                                 <div class="form-group">
                                     <div class=" d-flex justify-content-between">
                                         <label for="cantidadSelect">Cantidad:</label>

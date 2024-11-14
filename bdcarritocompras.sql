@@ -414,7 +414,7 @@ INSERT INTO `producto` (`idproducto`,`pronombre`,`prodetalle`,`procantstock`) VA
 
 -- Ejecutar consultas en tabla producto (hacerlo por separado)
 -- primera:
-ALTER TABLE producto ADD COLUMN precio INT;
+ALTER TABLE producto ADD COLUMN precioprod INT;
 -- segunda:
 UPDATE producto SET precio = CASE
     WHEN idproducto = 1 THEN 1200
