@@ -10,7 +10,7 @@ include_once('../estructura/headerSeguro.php');
 }else{
     include_once('../estructura/header.php');
 } */
-
+$ABMCompraitm = new ABMCompraItem; #una vez que confirmemos que el cliente tiene un carrito
 ?>
 
 <!DOCTYPE html>
