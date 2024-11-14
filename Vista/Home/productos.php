@@ -43,6 +43,15 @@ include_once('../estructura/headerSeguro.php');
 <script>
     $(document).ready(function(){
 
+        // coleccion de imagenes de notebooks
+        var colIMGS = [
+            '../imagenes/notebookIMG1.jpg',
+            '../imagenes/notebookIMG2.jpg',
+            '../imagenes/notebookIMG3.jpg',
+            '../imagenes/notebookIMG4.jpg',
+            '../imagenes/notebookIMG5.jpg'
+        ];
+
         $.ajax({
             // ruta que procesará la solicitud del servidor.
             url: '../Action/buscarProductos.php', // Ruta al script en Action
@@ -66,11 +75,16 @@ include_once('../estructura/headerSeguro.php');
                 }
 
                 // Mostrar nuevas sugerencias
-                productos.forEach(function(producto){
+                productos.forEach(function(producto, index){
+
+                    // Determinar la imagen cíclica usando el operador de módulo
+                    var imgSrc = colIMGS[index % colIMGS.length]; // Rotará a través de las imágenes
+
+
                     $('#prodContainer').append(`
                     <div class="col-md-4 mb-4">
                         <div class="card">
-                            <img src="https://via.placeholder.com/150" class="card-img-top" alt="Product 1">
+                            <img src="${imgSrc}" class="card-img-top" alt="Product 1">
                             <div class="card-body">
                                 <h5 class="card-title">`+producto.pronombre+`</h5>
                                 <p class="card-text">`+producto.prodetalle+`</p>
