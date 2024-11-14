@@ -1,7 +1,9 @@
 <?php
+include_once '../../configuracion.php';
+
 /* script que se encargará de recibir las órdenes en formato JSON que fueron enviadas desde producto.php a la espera de que el cliente confirme
 (y una vez confirmadas, se envíen a depósito para que las acepte o las rechace) */
-echo "<h1>pagina del carrito que vería el cliente</h1>";
+// echo "<h1>pagina del carrito que vería el cliente</h1>";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // 'php://input' es un flujo estándas para leer los datos enviados en una solicitud HTTP (especialmente enviados a través de un método POST).  

@@ -2,10 +2,13 @@
 
 class Session {
     public function __construct(){
-        if (!session_start()) {
+        /* if (!session_start()) {
             return false;
         } else {
             return true;
+        } */
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
         }
       }
 
