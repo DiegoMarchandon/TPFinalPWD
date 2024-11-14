@@ -41,7 +41,11 @@ include_once('../estructura/headerSeguro.php');
     </div>
 
 <script>
+
     $(document).ready(function(){
+
+        /* arreglo que contendrá los elementos agregados al carrito */
+        let colProductos = [];
 
         // coleccion de imagenes de notebooks
         var colIMGS = [
@@ -60,7 +64,7 @@ include_once('../estructura/headerSeguro.php');
 
             success: function(data){
                 var productos = JSON.parse(data);
-                console.log(productos);
+                // console.log(productos);
             
                 // Limpiar anteriores
                 $('#prodContainer').empty();
@@ -92,16 +96,16 @@ include_once('../estructura/headerSeguro.php');
                                 <div class="form-group">
                                     <div class=" d-flex justify-content-between">
                                         <label for="cantidadSelect">Cantidad:</label>
-                                        <small class="text-muted">Stock disponible: ` + producto.procantstock + ` unidades</small>
+                                        <small class="text-muted cantStock">Stock disponible: ` + producto.procantstock + ` unidades</small>
                                     </div>
-                                    <select class="form-select" class="cantidadSelect">
+                                    <select class="form-select cantidadSelect">
                                         ` + itemStock(producto.procantstock) + `
                                     </select>
                                 </div>
                                 
                                 
 
-                                <a href="#" class="btn btn-primary m-2">Agregar al carrito</a>
+                                <button class="btn btn-primary m-2">Agregar al carrito</button>
                             </div>
                         </div>
                     </div>`
@@ -109,11 +113,71 @@ include_once('../estructura/headerSeguro.php');
                 })
             }
 
-
-
-
         });
 
+        $(document).on('click','.btn-primary',function(event){
+            // evito el comportamiento por defecto del boton
+            event.preventDefault();
+
+            /* extraigo de la etiqueta los datos que necesito */
+
+            // buscamos el ancestro .card, y desde .card buscamos la imagen y extraemos el atributo 
+            var card = $(this).closest('.card');
+            var productoIMG = card.find('.card-img-top').attr('src');
+            console.log("productoIMG: "+productoIMG);
+            // busco el hermano de $(this) con la clase card-title. De la colección de 1 elemento retornada, accedo al primero, y extraigo el texto.
+            let productoNombre = $(this).siblings('.card-title').first().text();
+            console.log("productoNombre: "+productoNombre);
+            let productoDetalle = $(this).siblings('.card-text').first().text();
+            console.log("productoDetalle: "+productoDetalle);
+            let precioTexto = $(this).siblings('.text-success').first().text();
+            console.log("precioTexto: "+precioTexto);
+            // creo una expresión regular con el propósito de extraer el precio específico del texto del elemento 
+            let productoPrecioRegex = precioTexto.match(/\$(\d+)\.00/);
+            // como .match() devuelve un array si hay coincidencias (indice 0 para el string completo, indice 1 para la coincidencia), verifico que, en caso de no ser null, convierto el valor en posición 1 a entero en base 10.
+            let productoPrecio = productoPrecioRegex ? parseInt(productoPrecioRegex[1], 10) : 0;
+            console.log("precioNum: "+productoPrecio);
+
+            // cantidad total de stock (sin descontar la seleccionada por el cliente)
+            let productoCantStock = card.find('.cantStock').text().match(/Stock disponible:\s*(\d+)\s*unidades/);
+            console.log("productoCantStock: "+productoCantStock);
+
+            // obtenemos la cantidad seleccionada por el cliente
+            let productoCantSelec = card.find('.cantidadSelect').val();
+            console.log("productoCantSelec: "+productoCantSelec);
+
+            // creo el objeto del producto que será almacenado en el carrito
+            let objProducto = {
+
+                prodNombre: productoNombre,
+                prodDetalle: productoDetalle,
+                prodPrecio: productoPrecio,
+                prodCantStock: productoCantStock,
+                prodCantSelec: productoCantSelec,
+                prodIMG: productoIMG
+            };
+
+            // lo agrego a mi arreglo de productos que irán al carrito
+            colProductos.push(objProducto);
+
+            // lo convierto a formato JSON y los imprimo por consola solamente para ir visualizándolos
+            let productosJson = JSON.stringify(colProductos);
+            console.log("productos enviados: ",productosJson);
+            // envío el arreglo JSON al servidor con AJAX
+            $.ajax({
+                url: 'carrito.php', //URL al script PHP que recibirá los datos
+                method: 'POST', // lo hacemos a través de POST porque estamos enviando datos
+                contentType: 'application/json', // indicamos que estamos enviando JSON
+                data: productosJson,
+                success: function(response){
+                    // procesamos la respuesta del servidor
+                    console.log('Datos enviados correctamente',response);
+                },
+                error: function() {
+                    console.log('Error al enviar los productos.');
+                }
+            });
+        });
     });
 </script>
 </body>
