@@ -11,8 +11,6 @@ include_once '../../configuracion.php';
 
 //busca la tabla menuRol hace los dos insert que tengo tambien ahi
 
-
-
 $session = new Session();
 if (!$session->activa() || !$session->validar()) {
     
@@ -21,22 +19,21 @@ if (!$session->activa() || !$session->validar()) {
 }
 
 $userID = $session->getRol()[0]->getObjRol()->getIdrol();
+// $_SESSION['userConectadoRol'] = $userID;
 
 /* estilos personalizados para el navbar dependiendo el rol */
 if($userID == 1){ #administrador
+    $_SESSION['userConectadoRol'] = 'administrador';
     $colorFondo = ' bg-warning ';
 }elseif($userID == 2){ #deposito
+    $_SESSION['userConectadoRol'] = 'deposito';
     $colorFondo = ' bg-secondary ';
 }else{ #cliente
+    $_SESSION['userConectadoRol'] = 'cliente';
     $colorFondo = ' bg-success ';
 }
 
 $abmMenuRol = new ABMMenuRol();
-
-//aca tengo que colocar una funcion para obtener el id en base a la 
-//sesion iniciada para obtener el rol de cada cuenta por ahora esta asi para probar
-$param = ['idrol' => 1]; //cambiale el numerito a "3" si queres ver el del cliente
-                        //o tambien "1" el de administrador (el de deposito todavia no subi ninguna opcion)
 
 $menus = $abmMenuRol->buscar(['idrol'=>$userID]);
 ?>
@@ -47,9 +44,11 @@ $menus = $abmMenuRol->buscar(['idrol'=>$userID]);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menu</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
-    <script src="../js/script.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script src="../js/jquery-3.7.1.js"></script>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light <?= $colorFondo ?>">

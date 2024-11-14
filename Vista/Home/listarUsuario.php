@@ -1,6 +1,7 @@
-<?php include_once("../estructura/headerSeguro.php"); ?>
 <?php
+
 include_once '../../configuracion.php';
+include_once("../estructura/headerSeguro.php");
 
 //$session = new Session();
 $abmUsuario = new ABMUsuario();
