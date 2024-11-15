@@ -97,8 +97,11 @@ class ABMCompra {
      */
     public function alta($param) {
         $resp = false;
-        $objCompra = $this->cargarObjeto($param);
-        if ($objCompra != null and $objCompra->insertar()) {
+        $compra = new Compra();
+        $usuario = new Usuario();
+        $usuario->setIdusuario($param['idusuario']);
+        $compra->setear($param['idcompra'], $param['cofecha'], $usuario);
+        if ($compra->insertar()) {
             $resp = true;
         }
         return $resp;

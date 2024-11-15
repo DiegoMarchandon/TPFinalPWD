@@ -100,43 +100,40 @@ class Compra{
         $this->setObjUsuario($objUsuario);
     }
 
-    public function cargar(){
+    public function cargar() {
         $resp = false;
-        $base=new BaseDatos();
-        $sql="SELECT * FROM compra WHERE idcompra = ".$this->getIdcompra();
-      //  echo $sql;
+        $base = new BaseDatos();
+        $sql = "SELECT * FROM compra WHERE idcompra = " . $this->getIdcompra();
         if ($base->Iniciar()) {
             $res = $base->Ejecutar($sql);
-            if($res>-1){
-                if($res>0){
+            if ($res > -1) {
+                if ($res > 0) {
                     $row = $base->Registro();
-                    // con el id de usuario, lo cargo y lo guardo en mi objeto
                     $objUsuario = new Usuario();
                     $objUsuario->setIdusuario($row['idusuario']);
                     $objUsuario->cargar();
-
-                    $this->setear($row['idcompra'], $row['cofecha'],$objUsuario); 
-                    
+                    $this->setear($row['idcompra'], $row['cofecha'], $objUsuario);
                 }
             }
         } else {
-            $this->setmensajeoperacion("compra->cargar: ".$base->getError()[2]);
+            $this->setmensajeoperacion("compra->cargar: " . $base->getError()[2]);
         }
         return $resp;
     }
 
-    public function insertar(){
+    public function insertar() {
         $resp = false;
-        $base=new BaseDatos();
-        $sql="INSERT INTO compra(cofecha,idusuario)  VALUES(".$this->getCofecha().",".$this->getObjUsuario()->getIdusuario().");"; 
+        $base = new BaseDatos();
+        $sql = "INSERT INTO compra(cofecha, idusuario) VALUES('" . $this->getCofecha() . "', " . $this->getObjUsuario()->getIdusuario() . ");";
+        //echo "SQL: $sql"; // Mostrar la consulta SQL
         if ($base->Iniciar()) {
             if ($base->Ejecutar($sql)) {
                 $resp = true;
             } else {
-                $this->setmensajeoperacion("compra->insertar: ".$base->getError());
+                $this->setmensajeoperacion("compra->insertar: " . $base->getError());
             }
         } else {
-            $this->setmensajeoperacion("compra->insertar: ".$base->getError());
+            $this->setmensajeoperacion("compra->insertar: " . $base->getError());
         }
         return $resp;
     }
@@ -178,7 +175,6 @@ class Compra{
         $arreglo = array();
         $base=new BaseDatos();
         $sql="SELECT * FROM compra ";
-     //   echo $sql;
         if ($parametro!="") {
             $sql.='WHERE '.$parametro;
         }
@@ -186,22 +182,19 @@ class Compra{
             $res = $base->Ejecutar($sql);
             if($res>-1){
                 if($res>0){
-                    
                     while ($row = $base->Registro()){
-    
                         $objCompra = new Compra();
-                        
-                        $objCompra->setear($row['idcompra'], $row['cofecha'],$row['idusuario']); 
+                        $objUsuario = new Usuario();
+                        $objUsuario->setIdusuario($row['idusuario']);
+                        $objUsuario->cargar();
+                        $objCompra->setear($row['idcompra'], $row['cofecha'], $objUsuario);
                         array_push($arreglo, $objCompra);
                     }
-                    
                 }
-                
             } else {
-                $this->setmensajeoperacion("Especie->listar: ".$base->getError());
+                $this->setmensajeoperacion("Compra->listar: ".$base->getError());
             }
         }
-        
         return $arreglo;
     }
 
