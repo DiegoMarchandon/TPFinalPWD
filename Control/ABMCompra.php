@@ -173,5 +173,17 @@ class ABMCompra {
         }
         return $arreglo;
     }
+
+    /**
+     * permite buscar compras por idusuario
+     * @param int $idusuario
+     * @return array
+     */
+    public function buscarPorUsuario($idusuario) {
+        $where = "idusuario = $idusuario";
+        $compra = new Compra();
+        $arreglo = $compra->listar($where);
+        return $arreglo;
+    }
 }
 ?>

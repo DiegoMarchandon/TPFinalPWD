@@ -176,5 +176,30 @@ class ABMCompraEstado {
         }
         return $arreglo;
     }
+
+    /**
+     * permite buscar compras por idusuario y verificar el estado
+     * @param int $idusuario
+     * @return 
+     */
+    public function buscarCompraIniciadaPorUsuario($idusuario) {
+        $abmCompra = new ABMCompra();
+        $compras = $abmCompra->buscarPorUsuario($idusuario);
+
+        if (count($compras) > 0) {
+            foreach ($compras as $compra) {
+                $compraEstado = $this->buscar(['idcompra' => $compra->getIdcompra()]);
+                if (count($compraEstado) > 0) {
+                    foreach ($compraEstado as $estado) {
+                        if ($estado->getObjCompraEstadoTipo()->getIdcompraestadotipo() == 1) {
+                            return $compra;
+                        }
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
 }
 ?>

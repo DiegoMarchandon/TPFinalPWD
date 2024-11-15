@@ -1,6 +1,12 @@
 <?php
 include_once '../../configuracion.php';
-include_once('../estructura/headerSeguro.php');
+include_once '../estructura/headerSeguro.php';
+include_once '../../Control/ABMCompra.php';
+include_once '../../Modelo/Compra.php';
+include_once '../../Control/ABMCompraEstado.php';
+include_once '../../Modelo/CompraEstado.php';
+include_once '../../Control/ABMCompraItem.php';
+include_once '../../Modelo/CompraItem.php';
 
 // Configurar la zona horaria a Argentina
 date_default_timezone_set('America/Argentina/Buenos_Aires');
@@ -11,55 +17,62 @@ if ($data) {
     $idUsuario = $_SESSION['idusuario']; // Obtener el ID del usuario de la sesión
     $fechaCompra = date('Y-m-d H:i:s');
 
-    // una nueva instancia de ABMCompra
-    $abmCompra = new ABMCompra();
+    // Crear una nueva instancia de ABMCompraEstado
+    $abmCompraEstado = new ABMCompraEstado();
 
-    // Crear los parametros para la nueva compra
-    $paramCompra = [
-        'idcompra' => null,
-        'cofecha' => $fechaCompra,
-        'idusuario' => $idUsuario
-    ];
+    // Verificar si el usuario ya tiene una compra "iniciada"
+    $compraIniciada = $abmCompraEstado->buscarCompraIniciadaPorUsuario($idUsuario);
 
-    // Insertar la compra utilizando ABMCompra
-    if ($abmCompra->alta($paramCompra)) {
-        // Obtener el ID de la compra recien creada
-        $idCompra = $abmCompra->buscar(['cofecha' => $fechaCompra, 'idusuario' => $idUsuario])[0]->getIdcompra();
+    if ($compraIniciada === null) {
+        // una nueva instancia de ABMCompra
+        $abmCompra = new ABMCompra();
 
-        // Crear una nueva instancia de ABMCompraEstado
-        $abmCompraEstado = new ABMCompraEstado();
-
-        // Crear los parametros para el nuevo estado de la compra
-        $paramCompraEstado = [
-            'idcompraestado' => null,
-            'idcompra' => $idCompra,
-            'idcompraestadotipo' => 1, // Estado inicial "iniciada"
-            'cefechaini' => $fechaCompra,
-            'cefechafin' => null
+        // Crear los parametros para la nueva compra
+        $paramCompra = [
+            'idcompra' => null,
+            'cofecha' => $fechaCompra,
+            'idusuario' => $idUsuario
         ];
 
-        // Insertar el estado de la compra utilizando ABMCompraEstado
-        if ($abmCompraEstado->alta($paramCompraEstado)) {
-            // Insertar los elementos del carrito en la tabla compraitem
-            $abmCompraItem = new ABMCompraItem();
+        // Insertar la compra utilizando ABMCompra
+        if ($abmCompra->alta($paramCompra)) {
+            // Obtener el ID de la compra recien creada
+            $idCompra = $abmCompra->buscar(['cofecha' => $fechaCompra, 'idusuario' => $idUsuario])[0]->getIdcompra();
 
-            $paramCompraItem = [
-                'idcompraitem' => null,
-                'idproducto' => $data['idproducto'], //id del producto
+            // Crear los parametros para el nuevo estado de la compra
+            $paramCompraEstado = [
+                'idcompraestado' => null,
                 'idcompra' => $idCompra,
-                'cicantidad' => $data['prodCantSelec'] // La cantidad seleccionada por el cliente
+                'idcompraestadotipo' => 1, // Estado inicial "iniciada"
+                'cefechaini' => $fechaCompra,
+                'cefechafin' => null
             ];
 
-            if ($abmCompraItem->alta($paramCompraItem)) {
-                echo json_encode(["status" => "success"]);
+            // Insertar el estado de la compra utilizando ABMCompraEstado
+            if ($abmCompraEstado->alta($paramCompraEstado)) {
+                // Insertar los elementos del carrito en la tabla compraitem
+                $abmCompraItem = new ABMCompraItem();
+
+                $paramCompraItem = [
+                    'idcompraitem' => null,
+                    'idproducto' => $data['idproducto'], //id del producto
+                    'idcompra' => $idCompra,
+                    'cicantidad' => $data['prodCantSelec'] // La cantidad seleccionada por el cliente
+                ];
+
+                if ($abmCompraItem->alta($paramCompraItem)) {
+                    echo json_encode(["status" => "success"]);
+                } else {
+                    echo json_encode(["status" => "error", "message" => "Error al insertar el ítem de la compra"]);
+                }
             } else {
-                echo json_encode(["status" => "error", "message" => "Error al insertar el ítem de la compra"]);
+                echo json_encode(["status" => "error", "message" => "Error al insertar el estado de la compra"]);
             }
         } else {
-            echo json_encode(["status" => "error", "message" => "Error al insertar el estado de la compra"]);
+            echo json_encode(["status" => "error", "message" => "Error al insertar la compra"]);
         }
     } else {
-        echo json_encode(["status" => "error", "message" => "Error al insertar la compra"]);
+        echo json_encode(["status" => "error", "message" => "YA TENES UNA COMPRA INICIADA"]);
     }
 } else {
     echo json_encode(["status" => "error", "message" => "Datos no válidos"]);
