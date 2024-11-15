@@ -79,10 +79,10 @@ CREATE TABLE `compraestadotipo` (
 --
 
 INSERT INTO `compraestadotipo` (`idcompraestadotipo`, `cetdescripcion`, `cetdetalle`) VALUES
-(1, 'iniciada', 'cuando el usuario : cliente inicia la compra de uno o mas productos del carrito'), --cliente le da a aceptar compra
-(2, 'aceptada', 'cuando el usuario administrador da ingreso a uno de las compras en estado = 1 '), --deposito indica que tiene la orden lista
-(3, 'enviada', 'cuando el usuario administrador envia a uno de las compras en estado =2 '), --deposito
-(4, 'cancelada', 'un usuario administrador podra cancelar una compra en cualquier estado y un usuario cliente solo en estado=1 '); --deposito
+(1, 'iniciada', 'cuando el usuario : cliente inicia la compra de uno o mas productos del carrito'), --cliente inicia el carrito
+(2, 'aceptada', 'cuando el cliente acepta el carrito '), --cliente acepta el carrito
+(3, 'enviada', 'cuando el usuario deposito hace el envio del carrito '), --deposito arma y el carrito
+(4, 'cancelada', 'cuando el usuario deposito cancela el envio del carrito '); --deposito
 
 -- --------------------------------------------------------
 
