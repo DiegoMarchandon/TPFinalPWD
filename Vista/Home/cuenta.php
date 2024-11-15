@@ -33,7 +33,7 @@ Array ( [idusuario] => 4
 <div class="container mt-1">
     <h2 class="text-center">Cambiar Datos de Usuario</h2>
     <p class=" text-center text-muted">Deje el campo vacío de los datos que no desea actualizar.</p>
-    <form action="../Action/cambiarDatos.php" method="POST" id="modificarDatos">
+    <form action="../Action/actualizarLogin.php" method="POST" id="modificarDatos">
 
         <!-- Nombre de Usuario -->
 
@@ -241,10 +241,10 @@ Array ( [idusuario] => 4
                         }
                            
                            // 1) si todos los datos ingresados por el usuario coinciden con los que tiene
-                    /* if(emailCorrecto && nombreCorrecto && passCorrecta && newNombreValid && newPassValid && newEmailValid){
-                        alert("datos validos");
-                        // $('#modificarDatos').submit();
-                    } */
+                    if(emailCorrecto && nombreCorrecto && passCorrecta && newNombreValid && newPassValid && newEmailValid){
+                        // alert("datos validos");
+                        $('#modificarDatos').submit();
+                    }
 
                 },
                 error: function() {

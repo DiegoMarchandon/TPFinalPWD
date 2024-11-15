@@ -19,23 +19,21 @@ if (!$session->activa() || !$session->validar()) {
 }
 
 $userID = $session->getRol()[0]->getObjRol()->getIdrol();
-// $_SESSION['userConectadoRol'] = $userID;
-
-/* estilos personalizados para el navbar dependiendo el rol */
-if($userID == 1){ #administrador
-    $_SESSION['userConectadoRol'] = 'administrador';
-    $colorFondo = ' bg-warning ';
-}elseif($userID == 2){ #deposito
-    $_SESSION['userConectadoRol'] = 'deposito';
-    $colorFondo = ' bg-secondary ';
-}else{ #cliente
-    $_SESSION['userConectadoRol'] = 'cliente';
-    $colorFondo = ' bg-success ';
-}
 
 $abmMenuRol = new ABMMenuRol();
 
 $menus = $abmMenuRol->buscar(['idrol'=>$userID]);
+
+/* estilos personalizados para el navbar dependiendo el rol */
+if($userID == 1){ #administrador
+    $colorFondo = ' bg-warning ';
+}elseif($userID == 2){ #deposito
+    $colorFondo = ' bg-secondary ';
+}else{ #cliente
+    $colorFondo = ' bg-success ';
+}
+
+
 ?>
 
 <!DOCTYPE html>
