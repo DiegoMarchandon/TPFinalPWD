@@ -16,7 +16,10 @@ include_once("../../configuracion.php");
     <!--ESTO ES LO QUE YO TENIA EN MI HEADER DESPUES LO VAMO VIENDO-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
     <script src="../js/script.js"></script>
-
+    <script src="../js/crypto-js.min.js"></script>
+    <script src="../js/jquery.validate.min.js"></script>
+    <!-- <script src="../js/validaciones.js"></script> -->
+    
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
