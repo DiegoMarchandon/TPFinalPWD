@@ -14,6 +14,7 @@ $carritosIniciados = $ABMcompraEstado->buscarCompraIniciadaPorUsuario($idUsuario
 $ABMcompraitem = new ABMCompraItem;
 
 $productosCarrito = [];
+$totalCarrito = 0;
 
 if ($carritosIniciados !== null) {
     foreach ($carritosIniciados as $compraIni) {
@@ -22,14 +23,16 @@ if ($carritosIniciados !== null) {
 
         foreach ($compraItems as $compraItem) {
             if (null !== $compraItem->getObjProducto()) {
+                $precioTotalProducto = $compraItem->getObjProducto()->getPrecioprod() * $compraItem->getCicantidad();
                 $productoCarrito = [
                     'Nombre' => $compraItem->getObjProducto()->getPronombre(),
                     'Detalle' => $compraItem->getObjProducto()->getProdetalle(),
-                    'Precio' => $compraItem->getObjProducto()->getPrecioprod(),
+                    'Precio' => $precioTotalProducto,
                     'Cantidad' => $compraItem->getCicantidad()
                 ];
 
                 $productosCarrito[] = $productoCarrito;
+                $totalCarrito += $precioTotalProducto;
             } else {
                 echo "<br>No se encontraron productos para la compra con ID: " . $compraIni->getIdcompra() . "<br>";
             }
@@ -63,6 +66,10 @@ if ($carritosIniciados !== null) {
                             <td><?php echo htmlspecialchars($prodCarrito['Cantidad']); ?></td>
                         </tr>
                     <?php endforeach; ?>
+                    <tr>
+                        <td colspan="2" class="text-right"><strong>Total:</strong></td>
+                        <td colspan="2"><?php echo '$' . htmlspecialchars($totalCarrito); ?></td>
+                    </tr>
                 <?php else: ?>
                     <tr>
                         <td colspan="4" class="text-center">No hay productos en el carrito.</td>
@@ -70,6 +77,12 @@ if ($carritosIniciados !== null) {
                 <?php endif; ?>
                 </tbody>
             </table>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-12 text-center">
+            <button class="btn btn-success" onclick="confirmarCompra()">Confirmar Compra</button>
+            <button class="btn btn-danger" onclick="cancelarCompra()">Cancelar Compra</button>
         </div>
     </div>
 </div>
