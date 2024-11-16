@@ -180,26 +180,42 @@ class ABMCompraEstado {
     /**
      * permite buscar compras por idusuario y verificar el estado
      * @param int $idusuario
-     * @return 
+     * @return array|null
      */
     public function buscarCompraIniciadaPorUsuario($idusuario) {
         $abmCompra = new ABMCompra();
         $compras = $abmCompra->buscarPorUsuario($idusuario);
 
-        if (count($compras) > 0) {
-            foreach ($compras as $compra) {
-                $compraEstado = $this->buscar(['idcompra' => $compra->getIdcompra()]);
+        // arreglo para almacenar las compras con estado Iniciado
+        $compraEstadoIniciado = [];
+
+        foreach ($compras as $compra) {
+            if (count($compras) > 0) {
+                // de cada compra específica, obtengo su compraEstado específico
+                $compraEstado = $this->buscarArray(['idcompra' => $compra->getIdcompra()]);
                 if (count($compraEstado) > 0) {
-                    foreach ($compraEstado as $estado) {
-                        if ($estado->getObjCompraEstadoTipo()->getIdcompraestadotipo() == 1) {
-                            return $compra;
-                        }
+
+                    // si el 'idcompraestadotipo' de este compraEstado es 1, significa que la compra fue iniciada. Por lo que la almacenamos
+                    if($compraEstado[0]['objCompraEstadoTipo']->getIdcompraestadotipo() === 1){
+                        $compraEstadoIniciado[] = $compra; 
                     }
+
+                //     foreach ($compraEstado as $estado) {
+                //         if ($estado['idcompraestado'] == 1) {
+                //             // return $compra;
+                //             $compraEstadoIniciado[] = $compra;
+                //         }
+                   // }
+                //    $compraEstadoIniciado[] = $compraEstado[0]['objCompraEstadoTipo']; 
                 }
             }
+        } 
+
+        if(count($compraEstadoIniciado) === 0){
+            $compraEstadoIniciado = null;
         }
 
-        return null;
+        return $compraEstadoIniciado;
     }
 }
 ?>

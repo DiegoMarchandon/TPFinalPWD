@@ -1,15 +1,48 @@
 <?php
 include_once '../../configuracion.php';
 include_once('../estructura/headerSeguro.php');
+
+// primero verifico si el usuario logueado tiene carritos abiertos
+// obtenemos el id del usuario logueado
+$idUsuarioActual = $session->getUsuario()->getIdusuario();
+
+$ABMcompraEstado = new ABMCompraEstado;
+$carritosIniciados = $ABMcompraEstado->buscarCompraIniciadaPorUsuario($idUsuarioActual);
+
+$ABMcompraitem = new ABMCompraItem;
+
+$productosCarrito = [];
+
+if($carritosIniciados !== null){
+    // echo "<br>hay compras iniciadas<br>";
+    foreach($carritosIniciados as $compraIni){
+        // del compraitem, obtengo la cantidad de elementos comprados
+        $compraItem = $ABMcompraitem->buscarArray(['idcompra' => $compraIni->getIdcompra()]);
+        
+        $productoCarrito = [
+            'Nombre' => $compraItem[0]['objProducto']->getPronombre(),
+            'Detalle' => $compraItem[0]['objProducto']->getProdetalle(),
+            'Precio' => $compraItem[0]['objProducto']->getPrecioprod(),
+            'Cantidad' => $compraItem[0]['cicantidad']
+        ];
+    
+        $productosCarrito[] = $productoCarrito; 
+    }
+
+}else{
+    echo "<br>no hay compras iniciadas<br>";
+}
+
+// print_r($productosCarrito);
+
 ?>
 <div class="container mt-4">
-    <h1 class="text-center mb-4">Mis Productos</h1>
+    <h1 class="text-center mb-4">Mis Productos Pendientes</h1>
     <div class="row">
         <div class="col-md-12">
             <table class="table table-bordered" id="carritoTable">
                 <thead>
                     <tr>
-                        <th>Imagen</th>
                         <th>Nombre</th>
                         <th>Detalle</th>
                         <th>Precio</th>
@@ -17,17 +50,32 @@ include_once('../estructura/headerSeguro.php');
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- aca se insertaran los productos del carrito -->
+                <?php if (count($productosCarrito) > 0): ?>
+                    <?php foreach ($productosCarrito as $prodCarrito): ?>
+                        <tr>
+                            
+                            <td><?php echo htmlspecialchars($prodCarrito['Nombre']); ?></td>
+                            <td><?php echo htmlspecialchars($prodCarrito['Detalle']); ?></td>
+                            <td><?php echo '$' . htmlspecialchars($prodCarrito['Precio']); ?></td>
+                            <td><?php echo htmlspecialchars($prodCarrito['Cantidad']); ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="4" class="text-center">No hay productos en el carrito.</td>
+                    </tr>
+                <?php endif; ?>
                 </tbody>
             </table>
-            <p class="text-center" id="emptyMessage">No hay productos en el carrito.</p>
         </div>
     </div>
 </div>
 
+
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+    /* document.addEventListener('DOMContentLoaded', function() {
+        // let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+        let carrito = 
         let carritoTable = document.getElementById('carritoTable').getElementsByTagName('tbody')[0];
         let emptyMessage = document.getElementById('emptyMessage');
 
@@ -44,7 +92,7 @@ include_once('../estructura/headerSeguro.php');
         } else {
             carritoTable.style.display = 'none';
         }
-    });
+    }); */
 </script>
 </body>
 </html>
