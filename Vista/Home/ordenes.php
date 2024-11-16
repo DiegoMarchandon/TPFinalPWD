@@ -6,21 +6,38 @@ $ABMCompra = new ABMCompra;
 $ABMcompraestado = new ABMCompraEstado;
 $colCompras = $ABMCompra->buscarArray(null);
 
+// arreglo que almacenará las compras que tengan un estadotipo de 2
+$colComprasAceptadas = [];
+// recorro a coleccion de compras
 foreach($colCompras as $compra){
 
-    // obtengo el compraEstado de la compra
-    $compraEstado = $ABMcompraestado->buscarArray(["idcompra" => $compra['idcompra']])[0];
+    // obtengo los colCompraEstados de la compra
+    $colCompraEstados = $ABMcompraestado->buscarArray(["idcompra" => $compra['idcompra']]);
 
-    // obtengo el compraestadoTipo del compraEstado
-    $compraEstadoTipo = $compraEstado['objCompraEstadoTipo']->getIdcompraestadotipo();
+    // recorro la colección de compraEstados
+    foreach($colCompraEstados as $compraEstado){
+        echo "<br>----<br>";
+        echo $compraEstado['objCompraEstadoTipo']->getIdcompraestadotipo();
+        echo "<br>----<br>";
+        if($compraEstado['objCompraEstadoTipo']->getIdcompraestadotipo() === 2){
+
+            $compra['compraestado'] = 2;
+            // cada compra que tiene un estado de 2 tuvo que tener un estado de 1.
+            $colComprasAceptadas[] = $compra;
+        }
+    }
+
+    print_r($colComprasAceptadas);
+    // obtengo el compraestadoTipo del colCompraEstados
+    // $compraEstadoTipo = $colCompraEstados['objCompraEstadoTipo']->getIdcompraestadotipo();
     
 
     // echo "<br>----<br>";
     // si el compraEstadoTipo obtenido a partir de la compra es 1, imprimo la compra
-    /* if($compraEstadoTipo === 1){
+    // if($compraEstadoTipo === 2){
 
-        print_r($compra);
-    } */
+    //     print_r($compra);
+    // }
 }
 
 ?>
@@ -47,24 +64,24 @@ foreach($colCompras as $compra){
                 </tr>
             </thead>
             <tbody>
-                <?php if (count($colCompras) > 0): ?>
-                    <?php foreach ($colCompras as $compra): ?>
+                <?php if (count($colComprasAceptadas) > 0): ?>
+                    <?php foreach ($colComprasAceptadas as $compra): ?>
                         <?php 
-                        // Obtengo el compraEstado de la compra
-                        $compraEstado = $ABMcompraestado->buscarArray(["idcompra" => $compra['idcompra']])[0];
-                        // Obtengo el compraestadoTipo del compraEstado
-                        $compraEstadoTipo = $compraEstado['objCompraEstadoTipo']->getIdcompraestadotipo();
+                        // Obtengo el colCompraEstados de la compra
+                        // $colCompraEstados = $ABMcompraestado->buscarArray(["idcompra" => $compra['idcompra']])[0];
+                        // Obtengo el compraestadoTipo del colCompraEstados
+                        // $compraEstadoTipo = $colCompraEstados['objCompraEstadoTipo']->getIdcompraestadotipo();
                         ?>
-                        <?php if ($compraEstadoTipo === 1): ?>
+                        <?php /* if ($compraEstadoTipo === 1): */ ?>
                             <tr>
                                 <td><?php echo htmlspecialchars($compra['idcompra']); ?></td>
                                 <td><?php echo htmlspecialchars($compra['cofecha']); ?></td>
                                 <td><?php echo htmlspecialchars($compra['objUsuario']->getIdusuario()); ?></td>
                                 <td><?php echo htmlspecialchars($compra['objUsuario']->getUsnombre()); ?></td>
                                 <td><?php echo htmlspecialchars($compra['objUsuario']->getUsmail()); ?></td>
-                                <td><?php echo htmlspecialchars($compraEstadoTipo); ?></td>
+                                <td><?php echo htmlspecialchars($compra['compraestado']); ?></td>
                             </tr>
-                        <?php endif; ?>
+                            <?php /* endif; */ ?>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
