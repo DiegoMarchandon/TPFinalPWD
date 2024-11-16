@@ -60,7 +60,7 @@ if ($data) {
 
                 $paramCompraItem = [
                     'idcompraitem' => null,
-                    'idproducto' => $data[0]['idproducto'], //id del producto
+                    'idproducto' => $data['idproducto'], //id del producto
                     'idcompra' => $idCompra,
                     'cicantidad' => $data['prodCantSelec'] // La cantidad seleccionada por el cliente
                 ];
