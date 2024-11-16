@@ -21,7 +21,7 @@ foreach($colCompras as $compra){
         echo "<br>----<br>";
         if($compraEstado['objCompraEstadoTipo']->getIdcompraestadotipo() === 2){
 
-            $compra['compraestado'] = 2;
+            $compra['compraestado'] = $compraEstado['objCompraEstadoTipo']->getIdcompraestadotipo();
             // cada compra que tiene un estado de 2 tuvo que tener un estado de 1.
             $colComprasAceptadas[] = $compra;
         }
