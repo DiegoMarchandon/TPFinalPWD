@@ -8,40 +8,38 @@ $idUsuarioActual = $session->getUsuario()->getIdusuario();
 
 $ABMcompraEstado = new ABMCompraEstado;
 $carritosIniciados = $ABMcompraEstado->buscarCompraIniciadaPorUsuario($idUsuarioActual);
-
+//$carritosIniciados = $compraIniciada[0]->getIdcompra();
 // print_r($carritosIniciados);
 
 $ABMcompraitem = new ABMCompraItem;
 
 $productosCarrito = [];
 
-if($carritosIniciados !== null){
-    // echo "<br>hay compras iniciadas<br>";
-    foreach($carritosIniciados as $compraIni){
+if ($carritosIniciados !== null) {
+    foreach ($carritosIniciados as $compraIni) {
         // del compraitem, obtengo la cantidad de elementos comprados
-        $compraItem = $ABMcompraitem->buscarArray(['idcompra' => $compraIni->getIdcompra()]);
+        $compraItems = $ABMcompraitem->buscar(['idcompra' => $compraIni->getIdcompra()]);
 
-        if (!empty($compraItem) && isset($compraItem[0]['objProducto'])) {
-            $productoCarrito = [
-                'Nombre' => $compraItem[0]['objProducto']->getPronombre(),
-                'Detalle' => $compraItem[0]['objProducto']->getProdetalle(),
-                'Precio' => $compraItem[0]['objProducto']->getPrecioprod(),
-                'Cantidad' => $compraItem[0]['cicantidad']
-            ];
+        foreach ($compraItems as $compraItem) {
+            if (null !== $compraItem->getObjProducto()) {
+                $productoCarrito = [
+                    'Nombre' => $compraItem->getObjProducto()->getPronombre(),
+                    'Detalle' => $compraItem->getObjProducto()->getProdetalle(),
+                    'Precio' => $compraItem->getObjProducto()->getPrecioprod(),
+                    'Cantidad' => $compraItem->getCicantidad()
+                ];
 
-            $productosCarrito[] = $productoCarrito;
-        }else{
-            echo "<br>No se encontraron productos para la compra con ID: " . $compraIni->getIdcompra() . "<br>";
+                $productosCarrito[] = $productoCarrito;
+            } else {
+                echo "<br>No se encontraron productos para la compra con ID: " . $compraIni->getIdcompra() . "<br>";
+            }
         }
     }
-
-}else{
-    echo "<br>no hay compras iniciadas<br>";
+} else {
+    echo "<br>No hay compras iniciadas<br>";
 }
-
-// print_r($productosCarrito);
-
 ?>
+
 <div class="container mt-4">
     <h1 class="text-center mb-4">Mis Productos Pendientes</h1>
     <div class="row">
@@ -59,7 +57,6 @@ if($carritosIniciados !== null){
                 <?php if (count($productosCarrito) > 0): ?>
                     <?php foreach ($productosCarrito as $prodCarrito): ?>
                         <tr>
-                            
                             <td><?php echo htmlspecialchars($prodCarrito['Nombre']); ?></td>
                             <td><?php echo htmlspecialchars($prodCarrito['Detalle']); ?></td>
                             <td><?php echo '$' . htmlspecialchars($prodCarrito['Precio']); ?></td>

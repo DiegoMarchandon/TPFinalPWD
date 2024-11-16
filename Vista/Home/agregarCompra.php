@@ -1,12 +1,12 @@
 <?php
 include_once '../../configuracion.php';
 include_once '../estructura/headerSeguro.php';
-include_once '../../Control/ABMCompra.php';
-include_once '../../Modelo/Compra.php';
-include_once '../../Control/ABMCompraEstado.php';
-include_once '../../Modelo/CompraEstado.php';
-include_once '../../Control/ABMCompraItem.php';
-include_once '../../Modelo/CompraItem.php';
+//include_once '../../Control/ABMCompra.php';
+//include_once '../../Modelo/Compra.php';
+//include_once '../../Control/ABMCompraEstado.php';
+//include_once '../../Modelo/CompraEstado.php';
+//include_once '../../Control/ABMCompraItem.php';
+//include_once '../../Modelo/CompraItem.php';
 
 $session = new Session;
 
@@ -28,7 +28,7 @@ if ($data) {
     // Verificar si el usuario ya tiene una compra "iniciada"
     $compraIniciada = $abmCompraEstado->buscarCompraIniciadaPorUsuario($idUsuario);
 
-    // if ($compraIniciada === null) {
+    if ($compraIniciada === null) {
         // una nueva instancia de ABMCompra
         $abmCompra = new ABMCompra();
 
@@ -76,9 +76,28 @@ if ($data) {
         } else {
             echo json_encode(["status" => "error", "message" => "Error al insertar la compra"]);
         }
-    // } else {
+     } else {
+        
+        // Extraer el idcompra de la compra iniciada
+        $idCompraIniciada = $compraIniciada[0]->getIdcompra();
+
+        // Insertar un nuevo CompraItem en la compra existente
+        $abmCompraItem = new ABMCompraItem();
+
+        $paramCompraItem = [
+            'idcompraitem' => null,
+            'idproducto' => $data['idproducto'], //id del producto
+            'idcompra' => $idCompraIniciada,
+            'cicantidad' => $data['prodCantSelec'] // La cantidad seleccionada por el cliente
+        ];
+
+        if ($abmCompraItem->alta($paramCompraItem)) {
+            echo json_encode(["status" => "success"]);
+        } else {
+            echo json_encode(["status" => "error", "message" => "Error al insertar el ítem de la compra"]);
+        }
         // echo json_encode(["status" => "error", "message" => "YA TENES UNA COMPRA INICIADA"]);
-    // }
+     }
 } else {
     echo json_encode(["status" => "error", "message" => "Datos no válidos"]);
 }
