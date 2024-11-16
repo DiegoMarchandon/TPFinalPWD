@@ -217,5 +217,34 @@ class ABMCompraEstado {
 
         return $compraEstadoIniciado;
     }
+    /**
+     * permite buscar compras confirmadas sin finalizar
+     * @return array
+     */
+    public function buscarComprasConfirmadasSinFinalizar() {
+        $abmCompra = new ABMCompra();
+        $compras = $abmCompra->buscar(null); // Buscar todas las compras
+
+        // arreglo para almacenar las compras confirmadas sin finalizar
+        $comprasConfirmadasSinFinalizar = [];
+
+        foreach ($compras as $compra) {
+            if (count($compras) > 0) {
+                // de cada compra específica, obtengo su compraEstado específico
+                $compraEstado = $this->buscarArray(['idcompra' => $compra->getIdcompra()]);
+                if (count($compraEstado) > 0) {
+                    foreach ($compraEstado as $estado) {
+                        // si el 'idcompraestadotipo' de este compraEstado es 2 y 'cefechafin' es '0000-00-00 00:00:00', significa que la compra fue confirmada pero no finalizada. Por lo que la almacenamos
+                        if ($estado['objCompraEstadoTipo']->getIdcompraestadotipo() === 2 && $estado['cefechafin'] === '0000-00-00 00:00:00') {
+                            $comprasConfirmadasSinFinalizar[] = $compra;
+                           // break; // Salir del bucle una vez que encontramos un estado que cumple con las condiciones
+                        }
+                    }
+                }
+            }
+        }
+
+        return $comprasConfirmadasSinFinalizar;
+    }
 }
 ?>

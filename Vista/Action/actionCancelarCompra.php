@@ -27,7 +27,7 @@ if ($carritosIniciados !== null) {
                 $paramCompraEstado = [
                     'idcompraestado' => null,
                     'idcompra' => $idCompra,
-                    'idcompraestadotipo' => 4, // Estado "confirmada"
+                    'idcompraestadotipo' => 4, // Estado "cancelada"
                     'cefechaini' => $fechaFin,
                     'cefechafin' => $fechaFin
                 ];
