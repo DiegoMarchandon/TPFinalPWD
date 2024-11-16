@@ -39,7 +39,7 @@ if ($carritosIniciados !== null) {
         }
     }
 } else {
-    echo "<br>No hay compras iniciadas<br>";
+    //echo "<br>No hay compras iniciadas<br>";
 }
 ?>
 
@@ -81,8 +81,12 @@ if ($carritosIniciados !== null) {
     </div>
     <div class="row mt-4">
         <div class="col-md-12 text-center">
-            <button class="btn btn-success" onclick="confirmarCompra()">Confirmar Compra</button>
-            <button class="btn btn-danger" onclick="cancelarCompra()">Cancelar Compra</button>
+        <form id="confirmarCompraForm" action="../Action/actionConfirmarCompra.php" method="POST">
+            <button type="submit" class="btn btn-success">Confirmar Compra</button>
+        </form>
+        <form id="cancelarCompraForm" action="../Action/actionCancelarCompra.php" method="POST">
+            <button type="submit" class="btn btn-danger">Cancelar Compra</button>
+        </form>
         </div>
     </div>
 </div>

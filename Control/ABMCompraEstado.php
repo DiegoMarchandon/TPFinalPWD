@@ -196,7 +196,7 @@ class ABMCompraEstado {
                 if (count($compraEstado) > 0) {
 
                     // si el 'idcompraestadotipo' de este compraEstado es 1, significa que la compra fue iniciada. Por lo que la almacenamos
-                    if($compraEstado[0]['objCompraEstadoTipo']->getIdcompraestadotipo() === 1){
+                    if($compraEstado[0]['objCompraEstadoTipo']->getIdcompraestadotipo() === 1 &&  $compraEstado[0]['cefechafin'] === '0000-00-00 00:00:00'){
                         $compraEstadoIniciado[] = $compra; 
                     }
 
