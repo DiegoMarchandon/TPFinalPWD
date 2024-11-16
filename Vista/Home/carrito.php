@@ -9,6 +9,8 @@ $idUsuarioActual = $session->getUsuario()->getIdusuario();
 $ABMcompraEstado = new ABMCompraEstado;
 $carritosIniciados = $ABMcompraEstado->buscarCompraIniciadaPorUsuario($idUsuarioActual);
 
+// print_r($carritosIniciados);
+
 $ABMcompraitem = new ABMCompraItem;
 
 $productosCarrito = [];
@@ -18,15 +20,19 @@ if($carritosIniciados !== null){
     foreach($carritosIniciados as $compraIni){
         // del compraitem, obtengo la cantidad de elementos comprados
         $compraItem = $ABMcompraitem->buscarArray(['idcompra' => $compraIni->getIdcompra()]);
-        
-        $productoCarrito = [
-            'Nombre' => $compraItem[0]['objProducto']->getPronombre(),
-            'Detalle' => $compraItem[0]['objProducto']->getProdetalle(),
-            'Precio' => $compraItem[0]['objProducto']->getPrecioprod(),
-            'Cantidad' => $compraItem[0]['cicantidad']
-        ];
-    
-        $productosCarrito[] = $productoCarrito; 
+
+        if (!empty($compraItem) && isset($compraItem[0]['objProducto'])) {
+            $productoCarrito = [
+                'Nombre' => $compraItem[0]['objProducto']->getPronombre(),
+                'Detalle' => $compraItem[0]['objProducto']->getProdetalle(),
+                'Precio' => $compraItem[0]['objProducto']->getPrecioprod(),
+                'Cantidad' => $compraItem[0]['cicantidad']
+            ];
+
+            $productosCarrito[] = $productoCarrito;
+        }else{
+            echo "<br>No se encontraron productos para la compra con ID: " . $compraIni->getIdcompra() . "<br>";
+        }
     }
 
 }else{

@@ -26,7 +26,7 @@ if ($data) {
     // Verificar si el usuario ya tiene una compra "iniciada"
     $compraIniciada = $abmCompraEstado->buscarCompraIniciadaPorUsuario($idUsuario);
 
-    if ($compraIniciada === null) {
+    // if ($compraIniciada === null) {
         // una nueva instancia de ABMCompra
         $abmCompra = new ABMCompra();
 
@@ -74,9 +74,9 @@ if ($data) {
         } else {
             echo json_encode(["status" => "error", "message" => "Error al insertar la compra"]);
         }
-    } else {
-        echo json_encode(["status" => "error", "message" => "YA TENES UNA COMPRA INICIADA"]);
-    }
+    // } else {
+        // echo json_encode(["status" => "error", "message" => "YA TENES UNA COMPRA INICIADA"]);
+    // }
 } else {
     echo json_encode(["status" => "error", "message" => "Datos no válidos"]);
 }
