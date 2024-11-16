@@ -16,9 +16,9 @@ foreach($colCompras as $compra){
 
     // recorro la colección de compraEstados
     foreach($colCompraEstados as $compraEstado){
-        echo "<br>----<br>";
-        echo $compraEstado['objCompraEstadoTipo']->getIdcompraestadotipo();
-        echo "<br>----<br>";
+        // echo "<br>----<br>";
+        // echo $compraEstado['objCompraEstadoTipo']->getIdcompraestadotipo();
+        // echo "<br>----<br>";
         if($compraEstado['objCompraEstadoTipo']->getIdcompraestadotipo() === 2){
 
             $compra['compraestado'] = $compraEstado['objCompraEstadoTipo']->getIdcompraestadotipo();
@@ -27,17 +27,6 @@ foreach($colCompras as $compra){
         }
     }
 
-    print_r($colComprasAceptadas);
-    // obtengo el compraestadoTipo del colCompraEstados
-    // $compraEstadoTipo = $colCompraEstados['objCompraEstadoTipo']->getIdcompraestadotipo();
-    
-
-    // echo "<br>----<br>";
-    // si el compraEstadoTipo obtenido a partir de la compra es 1, imprimo la compra
-    // if($compraEstadoTipo === 2){
-
-    //     print_r($compra);
-    // }
 }
 
 ?>
@@ -66,22 +55,16 @@ foreach($colCompras as $compra){
             <tbody>
                 <?php if (count($colComprasAceptadas) > 0): ?>
                     <?php foreach ($colComprasAceptadas as $compra): ?>
-                        <?php 
-                        // Obtengo el colCompraEstados de la compra
-                        // $colCompraEstados = $ABMcompraestado->buscarArray(["idcompra" => $compra['idcompra']])[0];
-                        // Obtengo el compraestadoTipo del colCompraEstados
-                        // $compraEstadoTipo = $colCompraEstados['objCompraEstadoTipo']->getIdcompraestadotipo();
-                        ?>
-                        <?php /* if ($compraEstadoTipo === 1): */ ?>
-                            <tr>
-                                <td><?php echo htmlspecialchars($compra['idcompra']); ?></td>
-                                <td><?php echo htmlspecialchars($compra['cofecha']); ?></td>
-                                <td><?php echo htmlspecialchars($compra['objUsuario']->getIdusuario()); ?></td>
-                                <td><?php echo htmlspecialchars($compra['objUsuario']->getUsnombre()); ?></td>
-                                <td><?php echo htmlspecialchars($compra['objUsuario']->getUsmail()); ?></td>
-                                <td><?php echo htmlspecialchars($compra['compraestado']); ?></td>
-                            </tr>
-                            <?php /* endif; */ ?>
+                        
+                        <tr>
+                            <td><?php echo htmlspecialchars($compra['idcompra']); ?></td>
+                            <td><?php echo htmlspecialchars($compra['cofecha']); ?></td>
+                            <td><?php echo htmlspecialchars($compra['objUsuario']->getIdusuario()); ?></td>
+                            <td><?php echo htmlspecialchars($compra['objUsuario']->getUsnombre()); ?></td>
+                            <td><?php echo htmlspecialchars($compra['objUsuario']->getUsmail()); ?></td>
+                            <td><?php echo htmlspecialchars($compra['compraestado']); ?></td>
+                        </tr>
+                            
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>

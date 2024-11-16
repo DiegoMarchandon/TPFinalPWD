@@ -93,26 +93,7 @@ if ($carritosIniciados !== null) {
 
 
 <script>
-    /* document.addEventListener('DOMContentLoaded', function() {
-        // let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-        let carrito = 
-        let carritoTable = document.getElementById('carritoTable').getElementsByTagName('tbody')[0];
-        let emptyMessage = document.getElementById('emptyMessage');
-
-        if (carrito.length > 0) {
-            emptyMessage.style.display = 'none';
-            carrito.forEach(function(producto) {
-                let row = carritoTable.insertRow();
-                row.insertCell(0).innerHTML = `<img src="${producto.prodIMG}" alt="${producto.prodNombre}" width="50">`;
-                row.insertCell(1).innerText = producto.prodNombre;
-                row.insertCell(2).innerText = producto.prodDetalle;
-                row.insertCell(3).innerText = `$${producto.prodPrecio}.00`;
-                row.insertCell(4).innerText = producto.prodCantSelec;
-            });
-        } else {
-            carritoTable.style.display = 'none';
-        }
-    }); */
+    
 </script>
 </body>
 </html>
