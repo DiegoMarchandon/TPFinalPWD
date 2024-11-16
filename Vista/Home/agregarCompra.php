@@ -8,13 +8,16 @@ include_once '../../Modelo/CompraEstado.php';
 include_once '../../Control/ABMCompraItem.php';
 include_once '../../Modelo/CompraItem.php';
 
+$session = new Session;
+
 // Configurar la zona horaria a Argentina
 date_default_timezone_set('America/Argentina/Buenos_Aires');
-
+// lee los archivos JSON enviados a través de una solicitud HTTP, los decodifica y los convierte en un arreglo asociativo PHP.
+// php://input se usa para leer el cuerpo de la solicitud sin procesar
 $data = json_decode(file_get_contents('php://input'), true);
 
 if ($data) {
-    $idUsuario = $_SESSION['idusuario']; // Obtener el ID del usuario de la sesión
+    $idUsuario = $session->getUsuario()->getIdusuario(); // Obtener el ID del usuario de la sesión
     $fechaCompra = date('Y-m-d H:i:s');
 
     // Crear una nueva instancia de ABMCompraEstado

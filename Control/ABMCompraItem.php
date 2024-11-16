@@ -175,5 +175,29 @@ class ABMCompraItem {
         }
         return $arreglo;
     }
+
+    /**
+     * recibe el id de un producto y retorna su estado
+     * @param int
+     * @return null|int
+     */
+    public function estadoCompraItem($IDprod){
+
+        $compraEstadoTipo = null;
+        $ABMCompraEstado = new ABMCompraEstado;
+        // primero busco el compraItem vinculado a ese idProducto
+        $compraItemBuscado = $this->buscar(['idproducto' => $IDprod]);
+        // si se encontraron productos:
+        if(count($compraItemBuscado) > 0){
+            // busco un compraestado con el idcompra en cuestión
+            $compraEstadoBuscado = $ABMCompraEstado->buscar(['idcompra' => $compraItemBuscado[0]->getObjCompra()->getIdcompra()]);
+            if(count($compraEstadoBuscado) > 0){
+                // verifico con el compraestado el tipo de estado 
+                $compraEstadoTipo = $compraEstadoBuscado[0]->getObjCompraEstadoTipo()->getIdcompraestadotipo();
+            }
+        }
+    
+        return $compraEstadoTipo;
+    }
 }
 ?>
