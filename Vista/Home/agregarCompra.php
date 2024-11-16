@@ -16,6 +16,8 @@ date_default_timezone_set('America/Argentina/Buenos_Aires');
 // php://input se usa para leer el cuerpo de la solicitud sin procesar
 $data = json_decode(file_get_contents('php://input'), true);
 
+print_r($data);
+
 if ($data) {
     $idUsuario = $session->getUsuario()->getIdusuario(); // Obtener el ID del usuario de la sesión
     $fechaCompra = date('Y-m-d H:i:s');
@@ -58,7 +60,7 @@ if ($data) {
 
                 $paramCompraItem = [
                     'idcompraitem' => null,
-                    'idproducto' => $data['idproducto'], //id del producto
+                    'idproducto' => $data[0]['idproducto'], //id del producto
                     'idcompra' => $idCompra,
                     'cicantidad' => $data['prodCantSelec'] // La cantidad seleccionada por el cliente
                 ];

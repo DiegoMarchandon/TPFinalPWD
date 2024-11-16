@@ -28,7 +28,7 @@ $ABMcompraitem = new ABMCompraItem;
         // Vaciar el carrito en localStorage al cargar la página
         // localStorage.removeItem('carrito');
 
-        let colProductos = [];
+        // let colProductos = [];
         var colIMGS = [
             '../imagenes/notebookIMG1.jpg',
             '../imagenes/notebookIMG2.jpg',
@@ -112,6 +112,7 @@ $ABMcompraitem = new ABMCompraItem;
             }
         });
 
+        /* evento click que se activa para cada producto INDIVIDUAL  */
         $(document).on('click','.btn-primary',function(event){
             event.preventDefault();
             var card = $(this).closest('.card');
@@ -135,7 +136,7 @@ $ABMcompraitem = new ABMCompraItem;
                 prodIMG: productoIMG
             };
 
-            colProductos.push(objProducto);
+            // colProductos.push(objProducto);
             // localStorage.setItem('carrito', JSON.stringify(colProductos));
 
             // Enviar datos a la base de datos
@@ -143,7 +144,7 @@ $ABMcompraitem = new ABMCompraItem;
                 url: 'agregarCompra.php',
                 method: 'POST',
                 contentType: 'application/json',
-                data: JSON.stringify(colProductos),
+                data: JSON.stringify(objProducto),
                 success: function(response){
                     console.log('Producto agregado al carrito', response);
                 },
