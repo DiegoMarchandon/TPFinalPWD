@@ -74,18 +74,21 @@ foreach($colCompraItems as $compraitem){
                     'cefechaini' => $fechaFin,
                     'cefechafin' => null
                 ];
-                if($ABMcompraEstado->alta($param)){
-                    $compraEstadoNuevo = true;
-                    // echo "<br>verificacion 3/3<br>";
-                    $response = /* "exito"; */
-                    [
-                        // 'idproducto' => $param['idproducto'],
-                        'status' => 'success',
-                        'message' => 'Producto actualizado',
-                        'redirect' => '../Home/ordenes.php'
-                    ];
-                }else{
-                    $compraEstadoNuevo = false;
+                // verifico que ya no haya un registro de compraestado subido con ese idcompra y el idcompraestadotipo = 3 para evitarme duplicados
+                if(count($ABMcompraEstado->buscarArray(['idcompra' => $compraEstado['objCompra']->getIdcompra(), 'idcompraestadotipo' => 3])) === 0 ){
+                    if($ABMcompraEstado->alta($param)){
+                        $compraEstadoNuevo = true;
+                        // echo "<br>verificacion 3/3<br>";
+                        $response = /* "exito"; */
+                        [
+                            // 'idproducto' => $param['idproducto'],
+                            'status' => 'success',
+                            'message' => 'Producto actualizado',
+                            'redirect' => '../Home/ordenes.php'
+                        ];
+                    }else{
+                        $compraEstadoNuevo = false;
+                    }
                 }
             }else{
                 $compraEstadoCambiado = false;
