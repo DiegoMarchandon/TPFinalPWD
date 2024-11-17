@@ -39,11 +39,11 @@ $ABMCompraItem = new ABMCompraItem();
                             <div class="text-center mt-3">
                                 <form action="../Action/actionEnviarCompra.php" method="POST" class="d-inline">
                                     <input type="hidden" name="idcompra" value="<?php echo htmlspecialchars($compra->getIdcompra()); ?>">
-                                    <button type="submit" class="btn btn-success">Enviar Compra</button>
+                                    <button type="button" class="btn btn-success btnEnviarCompra">Enviar Compra</button>
                                 </form>
                                 <form action="../Action/actionCancelarCompra.php" method="POST" class="d-inline">
                                     <input type="hidden" name="idcompra" value="<?php echo htmlspecialchars($compra->getIdcompra()); ?>">
-                                    <button type="submit" class="btn btn-danger">Cancelar Compra</button>
+                                    <button type="button" class="btn btn-danger btnCancelarCompra">Cancelar Compra</button>
                                 </form>
                             </div>
                         </div>
@@ -60,20 +60,33 @@ $ABMCompraItem = new ABMCompraItem();
 
 <script>
     $(document).ready(function () {
-        $('.btnEnviarCompra').click(function () {
-            var idCompra = $(this).closest('form').data('id');
+        $('.btnEnviarCompra').click(function (event) {
+            event.preventDefault();
+            // var idCompra = $(this).closest('form').data('id');
+            var idCompra = $(this).closest('form').find('input[name="idcompra"]').val();
+            console.log("idCompra: "+idCompra);
             $.ajax({
                 url: '../Action/actionEnviarCompra.php',
                 method: 'POST',
                 data: { idcompra: idCompra },
+                // jQuery detecta que la respuesta del servidor tiene el tipo application/json en su encabezado, por lo que parsea automáticamente el JSON recibido en un objeto javascript
+                /* success: function(response){
+                    console.log(response);
+                    // console.log("response");
+                } */
                 success: function (response) {
-
                     response = typeof response === 'string' ? JSON.parse(response) : response;
+                    // console.log(response);
+                    console.log(response);
+                    alert("alertando respuesta exitosa");
+                    // response = typeof response === 'string' ? JSON.parse(response) : response;
                     if(response.status === 'success'){
                         console.log("response succes");
                         alert('Compra enviada: ');
-                        window.location.href = 'ordenes.php';
+                        // window.location.href = 'ordenes.php';
+                        window.location.href = response.redirect;
                     }else{
+                        alert('Compra no enviada: ');
                         console.log("response error");
                     }
 

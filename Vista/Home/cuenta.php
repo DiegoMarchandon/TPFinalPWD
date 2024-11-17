@@ -122,9 +122,7 @@ Array ( [idusuario] => 4
                 // jQuery detecta que la respuesta del servidor tiene el tipo application/json en su encabezado, por lo que parsea automáticamente el JSON recibido en un objeto javascript
                 success: function(data){
                     console.log("colusers: "+data.usersBD[0]['usnombre']);
-                    datos = data;
-                    // datos = JSON.parse(data);
-
+                    
                     // accedo a la clave colUsers, que contiene un arreglo indexado con los usuarios del sistema
                     var colUsers = data.usersBD;
 
@@ -255,7 +253,7 @@ Array ( [idusuario] => 4
 
             
         });
-        console.log("datos: ",datos);
+        // console.log("datos: ",data);
 
 
     });

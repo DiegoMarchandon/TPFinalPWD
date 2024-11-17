@@ -81,7 +81,8 @@ foreach($colCompraItems as $compraitem){
                     [
                         // 'idproducto' => $param['idproducto'],
                         'status' => 'success',
-                        'message' => 'Producto actualizado'
+                        'message' => 'Producto actualizado',
+                        'redirect' => '../Home/ordenes.php'
                     ];
                 }else{
                     $compraEstadoNuevo = false;
@@ -99,22 +100,12 @@ foreach($colCompraItems as $compraitem){
         [
             // 'idproducto' => $param['idproducto'],
             'status' => 'error',
-            'message' => 'Error al actualizar el producto'
+            'message' => 'Error al actualizar el producto',
+            'redirect' => '../Home/ordenes.php'
         ];
     }
 
 }
-
-// el stock de producto se actualiza apropiadamente. Falta;
-// 1) eliminar la compra (para que el compraitem ya no la busque y así se deje de listar en ordenes.php)
-    # no
-// 1) eliminar los compraitem asociados
-    # no
-// 2) eliminar la compra asociada / cambiarle la fecha 
-
-// 3) modificar la cefechafin del idcompraestadotipo = 2
-// 4) crear un nuevo registro de compraestado con el idcompraestadotipo 3
-
 
 echo json_encode($response);
 exit;
