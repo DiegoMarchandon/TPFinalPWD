@@ -1,12 +1,6 @@
 <?php
 include_once '../../configuracion.php';
 include_once '../estructura/headerSeguro.php';
-//include_once '../../Control/ABMCompra.php';
-//include_once '../../Modelo/Compra.php';
-//include_once '../../Control/ABMCompraEstado.php';
-//include_once '../../Modelo/CompraEstado.php';
-//include_once '../../Control/ABMCompraItem.php';
-//include_once '../../Modelo/CompraItem.php';
 
 $session = new Session;
 
@@ -15,8 +9,6 @@ date_default_timezone_set('America/Argentina/Buenos_Aires');
 // lee los archivos JSON enviados a través de una solicitud HTTP, los decodifica y los convierte en un arreglo asociativo PHP.
 // php://input se usa para leer el cuerpo de la solicitud sin procesar
 $data = json_decode(file_get_contents('php://input'), true);
-
-print_r($data);
 
 if ($data) {
     $idUsuario = $session->getUsuario()->getIdusuario(); // Obtener el ID del usuario de la sesión
@@ -76,7 +68,7 @@ if ($data) {
         } else {
             echo json_encode(["status" => "error", "message" => "Error al insertar la compra"]);
         }
-     } else {
+     } else { // Si ya tiene una compra iniciada
         
         // Extraer el idcompra de la compra iniciada
         $idCompraIniciada = $compraIniciada[0]->getIdcompra();
@@ -84,19 +76,41 @@ if ($data) {
         // Insertar un nuevo CompraItem en la compra existente
         $abmCompraItem = new ABMCompraItem();
 
-        $paramCompraItem = [
-            'idcompraitem' => null,
-            'idproducto' => $data['idproducto'], //id del producto
-            'idcompra' => $idCompraIniciada,
-            'cicantidad' => $data['prodCantSelec'] // La cantidad seleccionada por el cliente
-        ];
+        // Verificar si ya existe un CompraItem con el mismo idproducto y idcompra
+        $compraItemExistente = $abmCompraItem->buscar(['idcompra' => $idCompraIniciada, 'idproducto' => $data['idproducto']]);
 
-        if ($abmCompraItem->alta($paramCompraItem)) {
-            echo json_encode(["status" => "success"]);
+        if (count($compraItemExistente) > 0) {
+            // Si ya existe, actualizar la cantidad
+            $compraItemExistente = $compraItemExistente[0];
+            $nuevaCantidad = $compraItemExistente->getCicantidad() + $data['prodCantSelec'];
+
+            $paramCompraItem = [
+                'idcompraitem' => $compraItemExistente->getIdcompraitem(),
+                'idproducto' => $data['idproducto'], //id del producto
+                'idcompra' => $idCompraIniciada,
+                'cicantidad' => $nuevaCantidad // La nueva cantidad
+            ];
+
+            if ($abmCompraItem->modificacion($paramCompraItem)) {
+                echo json_encode(["status" => "success"]);
+            } else {
+                echo json_encode(["status" => "error", "message" => "Error al actualizar la cantidad del ítem de la compra"]);
+            }
         } else {
-            echo json_encode(["status" => "error", "message" => "Error al insertar el ítem de la compra"]);
+            // Si no existe, insertar un nuevo CompraItem
+            $paramCompraItem = [
+                'idcompraitem' => null,
+                'idproducto' => $data['idproducto'], //id del producto
+                'idcompra' => $idCompraIniciada,
+                'cicantidad' => $data['prodCantSelec'] // La cantidad seleccionada por el cliente
+            ];
+
+            if ($abmCompraItem->alta($paramCompraItem)) {
+                echo json_encode(["status" => "success"]);
+            } else {
+                echo json_encode(["status" => "error", "message" => "Error al insertar el ítem de la compra"]);
+            }
         }
-        // echo json_encode(["status" => "error", "message" => "YA TENES UNA COMPRA INICIADA"]);
      }
 } else {
     echo json_encode(["status" => "error", "message" => "Datos no válidos"]);
