@@ -58,7 +58,43 @@ $ABMCompraItem = new ABMCompraItem();
     </div>
 </div>
 
+<script>
+    $(document).ready(function () {
+        $('.btnEnviarCompra').click(function () {
+            var idCompra = $(this).closest('form').data('id');
+            $.ajax({
+                url: '../Action/actionEnviarCompra.php',
+                method: 'POST',
+                data: { idcompra: idCompra },
+                success: function (response) {
+                    // Manejo de la respuesta
+                    alert('Compra enviada: ' + response);
+                    // Aquí puedes agregar lógica adicional para actualizar la página si es necesario
+                },
+                error: function (xhr, status, error) {
+                    alert('Error al enviar la compra: ' + error);
+                }
+            });
+        });
 
+        $('.btnCancelarCompra').click(function () {
+            var idCompra = $(this).closest('form').data('id');
+            $.ajax({
+                url: '../Action/actionCancelarCompra.php',
+                method: 'POST',
+                data: { idcompra: idCompra },
+                success: function (response) {
+                    // Manejo de la respuesta
+                    alert('Compra cancelada: ' + response);
+                    // Actualizar la página si es necesario
+                },
+                error: function (xhr, status, error) {
+                    alert('Error al cancelar la compra: ' + error);
+                }
+            });
+        });
+    });
+</script>
 <?php
 include_once('../estructura/footer.php');
 ?>
