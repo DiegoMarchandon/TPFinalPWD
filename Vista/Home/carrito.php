@@ -81,12 +81,12 @@ if ($carritosIniciados !== null) {
     </div>
     <div class="row mt-4">
         <div class="col-md-12 text-center">
-        <form id="confirmarCompraForm" action="../Action/actionConfirmarCompra.php" method="POST">
-            <button type="submit" class="btn btn-success">Confirmar Compra</button>
-        </form>
-        <form id="cancelarCompraForm" action="../Action/actionCancelarCompra.php" method="POST">
-            <button type="submit" class="btn btn-danger">Cancelar Compra</button>
-        </form>
+            <form id="confirmarCompraForm" action="../Action/actionConfirmarCompra.php" method="POST" class=" m-2 d-inline-block">
+                <button type="submit" class="btn btn-success">Confirmar Compra</button>
+            </form>
+            <form id="cancelarCompraForm" action="../Action/actionCancelarCompra.php" method="POST" class=" m-2 d-inline-block">
+                <button type="submit" class="btn btn-danger">Cancelar Compra</button>
+            </form>
         </div>
     </div>
 </div>

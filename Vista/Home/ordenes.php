@@ -67,8 +67,17 @@ $ABMCompraItem = new ABMCompraItem();
                 method: 'POST',
                 data: { idcompra: idCompra },
                 success: function (response) {
+
+                    response = typeof response === 'string' ? JSON.parse(response) : response;
+                    if(response.status === 'success'){
+                        console.log("response succes");
+                        alert('Compra enviada: ');
+                        window.location.href = 'ordenes.php';
+                    }else{
+                        console.log("response error");
+                    }
+
                     // Manejo de la respuesta
-                    alert('Compra enviada: ' + response);
                     // Aquí puedes agregar lógica adicional para actualizar la página si es necesario
                 },
                 error: function (xhr, status, error) {
@@ -85,7 +94,13 @@ $ABMCompraItem = new ABMCompraItem();
                 data: { idcompra: idCompra },
                 success: function (response) {
                     // Manejo de la respuesta
-                    alert('Compra cancelada: ' + response);
+                    response = typeof response === 'string' ? JSON.parse(response) : response;
+                    window.location.href = 'ordenes.php';
+                    if(response.status === 'success'){
+                        alert('Compra enviada');
+                    }else{
+                        alert('la Compra no se ha podido enviar ');
+                    }
                     // Actualizar la página si es necesario
                 },
                 error: function (xhr, status, error) {

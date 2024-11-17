@@ -23,9 +23,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $session = new Session();
             if ($session->iniciar($nombreUsuario, $hashedPassword)) {
                 
-                // creo una variable almacenada en la sesion actual para tener de referencia para las demás páginas
-                // $_SESSION['userConectadoRol'] = $session->getRol()[0]->getObjRol()->getIdrol();
-                
                 // Sesión iniciada correctamente
                 header('Location: ../Home/paginaSegura.php');
 
