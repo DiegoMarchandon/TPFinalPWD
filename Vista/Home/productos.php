@@ -151,7 +151,7 @@ $ABMcompraitem = new ABMCompraItem;
 
                 // Enviar datos a la base de datos
                 $.ajax({
-                    url: 'agregarCompra.php',
+                    url: '../Action/agregarCompra.php',
                     method: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(objProducto),

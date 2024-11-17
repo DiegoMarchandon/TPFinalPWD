@@ -60,11 +60,11 @@ $ABMCompraItem = new ABMCompraItem();
 
 <script>
     $(document).ready(function () {
+        // Verificar el stock disponible antes de habilitar el botón
         $('.formEnviarCompra').each(function () {
             var form = $(this);
             var stockInsuficiente = false;
 
-            // Verificar el stock disponible antes de habilitar el botón
             form.closest('.card').find('ul li').each(function () {
                 var cantidad = parseInt($(this).find('.cantidad').text());
                 var stockDisponible = parseInt($(this).find('.stock-disponible').text());
@@ -82,19 +82,36 @@ $ABMCompraItem = new ABMCompraItem();
 
         $('.btnEnviarCompra').click(function (event) {
             event.preventDefault();
+            // var idCompra = $(this).closest('form').data('id');
             var idCompra = $(this).closest('form').find('input[name="idcompra"]').val();
+            console.log("idCompra: "+idCompra);
             $.ajax({
                 url: '../Action/actionEnviarCompra.php',
                 method: 'POST',
                 data: { idcompra: idCompra },
+                // jQuery detecta que la respuesta del servidor tiene el tipo application/json en su encabezado, por lo que parsea automáticamente el JSON recibido en un objeto javascript
+                /* success: function(response){
+                    console.log(response);
+                    // console.log("response");
+                } */
                 success: function (response) {
                     response = typeof response === 'string' ? JSON.parse(response) : response;
+                    // console.log(response);
+                    console.log(response);
+                    alert("alertando respuesta exitosa");
+                    // response = typeof response === 'string' ? JSON.parse(response) : response;
                     if(response.status === 'success'){
-                        alert('Compra enviada');
+                        console.log("response succes");
+                        alert('Compra enviada: ');
+                        // window.location.href = 'ordenes.php';
                         window.location.href = response.redirect;
                     }else{
-                        alert(response.message);
+                        alert('Compra no enviada: ');
+                        console.log("response error");
                     }
+
+                    // Manejo de la respuesta
+                    // Aquí puedes agregar lógica adicional para actualizar la página si es necesario
                 },
                 error: function (xhr, status, error) {
                     alert('Error al enviar la compra: ' + error);
@@ -103,19 +120,21 @@ $ABMCompraItem = new ABMCompraItem();
         });
 
         $('.btnCancelarCompra').click(function () {
-            var idCompra = $(this).closest('form').find('input[name="idcompra"]').val();
+            var idCompra = $(this).closest('form').data('id');
             $.ajax({
                 url: '../Action/actionCancelarCompra.php',
                 method: 'POST',
                 data: { idcompra: idCompra },
                 success: function (response) {
+                    // Manejo de la respuesta
                     response = typeof response === 'string' ? JSON.parse(response) : response;
                     window.location.href = 'ordenes.php';
                     if(response.status === 'success'){
-                        alert('Compra cancelada');
+                        alert('Compra enviada');
                     }else{
-                        alert('La compra no se ha podido cancelar');
+                        alert('la Compra no se ha podido enviar ');
                     }
+                    // Actualizar la página si es necesario
                 },
                 error: function (xhr, status, error) {
                     alert('Error al cancelar la compra: ' + error);
