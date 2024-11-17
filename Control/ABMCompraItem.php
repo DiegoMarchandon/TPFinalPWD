@@ -189,6 +189,7 @@ class ABMCompraItem {
         $compraItemBuscado = $this->buscar(['idproducto' => $IDprod]);
         // si se encontraron productos:
         if(count($compraItemBuscado) > 0){
+            // echo "<br>--entra--<br>";
             // busco un compraestado con el idcompra en cuestión
             $compraEstadoBuscado = $ABMCompraEstado->buscar(['idcompra' => $compraItemBuscado[0]->getObjCompra()->getIdcompra()]);
             if(count($compraEstadoBuscado) > 0){
