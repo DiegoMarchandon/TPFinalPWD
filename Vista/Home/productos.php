@@ -1,6 +1,13 @@
 <?php
 include_once '../../configuracion.php';
-include_once('../estructura/headerSeguro.php');
+$session = new Session();
+if ($session->activa() && $session->validar()) {
+    include_once('../estructura/headerSeguro.php');
+    $sesionActiva = true;
+} else {
+    include_once('../estructura/header.php');
+    $sesionActiva = false;
+}
 
 $ABMcompraitem = new ABMCompraItem;
 
@@ -115,43 +122,47 @@ $ABMcompraitem = new ABMCompraItem;
         /* evento click que se activa para cada producto INDIVIDUAL  */
         $(document).on('click','.btn-primary',function(event){
             event.preventDefault();
-            var card = $(this).closest('.card');
-            var idProducto = $(this).data('id');
-            var productoIMG = card.find('.card-img-top').attr('src');
-            let productoNombre = $(this).siblings('.card-title').first().text();
-            let productoDetalle = $(this).siblings('.card-text').first().text();
-            let precioTexto = $(this).siblings('.text-success').first().text();
-            let productoPrecioRegex = precioTexto.match(/\$(\d+)\.00/);
-            let productoPrecio = productoPrecioRegex ? parseInt(productoPrecioRegex[1], 10) : 0;
-            let productoCantStock = card.find('.cantStock').text().match(/Stock disponible:\s*(\d+)\s*unidades/);
-            let productoCantSelec = card.find('.cantidadSelect').val();
+            <?php if (!$sesionActiva): ?>
+                window.location.href = '../Home/login.php';
+            <?php else: ?>
+                var card = $(this).closest('.card');
+                var idProducto = $(this).data('id');
+                var productoIMG = card.find('.card-img-top').attr('src');
+                let productoNombre = $(this).siblings('.card-title').first().text();
+                let productoDetalle = $(this).siblings('.card-text').first().text();
+                let precioTexto = $(this).siblings('.text-success').first().text();
+                let productoPrecioRegex = precioTexto.match(/\$(\d+)\.00/);
+                let productoPrecio = productoPrecioRegex ? parseInt(productoPrecioRegex[1], 10) : 0;
+                let productoCantStock = card.find('.cantStock').text().match(/Stock disponible:\s*(\d+)\s*unidades/);
+                let productoCantSelec = card.find('.cantidadSelect').val();
 
-            let objProducto = {
-                idproducto: idProducto,
-                prodNombre: productoNombre,
-                prodDetalle: productoDetalle,
-                prodPrecio: productoPrecio,
-                prodCantStock: productoCantStock ? parseInt(productoCantStock[1], 10) : 0,
-                prodCantSelec: parseInt(productoCantSelec, 10),
-                prodIMG: productoIMG
-            };
+                let objProducto = {
+                    idproducto: idProducto,
+                    prodNombre: productoNombre,
+                    prodDetalle: productoDetalle,
+                    prodPrecio: productoPrecio,
+                    prodCantStock: productoCantStock ? parseInt(productoCantStock[1], 10) : 0,
+                    prodCantSelec: parseInt(productoCantSelec, 10),
+                    prodIMG: productoIMG
+                };
 
-            // colProductos.push(objProducto);
-            // localStorage.setItem('carrito', JSON.stringify(colProductos));
+                // colProductos.push(objProducto);
+                // localStorage.setItem('carrito', JSON.stringify(colProductos));
 
-            // Enviar datos a la base de datos
-            $.ajax({
-                url: 'agregarCompra.php',
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(objProducto),
-                success: function(response){
-                    console.log('Producto agregado al carrito', response);
-                },
-                error: function() {
-                    console.log('Error al agregar el producto al carrito.');
-                }
-            });
+                // Enviar datos a la base de datos
+                $.ajax({
+                    url: 'agregarCompra.php',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(objProducto),
+                    success: function(response){
+                        console.log('Producto agregado al carrito', response);
+                    },
+                    error: function() {
+                        console.log('Error al agregar el producto al carrito.');
+                    }
+                });
+            <?php endif; ?>
         });
     });
 </script>

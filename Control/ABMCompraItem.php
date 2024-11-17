@@ -208,14 +208,20 @@ class ABMCompraItem {
      */
     public function obtenerProductosCarrito($idUsuario) {
         $ABMCompraEstado = new ABMCompraEstado();
+
+        // Buscar carritos iniciados por el usuario y sin finalizar
         $carritosIniciados = $ABMCompraEstado->buscarCompraIniciadaPorUsuario($idUsuario);
 
         $productosCarrito = [];
         $totalCarrito = 0;
 
+        // Si se encontraron carritos iniciados
         if ($carritosIniciados !== null) {
+            // Recorrer los carritos iniciados
             foreach ($carritosIniciados as $compraIni) {
-                // del compraitem obtengo la cantidad de elementos comprados
+
+                // del compraitem obtengo la cantidad de elementos comprados que serian
+                // los elementos del carrito que estan sin finalizar
                 $compraItems = $this->buscar(['idcompra' => $compraIni->getIdcompra()]);
 
                 foreach ($compraItems as $compraItem) {
@@ -229,6 +235,8 @@ class ABMCompraItem {
                         ];
 
                         // Verificar si el producto ya esta en el carrito
+                        //agregado por que hay veces que se repiten los productos en el carrito
+                        //para que se sume y no cree otro compraitem
                         $productoExistente = false;
                         foreach ($productosCarrito as &$prodCarrito) {
                             if ($prodCarrito['Nombre'] === $productoCarrito['Nombre']) {

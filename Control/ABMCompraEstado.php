@@ -178,12 +178,13 @@ class ABMCompraEstado {
     }
 
     /**
-     * permite buscar compras por idusuario y verificar el estado
+     * permite buscar compras por idusuario y trae las compras con estado Iniciado y fecha fin null
      * @param int $idusuario
      * @return array|null
      */
     public function buscarCompraIniciadaPorUsuario($idusuario) {
         $abmCompra = new ABMCompra();
+        //busca todas las compras por el id de usario
         $compras = $abmCompra->buscarPorUsuario($idusuario);
 
         // arreglo para almacenar las compras con estado Iniciado
@@ -199,14 +200,6 @@ class ABMCompraEstado {
                     if($compraEstado[0]['objCompraEstadoTipo']->getIdcompraestadotipo() === 1 &&  $compraEstado[0]['cefechafin'] === '0000-00-00 00:00:00'){
                         $compraEstadoIniciado[] = $compra; 
                     }
-
-                //     foreach ($compraEstado as $estado) {
-                //         if ($estado['idcompraestado'] == 1) {
-                //             // return $compra;
-                //             $compraEstadoIniciado[] = $compra;
-                //         }
-                   // }
-                //    $compraEstadoIniciado[] = $compraEstado[0]['objCompraEstadoTipo']; 
                 }
             }
         } 
