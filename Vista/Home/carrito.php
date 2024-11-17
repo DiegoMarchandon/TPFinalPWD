@@ -6,41 +6,11 @@ include_once('../estructura/headerSeguro.php');
 // obtenemos el id del usuario logueado
 $idUsuarioActual = $session->getUsuario()->getIdusuario();
 
-$ABMcompraEstado = new ABMCompraEstado;
-$carritosIniciados = $ABMcompraEstado->buscarCompraIniciadaPorUsuario($idUsuarioActual);
-//$carritosIniciados = $compraIniciada[0]->getIdcompra();
-// print_r($carritosIniciados);
-
 $ABMcompraitem = new ABMCompraItem;
 
-$productosCarrito = [];
-$totalCarrito = 0;
-
-if ($carritosIniciados !== null) {
-    foreach ($carritosIniciados as $compraIni) {
-        // del compraitem, obtengo la cantidad de elementos comprados
-        $compraItems = $ABMcompraitem->buscar(['idcompra' => $compraIni->getIdcompra()]);
-
-        foreach ($compraItems as $compraItem) {
-            if (null !== $compraItem->getObjProducto()) {
-                $precioTotalProducto = $compraItem->getObjProducto()->getPrecioprod() * $compraItem->getCicantidad();
-                $productoCarrito = [
-                    'Nombre' => $compraItem->getObjProducto()->getPronombre(),
-                    'Detalle' => $compraItem->getObjProducto()->getProdetalle(),
-                    'Precio' => $precioTotalProducto,
-                    'Cantidad' => $compraItem->getCicantidad()
-                ];
-
-                $productosCarrito[] = $productoCarrito;
-                $totalCarrito += $precioTotalProducto;
-            } else {
-                echo "<br>No se encontraron productos para la compra con ID: " . $compraIni->getIdcompra() . "<br>";
-            }
-        }
-    }
-} else {
-    //echo "<br>No hay compras iniciadas<br>";
-}
+$resultadoCarrito = $ABMcompraitem->obtenerProductosCarrito($idUsuarioActual);
+$productosCarrito = $resultadoCarrito['productosCarrito'];
+$totalCarrito = $resultadoCarrito['totalCarrito'];
 ?>
 
 <div class="container mt-4">
@@ -90,7 +60,6 @@ if ($carritosIniciados !== null) {
         </div>
     </div>
 </div>
-
 
 <script>
     

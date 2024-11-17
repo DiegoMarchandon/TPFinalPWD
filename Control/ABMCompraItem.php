@@ -200,5 +200,61 @@ class ABMCompraItem {
     
         return $compraEstadoTipo;
     }
+
+    /**
+     * Obtiene los productos del carrito para un usuario específico
+     * @param int $idUsuario
+     * @return array
+     */
+    public function obtenerProductosCarrito($idUsuario) {
+        $ABMCompraEstado = new ABMCompraEstado();
+        $carritosIniciados = $ABMCompraEstado->buscarCompraIniciadaPorUsuario($idUsuario);
+
+        $productosCarrito = [];
+        $totalCarrito = 0;
+
+        if ($carritosIniciados !== null) {
+            foreach ($carritosIniciados as $compraIni) {
+                // del compraitem obtengo la cantidad de elementos comprados
+                $compraItems = $this->buscar(['idcompra' => $compraIni->getIdcompra()]);
+
+                foreach ($compraItems as $compraItem) {
+                    if (null !== $compraItem->getObjProducto()) {
+                        $precioTotalProducto = $compraItem->getObjProducto()->getPrecioprod() * $compraItem->getCicantidad();
+                        $productoCarrito = [
+                            'Nombre' => $compraItem->getObjProducto()->getPronombre(),
+                            'Detalle' => $compraItem->getObjProducto()->getProdetalle(),
+                            'Precio' => $precioTotalProducto,
+                            'Cantidad' => $compraItem->getCicantidad()
+                        ];
+
+                        // Verificar si el producto ya esta en el carrito
+                        $productoExistente = false;
+                        foreach ($productosCarrito as &$prodCarrito) {
+                            if ($prodCarrito['Nombre'] === $productoCarrito['Nombre']) {
+                                $prodCarrito['Cantidad'] += $productoCarrito['Cantidad'];
+                                $prodCarrito['Precio'] += $precioTotalProducto;
+                                $productoExistente = true;
+                                //break;
+                            }
+                        }
+
+                        if (!$productoExistente) {
+                            $productosCarrito[] = $productoCarrito;
+                        }
+
+                        $totalCarrito += $precioTotalProducto;
+                    } else {
+                        //echo "<br>No se encontraron productos para la compra con ID: " . $compraIni->getIdcompra() . "<br>";
+                    }
+                }
+            }
+        }
+
+        $resultado = ['productosCarrito' => $productosCarrito, 'totalCarrito' => $totalCarrito];
+        return $resultado;
+    }
+
+
 }
 ?>
