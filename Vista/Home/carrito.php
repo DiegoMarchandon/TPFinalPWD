@@ -52,9 +52,11 @@ $totalCarrito = $resultadoCarrito['totalCarrito'];
     <div class="row mt-4">
         <div class="col-md-12 text-center">
             <form id="confirmarCompraForm" action="../Action/actionConfirmarCompra.php" method="POST" class=" m-2 d-inline-block">
+                <input type="hidden" name="comprasRol" id="hiddenConfirmar" value="cliente">
                 <button type="submit" class="btn btn-success">Confirmar Compra</button>
             </form>
             <form id="cancelarCompraForm" action="../Action/actionCancelarCompra.php" method="POST" class=" m-2 d-inline-block">
+                <input type="hidden" name="comprasRol" id="hiddenCancelar" value="cliente">
                 <button type="submit" class="btn btn-danger">Cancelar Compra</button>
             </form>
         </div>

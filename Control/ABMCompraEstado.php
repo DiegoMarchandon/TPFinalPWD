@@ -210,6 +210,37 @@ class ABMCompraEstado {
 
         return $compraEstadoIniciado;
     }
+
+    /**
+     * permite buscar las compras con un idusuario, compraestado y fecha fin especificados 
+     * ($fechafin === true === null === '0000-00-00 00:00:00' ).
+     * @return array|null 
+    */
+    public function estadoCompraUsuario($idusuario,$estado,$fechafin){
+        $abmCompra = new ABMCompra;
+        //busca todas las compras por el id de usario
+            // usa un listar, por lo que retorna una coleccion de objetos compra
+        $comprasUsuario = $abmCompra->buscarPorUsuario($idusuario);
+        // variable (null) que, en caso de encontrar registros, será un arreglo para almacenar las compras con el estado y fecha especificados.
+        $comprasEspecificadas = null;
+        
+        if(count($comprasUsuario) > 0){
+            foreach($comprasUsuario as $compraUser){
+                // si $fechafin es true, filtro las búsquedas también por el fechafin por defecto (000:000:000) 
+                if($fechafin === true){
+                    $compraEstado = $this->buscarArray(['idcompraestadotipo' => $estado,'idcompra' => $compraUser->getIdcompra(),'cefechafin' => '0000-00-00 00:00:00']);
+                }else{
+                    $compraEstado = $this->buscarArray(['idcompraestadotipo' => $estado,'idcompra' => $compraUser->getIdcompra()]);
+                }
+                if(count($compraEstado) > 0){
+                    $comprasEspecificadas[] = $compraUser;
+                }
+            }
+        }
+        return $comprasEspecificadas;
+    }
+
+
     /**
      * permite buscar compras confirmadas sin finalizar
      * @return array

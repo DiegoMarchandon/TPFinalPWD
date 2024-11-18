@@ -119,20 +119,25 @@ $ABMCompraItem = new ABMCompraItem();
             });
         });
 
-        $('.btnCancelarCompra').click(function () {
-            var idCompra = $(this).closest('form').data('id');
+        $('.btnCancelarCompra').click(function (event) {
+            event.preventDefault();
+            // var idCompra = $(this).closest('form').data('id');
+            var idCompra = $(this).closest('form').find('input[name="idcompra"]').val();
+            console.log("idCompra: "+idCompra);
             $.ajax({
                 url: '../Action/actionCancelarCompra.php',
                 method: 'POST',
-                data: { idcompra: idCompra },
+                data: { idcompra: idCompra, comprasRol: "deposito"},
                 success: function (response) {
                     // Manejo de la respuesta
                     response = typeof response === 'string' ? JSON.parse(response) : response;
-                    window.location.href = 'ordenes.php';
+                    alert("alertando respuesta exitosa");
                     if(response.status === 'success'){
-                        alert('Compra enviada');
+                        // alert('Compra enviada');
+                        console.log("response succes");
+                        alert('Compra Cancelada: ');
                     }else{
-                        alert('la Compra no se ha podido enviar ');
+                        alert('la Compra no se ha podido cancelar ');
                     }
                     // Actualizar la página si es necesario
                 },

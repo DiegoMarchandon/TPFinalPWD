@@ -177,7 +177,7 @@ class ABMCompraItem {
     }
 
     /**
-     * recibe el id de un producto y retorna su estado
+     * recibe el id de un producto y retorna su ULTIMO estado
      * @param int
      * @return null|int
      */
@@ -191,10 +191,10 @@ class ABMCompraItem {
         if(count($compraItemBuscado) > 0){
             // echo "<br>--entra--<br>";
             // busco un compraestado con el idcompra en cuestión
-            $compraEstadoBuscado = $ABMCompraEstado->buscar(['idcompra' => $compraItemBuscado[0]->getObjCompra()->getIdcompra()]);
-            if(count($compraEstadoBuscado) > 0){
+            $ultimoCompraEstado = end($ABMCompraEstado->buscar(['idcompra' => $compraItemBuscado[0]->getObjCompra()->getIdcompra()]));
+            if(count($ultimoCompraEstado) > 0){
                 // verifico con el compraestado el tipo de estado 
-                $compraEstadoTipo = $compraEstadoBuscado[0]->getObjCompraEstadoTipo()->getIdcompraestadotipo();
+                $compraEstadoTipo = $ultimoCompraEstado->getObjCompraEstadoTipo()->getIdcompraestadotipo();
             }
         }
     
