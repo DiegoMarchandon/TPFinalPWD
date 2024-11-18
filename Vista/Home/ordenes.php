@@ -88,7 +88,7 @@ $ABMCompraItem = new ABMCompraItem();
             $.ajax({
                 url: '../Action/actionEnviarCompra.php',
                 method: 'POST',
-                data: { idcompra: idCompra },
+                data: { idcompra: idCompra, comprasRol: "deposito" },
                 // jQuery detecta que la respuesta del servidor tiene el tipo application/json en su encabezado, por lo que parsea automáticamente el JSON recibido en un objeto javascript
                 /* success: function(response){
                     console.log(response);
@@ -98,11 +98,11 @@ $ABMCompraItem = new ABMCompraItem();
                     response = typeof response === 'string' ? JSON.parse(response) : response;
                     // console.log(response);
                     console.log(response);
-                    alert("alertando respuesta exitosa");
+                    // alert("alertando respuesta exitosa");
                     // response = typeof response === 'string' ? JSON.parse(response) : response;
                     if(response.status === 'success'){
                         console.log("response succes");
-                        alert('Compra enviada: ');
+                        alert('Compra enviada. ');
                         // window.location.href = 'ordenes.php';
                         window.location.href = response.redirect;
                     }else{
@@ -136,6 +136,7 @@ $ABMCompraItem = new ABMCompraItem();
                         // alert('Compra enviada');
                         console.log("response succes");
                         alert('Compra Cancelada: ');
+                        window.location.href = response.redirect;
                     }else{
                         alert('la Compra no se ha podido cancelar ');
                     }
