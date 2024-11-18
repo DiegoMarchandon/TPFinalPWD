@@ -53,18 +53,77 @@ $totalCarrito = $resultadoCarrito['totalCarrito'];
         <div class="col-md-12 text-center">
             <form id="confirmarCompraForm" action="../Action/actionConfirmarCompra.php" method="POST" class=" m-2 d-inline-block">
                 <input type="hidden" name="comprasRol" id="hiddenConfirmar" value="cliente">
-                <button type="submit" class="btn btn-success">Confirmar Compra</button>
+                <button type="button" class="btn btn-success btnEnviarCompra">Confirmar Compra</button>
             </form>
             <form id="cancelarCompraForm" action="../Action/actionCancelarCompra.php" method="POST" class=" m-2 d-inline-block">
                 <input type="hidden" name="comprasRol" id="hiddenCancelar" value="cliente">
-                <button type="submit" class="btn btn-danger">Cancelar Compra</button>
+                <button type="button" class="btn btn-danger btnCancelarCompra">Cancelar Compra</button>
             </form>
         </div>
     </div>
 </div>
 
 <script>
+    $(document).ready(function () {
     
+        $('.btnEnviarCompra').click(function (event) {
+            event.preventDefault();
+
+            $.ajax({
+                url: '../Action/actionConfirmarCompra.php',
+                method: 'POST',
+                data: { comprasRol: "cliente" },
+                // jQuery detecta que la respuesta del servidor tiene el tipo application/json en su encabezado, por lo que parsea automáticamente el JSON recibido en un objeto javascript
+                success: function (response) {
+                    response = typeof response === 'string' ? JSON.parse(response) : response;
+                    // alert("alertando respuesta exitosa");
+                    if(response.status === 'success'){
+                        // console.log("response succes");
+                        // alert('Compra enviada. ');
+                        window.location.href = response.redirect;
+                    }else{
+                        // alert('Compra no enviada: ');
+                        console.log("response error");
+                    }
+
+                    // Manejo de la respuesta
+                    // Aquí puedes agregar lógica adicional para actualizar la página si es necesario
+                },
+                error: function (xhr, status, error) {
+                    alert('Error al enviar la compra: ' + error);
+                }
+            });
+        });
+
+        $('.btnCancelarCompra').click(function (event) {
+            event.preventDefault();
+            $.ajax({
+                url: '../Action/actionCancelarCompra.php',
+                method: 'POST',
+                data: { comprasRol: "cliente" },
+                success: function (response) {
+                    // Manejo de la respuesta
+                    response = typeof response === 'string' ? JSON.parse(response) : response;
+                    // alert("alertando respuesta exitosa");
+                    if (response.status === 'success') {
+                        // var toName = response.toName;
+                        // var toEmail = response.toEmail;
+                        // var message = 'Su carrito ha sido cancelado. Si tiene alguna pregunta, por favor contáctenos.';
+                        // sendEmail(toName, toEmail, message);
+                        // alert('Carrito cancelado con éxito. Se ha enviado un correo de confirmación.');
+                        window.location.href = '../Home/carrito.php';
+                    } else {
+                        alert('El carrito no se ha podido cancelar: ' + response.message);
+                    }
+                    // Actualizar la página si es necesario
+                },
+                error: function (xhr, status, error) {
+                    alert('Error al cancelar el carrito: ' + error);
+                }
+            });
+        });
+    
+    });
 </script>
 </body>
 </html>

@@ -20,8 +20,6 @@ $datos = darDatosSubmitted();
 
 
 $ABMcompraEstado = new ABMCompraEstado;
-// llamo a estadoCompraUsuario para obtener los carritos en estado 2 del usuario actual que tengan una cefechafin sin asignar (por defecto)
-// $carritosConfirmados = $ABMcompraEstado->estadoCompraUsuario($idUsuarioActual,2,true);
 
 $colCompras = [];
 
@@ -34,24 +32,21 @@ if($datos['comprasRol'] === 'deposito'){
 
 if(count($colCompras) >0 || $colCompras !== null){
     foreach($colCompras as $compra){
-        // echo $datos['idcompra']."<br>".$compra->getIdcompra()."<br>";
 
-        // echo gettype($datos['idcompra'])
+        // si existe $datos['idcompra'] (caso de ordenes.php), lo uso para la comparación y almaceno el booleano. Si no existe (caso de carrito.php), directamente almaceno true.
+        $bandera = isset($datos['idcompra']) ? $compra->getIdcompra() == $datos['idcompra'] : true; 
 
-        if(isset($datos['idcompra']) && $compra->getIdcompra() == $datos['idcompra']){
-            /* if(!isset($datos['idcompra'])){
-                echo "<script>alert('no existe el idcompra (carrito.php)')</script>";
-            }else{
-                echo "<script>alert('existe el idcompra (carrito.php)')</script>";
-            } */
+        if($bandera){
+
+            // si no existe, almaceno en la clave el valor de la compra actual.
+            if(!isset($datos['idcompra'])){
+                $datos['idcompra'] = $compra->getIdcompra();
+            }
 
             // si el idcompra recibido se encuentra dentro de la coleccion de compras sin finalizar (compraestado = 2), le pongo una fechafin.
             // si el dato recibido en $datos['compraRol'] indica que el action se llama desde una vista de depósito, accedo al compraestado = 2. Si se llama desde una vista de cliente, accedo al compraestado = 1
             $compraEstadoBuscado = $datos['comprasRol'] === 'deposito' ? $ABMcompraEstado->buscarArray(['idcompra' => $datos['idcompra']])[1] : $ABMcompraEstado->buscarArray(['idcompra' => $datos['idcompra']])[0];
-            // $compraEstadoBuscado['cefechaini'] = $fechaFin;
-            // print_r($compraEstadoBuscado['cefechaini']);
-            // echo "<br>";
-            // print_r($compraEstadoBuscado['objCompraEstadoTipo']->getIdcompraestadotipo());
+
             $compraEstadoModificado = [
                 'idcompraestado' => $compraEstadoBuscado['idcompraestado'],
                 'idcompra' => $datos['idcompra'],
@@ -97,19 +92,22 @@ if(count($colCompras) >0 || $colCompras !== null){
                 // echo "<script>alert('Error al Cancelar la compra'); window.location.href='../Home/carrito.php';</script>";
             }
         }else{
-            $response['status'] = 'Error en 2do condicional';
-            $response['message'] = '!isset($datos["idcompra"]) || $compra->getIdcompra() != $datos["idcompra"]';
+            if(!isset($datos['idcompra'])){
+
+                $response['status'] = 'Error en 2do condicional (no existe idcompra)';
+            }else{
+                $response['status'] = 'Error en 2do condicional (existe idcompra)';
+                $response['message'] = '!isset($datos["idcompra"]) || $compra->getIdcompra() != $datos["idcompra"]';
+            }
             // echo "<script>alert('Noo se encontró un estado de compra iniciado para la compra con ID: ".$datos['idcompra']."); window.location.href='../Home/carrito.php';</script>";
         }
     }
 }else{
     $response['status'] = 'Error en 1er condicional';
     $response['message'] = 'colCompras === 0 || colCompras === null';
-    /* al cancelar una compra que no contiene productos se redirige a actionCancelarCompra y se muestra de forma literal lo que está en las comillas del echo */
     // echo "<script>alert('No hay compras iniciadas'); window.location.href='../Home/carrito.php';</script>";
 }
 
 echo json_encode($response);
 exit;
-
 ?>

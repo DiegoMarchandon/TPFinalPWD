@@ -1,7 +1,12 @@
-<?php include_once("../estructura/headerSeguro.php"); ?>
 <?php
 include_once '../../configuracion.php';
-
+header('Content-Type: application/json');
+// voy creando el arreglo asociativo que voy a pasar como respuesta en formato JSON
+$response = [
+    'status' => 'default',
+    'message' => 'Parte inicial del action',
+    'redirect' => '../Home/carrito.php'
+];
 
 // Configurar la zona horaria a Argentina
 date_default_timezone_set('America/Argentina/Buenos_Aires');
@@ -38,37 +43,31 @@ if ($carritosIniciados !== null) {
                 ];
 
                 if ($ABMcompraEstado->alta($paramCompraEstado)) {
+                    $response['status'] = 'success';
+                    $response['message'] = 'operacion exitosa';
                     $compraConfirmada = true;
                 } else {
-                    echo "<script>alert('Error al insertar el nuevo estado de la compra'); window.location.href='../Home/carrito.php';</script>";
+                    $response['status'] = 'error en el 4to condicional';
+                    $response['message'] = '!$ABMcompraEstado->alta($paramCompraEstado)';
+                    // echo "<script>alert('Error al insertar el nuevo estado de la compra'); window.location.href='../Home/carrito.php';</script>";
                 }
             } else {
-                echo "<script>alert('Error al confirmar la compra'); window.location.href='../Home/carrito.php';</script>";
+                $response['status'] = 'error en el 3er condicional';
+                $response['message'] = '!$compraEstado->modificar()';
+                // echo "<script>alert('Error al confirmar la compra'); window.location.href='../Home/carrito.php';</script>";
             }
         } else {
-            echo "<script>alert('No se encontró un estado de compra iniciado para la compra con ID: $idCompra'); window.location.href='../Home/carrito.php';</script>";
+            $response['status'] = 'error en el 2do condicional';
+            $response['message'] = 'count($compraEstado) === 0';
+            // echo "<script>alert('No se encontró un estado de compra iniciado para la compra con ID: $idCompra'); window.location.href='../Home/carrito.php';</script>";
         }
     }
 } else {
-    echo "<script>alert('No hay compras iniciadas'); window.location.href='../Home/carrito.php';</script>";
+    $response['status'] = 'error en el 1er condicional';
+    $response['message'] = '$carritosIniciados === null';
+    // echo "<script>alert('No hay compras iniciadas'); window.location.href='../Home/carrito.php';</script>";
 }
-?>
 
-<?php include_once("../estructura/headerSeguro.php"); ?>
-    <?php if ($compraConfirmada): ?>
-        <h1>Enviando correo...</h1>
-    <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded', function () {
-            <?php
-            // Definir los parámetros de entrada
-            $toName = $session->getUsuario()->getUsnombre();
-            $toEmail = $session->getUsuario()->getUsmail();
-            $message = 'Usted ha confirmado una compra. Este pendiente a la respuesta de la misma, en breve le notificaremos.';
-            ?>
-            // Llamar a la función de JavaScript pasando los parámetros desde PHP
-            // de esta forma ya me funciono sin problemas
-            sendEmail('<?php echo $toName; ?>', '<?php echo $toEmail; ?>', '<?php echo $message; ?>');
-        });
-    </script>
-    <?php endif; ?>
-<?php include_once("../estructura/footer.php"); ?>
+echo json_encode($response);
+exit;
+?>

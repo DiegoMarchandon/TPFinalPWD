@@ -90,10 +90,6 @@ $ABMCompraItem = new ABMCompraItem();
                 method: 'POST',
                 data: { idcompra: idCompra, comprasRol: "deposito" },
                 // jQuery detecta que la respuesta del servidor tiene el tipo application/json en su encabezado, por lo que parsea automáticamente el JSON recibido en un objeto javascript
-                /* success: function(response){
-                    console.log(response);
-                    // console.log("response");
-                } */
                 success: function (response) {
                     response = typeof response === 'string' ? JSON.parse(response) : response;
                     // console.log(response);
