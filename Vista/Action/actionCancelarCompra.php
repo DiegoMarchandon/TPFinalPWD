@@ -73,6 +73,19 @@ if(count($colCompras) >0 || $colCompras !== null){
                     $response['status'] = 'success';
                     $response['message'] = 'operacion exitosa';
                     // echo "<script>alert('Compra Cancelada con éxito'); window.location.href='../Home/carrito.php';</script>";
+                    $banderita = true;
+                    // Obtener el usuario asociado a la compra
+                    $idcompra = $datos['idcompra'];
+                    $compra = new ABMCompra();
+                    $objCompra = $compra->buscar(['idcompra' => $idcompra]);
+                    if (count($objCompra) > 0) {
+                        $objCompra = $objCompra[0];
+                        $usuario = $objCompra->getObjUsuario();
+                        $toName = $usuario->getUsnombre();
+                        $toEmail = $usuario->getUsmail();
+                        $response['toName'] = $toName;
+                        $response['toEmail'] = $toEmail;
+                    }
                 }else{
                     $response['status'] = 'Error en 4to condicional';
                     $response['message'] = '!$ABMcompraEstado->alta($paramCompraEstado)';

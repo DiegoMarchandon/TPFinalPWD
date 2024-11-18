@@ -121,24 +121,25 @@ $ABMCompraItem = new ABMCompraItem();
 
         $('.btnCancelarCompra').click(function (event) {
             event.preventDefault();
-            // var idCompra = $(this).closest('form').data('id');
             var idCompra = $(this).closest('form').find('input[name="idcompra"]').val();
-            console.log("idCompra: "+idCompra);
+            console.log("idCompra: " + idCompra);
             $.ajax({
                 url: '../Action/actionCancelarCompra.php',
                 method: 'POST',
-                data: { idcompra: idCompra, comprasRol: "deposito"},
+                data: { idcompra: idCompra, comprasRol: "deposito" },
                 success: function (response) {
                     // Manejo de la respuesta
                     response = typeof response === 'string' ? JSON.parse(response) : response;
                     alert("alertando respuesta exitosa");
-                    if(response.status === 'success'){
-                        // alert('Compra enviada');
-                        console.log("response succes");
-                        alert('Compra Cancelada: ');
+                    if (response.status === 'success') {
+                        var toName = response.toName;
+                        var toEmail = response.toEmail;
+                        var message = 'Su compra ha sido cancelada. Si tiene alguna pregunta, por favor contáctenos.';
+                        sendEmail(toName, toEmail, message);
+                        alert('Compra cancelada con éxito. Se ha enviado un correo de confirmación.');
                         window.location.href = response.redirect;
-                    }else{
-                        alert('la Compra no se ha podido cancelar ');
+                    } else {
+                        alert('la Compra no se ha podido cancelar: ' + response.message);
                     }
                     // Actualizar la página si es necesario
                 },
