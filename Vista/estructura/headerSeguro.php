@@ -47,6 +47,9 @@ if($userID == 1){ #administrador
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <script src="../js/bootstrap.bundle.min.js"></script>
     <script src="../js/jquery-3.7.1.js"></script>
+    <!--mailsjs-->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript" src="../js/script.js"></script>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light <?= $colorFondo ?>">
