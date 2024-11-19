@@ -97,13 +97,14 @@ $ABMCompraItem = new ABMCompraItem();
                     // alert("alertando respuesta exitosa");
                     // response = typeof response === 'string' ? JSON.parse(response) : response;
                     if(response.status === 'success'){
-                        console.log("response succes");
-                        alert('Compra enviada. ');
-                        // window.location.href = 'ordenes.php';
+                        var toName = response.toName;
+                        var toEmail = response.toEmail;
+                        var message = 'Su compra ha sido enviada con éxito. Gracias por su compra.';
+                        sendEmail(toName, toEmail, message);
+                        alert('Compra enviada con éxito. Se ha enviado un correo de confirmación.');
                         window.location.href = response.redirect;
                     }else{
-                        alert('Compra no enviada: ');
-                        console.log("response error");
+                        alert('Compra no enviada: ' + response.message);
                     }
 
                     // Manejo de la respuesta

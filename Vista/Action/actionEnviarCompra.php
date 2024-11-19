@@ -86,6 +86,18 @@ foreach($colCompraItems as $compraitem){
                             'message' => 'Producto actualizado',
                             'redirect' => '../Home/ordenes.php'
                         ];
+                        // Obtener el usuario asociado a la compra
+                        $idcompra = $datos['idcompra'];
+                        $compra = new ABMCompra();
+                        $objCompra = $compra->buscar(['idcompra' => $idcompra]);
+                        if (count($objCompra) > 0) {
+                            $objCompra = $objCompra[0];
+                            $usuario = $objCompra->getObjUsuario();
+                            $toName = $usuario->getUsnombre();
+                            $toEmail = $usuario->getUsmail();
+                            $response['toName'] = $toName;
+                            $response['toEmail'] = $toEmail;
+                        }
                     }else{
                         $compraEstadoNuevo = false;
                     }
