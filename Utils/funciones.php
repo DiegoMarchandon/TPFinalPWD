@@ -128,6 +128,29 @@ function SubirImagenSubmitted() {
     return $mensaje; // Devolvemos el mensaje
 }
 
+function mostrarCompras($compras, $ABMCompraItem) {
+    foreach ($compras as $compra) {
+        echo '<div class="col-12 mb-4">';
+        echo '<div class="card">';
+        echo '<div class="card-header">';
+        echo '<h6 class="card-subtitle mb-2 text-muted">Fecha de Compra: ' . htmlspecialchars($compra->getCofecha()) . '</h6>';
+        echo '</div>';
+        echo '<div class="card-body">';
+        echo '<h6>Productos:</h6>';
+        echo '<ul>';
+        $compraItems = $ABMCompraItem->buscar(['idcompra' => $compra->getIdcompra()]);
+        foreach ($compraItems as $item) {
+            echo '<li>';
+            echo 'Producto: ' . htmlspecialchars($item->getObjProducto()->getPronombre()) . ', ';
+            echo 'Cantidad: ' . htmlspecialchars($item->getCicantidad());
+            echo '</li>';
+        }
+        echo '</ul>';
+        echo '</div>';
+        echo '</div>';
+        echo '</div>';
+    }
+}
 
 
 ?>

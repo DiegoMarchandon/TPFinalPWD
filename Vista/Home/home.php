@@ -11,50 +11,10 @@ $comprasUsuario = $ABMCompra->buscar(['idusuario' => $idUsuario]);
 $ABMCompraEstado = new ABMCompraEstado();
 $ABMCompraItem = new ABMCompraItem();
 
-$comprasPendientes = [];
-$comprasEnviadas = [];
-$comprasCanceladas = [];
+$comprasPendientes = $ABMCompra->obtenerComprasPorEstado($idUsuario, 2); //2 son las confirmadas y pasadas a deposito
+$comprasEnviadas = $ABMCompra->obtenerComprasPorEstado($idUsuario, 3); //3 son las enviadas
+$comprasCanceladas = $ABMCompra->obtenerComprasPorEstado($idUsuario, 4); //son las canceladas tanto por el mismo cliente como por el deposito
 
-foreach ($comprasUsuario as $compra) {
-    $compraEstado = $ABMCompraEstado->buscar(['idcompra' => $compra->getIdcompra()]);
-    if (count($compraEstado) > 0) {
-        foreach ($compraEstado as $estado) {
-            $estadoTipo = $estado->getObjCompraEstadoTipo()->getIdcompraestadotipo();
-            $cefechafin = $estado->getCefechafin();
-            if ($estadoTipo == 2 && $cefechafin == '0000-00-00 00:00:00') {
-                $comprasPendientes[] = $compra;
-            } elseif ($estadoTipo == 3) {
-                $comprasEnviadas[] = $compra;
-            } elseif ($estadoTipo == 4) {
-                $comprasCanceladas[] = $compra;
-            }
-        }
-    }
-}
-
-function mostrarCompras($compras, $ABMCompraItem) {
-    foreach ($compras as $compra) {
-        echo '<div class="col-12 mb-4">';
-        echo '<div class="card">';
-        echo '<div class="card-header">';
-        echo '<h6 class="card-subtitle mb-2 text-muted">Fecha de Compra: ' . htmlspecialchars($compra->getCofecha()) . '</h6>';
-        echo '</div>';
-        echo '<div class="card-body">';
-        echo '<h6>Productos:</h6>';
-        echo '<ul>';
-        $compraItems = $ABMCompraItem->buscar(['idcompra' => $compra->getIdcompra()]);
-        foreach ($compraItems as $item) {
-            echo '<li>';
-            echo 'Producto: ' . htmlspecialchars($item->getObjProducto()->getPronombre()) . ', ';
-            echo 'Cantidad: ' . htmlspecialchars($item->getCicantidad());
-            echo '</li>';
-        }
-        echo '</ul>';
-        echo '</div>';
-        echo '</div>';
-        echo '</div>';
-    }
-}
 ?>
 
 <div class="container mt-4">

@@ -185,5 +185,28 @@ class ABMCompra {
         $arreglo = $compra->listar($where);
         return $arreglo;
     }
+
+    public function obtenerComprasPorEstado($idUsuario, $estadoTipo) {
+        $ABMCompraEstado = new ABMCompraEstado();
+        $comprasUsuario = $this->buscar(['idusuario' => $idUsuario]);
+        $compras = [];
+
+        foreach ($comprasUsuario as $compra) {
+            $compraEstado = $ABMCompraEstado->buscar(['idcompra' => $compra->getIdcompra()]);
+            if (count($compraEstado) > 0) {
+                foreach ($compraEstado as $estado) {
+                    if ($estado->getObjCompraEstadoTipo()->getIdcompraestadotipo() == $estadoTipo) {
+                        if ($estadoTipo == 2 && $estado->getCefechafin() == '0000-00-00 00:00:00') {
+                            $compras[] = $compra;
+                        } elseif ($estadoTipo != 2) {
+                            $compras[] = $compra;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $compras;
+    }
 }
 ?>
