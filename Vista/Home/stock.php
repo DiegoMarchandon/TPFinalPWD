@@ -109,5 +109,4 @@ $(document).ready(function(){
 
 });
 </script>
-</body>
-</html>
+<?php include_once("../estructura/footer.php"); ?>

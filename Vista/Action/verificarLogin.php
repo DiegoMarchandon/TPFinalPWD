@@ -1,5 +1,6 @@
 <?php
 include_once '../../configuracion.php';
+header('Content-Type: application/json');
 
 // Verificar que el método sea POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -12,31 +13,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Buscar el usuario por nombre de usuario
     $usuario = $abmUsuario->buscar(['usnombre' => $nombreUsuario]);
 
+    $response = [];
+
     if (count($usuario) > 0) {
         $usuario = $usuario[0];
         $hashedPassword = $usuario->getUsPass();
 
         // Verificar la contraseña
         if ($hashedPassword === $psw) {
-            echo "Contraseña Verificada Correctamente<br>";
             // Autenticación exitosa, iniciar sesión
             $session = new Session();
             if ($session->iniciar($nombreUsuario, $hashedPassword)) {
-                
                 // Sesión iniciada correctamente
-                header('Location: ../Home/paginaSegura.php');
-
+                $response['success'] = 'Inicio de sesión exitoso.';
+                $response['redirect'] = '../Home/paginaSegura.php';
             } else {
                 // Error al iniciar sesión
-                header('Location: ../Home/login.php?error=credenciales');
+                $response['error'] = 'Error al iniciar sesión. Por favor, inténtelo de nuevo.';
             }
         } else {
             // Contraseña Incorrecta
-            header('Location: ../Home/login.php?error=credenciales');
+            $response['error'] = 'Credenciales incorrectas. Por favor, inténtelo de nuevo.';
         }
     } else {
         // Usuario no encontrado
-        header('Location: ../Home/login.php?error=credenciales');
+        $response['error'] = 'Credenciales incorrectas. Por favor, inténtelo de nuevo.';
     }
+
+    
+    echo json_encode($response);
+    exit;
 }
 ?>

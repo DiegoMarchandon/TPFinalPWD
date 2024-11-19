@@ -1,12 +1,12 @@
 <?php
 include_once '../../configuracion.php';
 $session = new Session();
-if ($session->activa() && $session->validar()) {
+if ($session->activa() && $session->validar()) { //si la sesion es valida se muestra headerSeguro.php
     include_once('../estructura/headerSeguro.php');
     $sesionActiva = true;
 } else {
-    include_once('../estructura/header.php');
-    $sesionActiva = false;
+    include_once('../estructura/header.php');  //si la sesion no es valida se muestra header.php
+    $sesionActiva = false; 
 }
 
 $ABMcompraitem = new ABMCompraItem;

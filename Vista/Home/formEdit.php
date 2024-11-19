@@ -14,7 +14,7 @@ $usuario = $abmUsuario->buscar(['idusuario' => $idUsuario])[0];
 <?php include_once("../estructura/headerSeguro.php"); ?>
 <div class="container mt-5">
     <h1 class="text-center">Actualizar Usuario</h1>
-    <form id="actualizarForm" action="../Action/actualizarLogin.php" method="post" onsubmit="return hashPassword()">
+    <form id="actualizarForm" action="../Action/modificarUsuarios.php" method="post" onsubmit="return hashPassword()">
         <input type="hidden" name="idusuario" value="<?php echo $usuario->getIdUsuario(); ?>">
         <div class="form-group">
             <label for="usnombre">Nombre:</label>
