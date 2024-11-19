@@ -1,5 +1,7 @@
 <?php
 include_once '../../configuracion.php';
+// Configurar la zona horaria a Argentina
+date_default_timezone_set('America/Argentina/Buenos_Aires');
 
 $session = new Session();
 if (!$session->activa() || !$session->validar()) {
@@ -8,8 +10,9 @@ if (!$session->activa() || !$session->validar()) {
 }
 
 $abmUsuario = new ABMUsuario();
-if (isset($_GET['id'])) {
-    $param = ['idusuario' => $_GET['id']];
+$datos = darDatosSubmitted(); 
+if (isset($datos['id'])) {
+    $param = ['idusuario' => $datos['id']];
     $usuario = $abmUsuario->buscar($param)[0];
     $param = [
         'idusuario' => $usuario->getIdusuario(), // Asegúrate de incluir el idusuario aquí

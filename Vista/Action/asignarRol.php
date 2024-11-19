@@ -4,10 +4,11 @@ include_once '../../configuracion.php';
 $session = new Session();
 $abmUsuarioRol = new ABMUsuarioRol();
 
+$datos = darDatosSubmitted();
 // Verificar que el método sea GET y que el ID del usuario y el rol estén presentes
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id']) && isset($_GET['rol'])) {
-    $idUsuario = $_GET['id'];
-    $idRol = $_GET['rol'];
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($datos['id']) && isset($datos['rol'])) {
+    $idUsuario = $datos['id'];
+    $idRol = $datos['rol'];
 
     //echo "ID Usuario: $idUsuario<br>";
     //echo "ID Rol: $idRol<br>";

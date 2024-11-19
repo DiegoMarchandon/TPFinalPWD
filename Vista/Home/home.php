@@ -20,7 +20,8 @@ foreach ($comprasUsuario as $compra) {
     if (count($compraEstado) > 0) {
         foreach ($compraEstado as $estado) {
             $estadoTipo = $estado->getObjCompraEstadoTipo()->getIdcompraestadotipo();
-            if ($estadoTipo == 2) {
+            $cefechafin = $estado->getCefechafin();
+            if ($estadoTipo == 2 && $cefechafin == '0000-00-00 00:00:00') {
                 $comprasPendientes[] = $compra;
             } elseif ($estadoTipo == 3) {
                 $comprasEnviadas[] = $compra;
