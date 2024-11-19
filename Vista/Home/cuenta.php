@@ -85,10 +85,6 @@ Array ( [idusuario] => 4
 <script>
     $(document).ready(function(){
         
-        
-        /* variable que almacenará los datos obtenidos con ajax */
-        var datos;
-        
         $(document).on('click','.btn-primary',function(event){
             
             // evito el comportamiento por defecto del boton
@@ -253,8 +249,6 @@ Array ( [idusuario] => 4
 
             
         });
-        // console.log("datos: ",data);
-
 
     });
 </script>

@@ -13,7 +13,7 @@
         document.addEventListener('DOMContentLoaded', function () {
             emailjs.send('service_ot7ycz5', 'template_fpc9kkb', {
                 to_name: 'andres',
-                to_email: 'prueba.aemv@gmail.com', //aca pone tu mail
+                to_email: 'diegomarc2020@gmail.com', //aca pone tu mail
                 from_name: 'E-Commerce Team',
                 message: 'Usted ha confirmado una compra. Este pendiente a la respuesta de la misma, en breve le notificaremos.'
             }).then(function(response) {

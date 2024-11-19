@@ -3,7 +3,7 @@
 })();
 
 function sendEmail(toName, toEmail, message) {
-    emailjs.send('service_ot7ycz5', 'template_fpc9kkb', {
+    emailjs.send(/* 'service_ot7ycz5' */'service_0z1cn1z', 'template_fpc9kkb', {
         to_name: toName,
         to_email: toEmail,
         from_name: 'E-Commerce Team',
