@@ -117,19 +117,17 @@ CREATE TABLE `menu` (
 --
 
 INSERT INTO `menu` (`idmenu`, `menombre`, `medescripcion`, `idpadre`, `medeshabilitado`) VALUES
-(1, 'Home', 'home.php', NULL, NULL),
-(2, 'Productos', 'productos.php', NULL, NULL),
-(3, 'Contacto', 'contacto.php', NULL, NULL),
-(4, 'Carrito', 'carrito.php', NULL, NULL),
-(5, 'Mi Cuenta', 'cuenta.php', NULL, NULL),
+(1, 'Home', '../Home/home.php', NULL, NULL),
+(2, 'Productos', '../Home/productos.php', NULL, NULL),
+(3, 'Contacto', '../Home/contacto.php', NULL, NULL),
+(4, 'Carrito', '../Home/carrito.php', NULL, NULL),
+(5, 'Mi Cuenta', '../Home/cuenta.php', NULL, NULL),
 
-(6, 'Stock', 'stock.php', NULL, NULL),
-(7, 'Ordenes', 'ordenes.php', NULL, NULL),
-(8, 'Shipping', 'shipping.php', NULL, NULL),
+(6, 'Stock', '../Home/stock.php', NULL, NULL),
+(7, 'Ordenes', '../Home/ordenes.php', NULL, NULL),
 
-(9, 'Usuarios', 'usuarios.php', NULL, NULL),
-(10, 'Configuraciones', 'configuraciones.php', NULL, NULL),
-(11, 'Asignar Roles', 'asignarRoles.php', NULL, NULL),
+(9, 'Usuarios', '../Home/listarUsuario.php', NULL, NULL),
+(11, 'Asignar Roles', '../Home/asignarRoles.php', NULL, NULL),
 
 (12, 'Cerrar Sesión', '../Action/logout.php', NULL, NULL);
 
@@ -154,16 +152,12 @@ CREATE TABLE `menurol` (
 INSERT INTO `menurol` (`idmenu`, `idrol`) VALUES
 ((SELECT idmenu FROM menu WHERE menombre = 'Home'), 3),
 ((SELECT idmenu FROM menu WHERE menombre = 'Productos'), 3),
-((SELECT idmenu FROM menu WHERE menombre = 'Productos'), 1),
 ((SELECT idmenu FROM menu WHERE menombre = 'Contacto'), 3),
 ((SELECT idmenu FROM menu WHERE menombre = 'Carrito'), 3),
 ((SELECT idmenu FROM menu WHERE menombre = 'Mi Cuenta'), 3),
 ((SELECT idmenu FROM menu WHERE menombre = 'Stock'), 2),
 ((SELECT idmenu FROM menu WHERE menombre = 'Ordenes'), 2),
-((SELECT idmenu FROM menu WHERE menombre = 'Ordenes'), 1),
-((SELECT idmenu FROM menu WHERE menombre = 'Shipping'), 2),
 ((SELECT idmenu FROM menu WHERE menombre = 'Usuarios'), 1),
-((SELECT idmenu FROM menu WHERE menombre = 'Configuraciones'), 1),
 ((SELECT idmenu FROM menu WHERE menombre = 'Asignar Roles'), 1),
 ((SELECT idmenu FROM menu WHERE menombre = 'Cerrar Sesión'), 1),
 ((SELECT idmenu FROM menu WHERE menombre = 'Cerrar Sesión'), 2),

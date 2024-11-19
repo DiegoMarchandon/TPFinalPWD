@@ -1,11 +1,18 @@
-<?php include_once("../estructura/header.php"); ?>
+<?php
+include_once '../../configuracion.php';
+include_once("../estructura/header.php");
+
+// Usar la función darDatosSubmitted para obtener los datos
+$datos = darDatosSubmitted();
+?>
+
 <div class="container mt-5">
     <h1 class="text-center">Iniciar Sesión</h1>
     <?php
-    if (isset($_GET['error']) && $_GET['error'] == 'credenciales') {
+    if (isset($datos['error']) && $datos['error'] == 'credenciales') {
         echo '<div class="alert alert-danger text-center">Credenciales incorrectas. Por favor, inténtelo de nuevo.</div>';
     }
-    if (isset($_GET['registro']) && $_GET['registro'] == 'exitoso') {
+    if (isset($datos['registro']) && $datos['registro'] == 'exitoso') {
         echo '<div class="alert alert-success text-center">Cuenta creada exitosamente. Ahora puede iniciar sesión.</div>';
     }
     ?>
