@@ -8,10 +8,16 @@ $response = [
     'redirect' => '../Home/carrito.php'
 ];
 
+/* 
+$response = [
+    'status' => 'test',
+    'message' => 'Esto es una prueba simple',
+]; */
+
 // Configurar la zona horaria a Argentina
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
-//$session = new Session();
+$session = new Session();
 $fechaFin = date('Y-m-d H:i:s');
 $idUsuarioActual = $session->getUsuario()->getIdusuario();
 //$nombreUsuario = "andres";//$session->getUsuario()->getUsnombre();
@@ -67,7 +73,17 @@ if ($carritosIniciados !== null) {
     $response['message'] = '$carritosIniciados === null';
     // echo "<script>alert('No hay compras iniciadas'); window.location.href='../Home/carrito.php';</script>";
 }
-
+/* 
+$json = json_encode($response);
+if ($json === false) {
+    $response['status'] = 'error';
+    $response['message'] = 'Error al codificar el JSON: ' . json_last_error_msg();
+    echo json_encode($response);
+    exit;
+}
+echo $json;
+exit; */
+// var_dump('verificando salidas indeseadas');
 echo json_encode($response);
 exit;
 ?>
