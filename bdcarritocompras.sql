@@ -32,8 +32,35 @@ CREATE TABLE `producto` (
   `idproducto` bigint(20) NOT NULL,
   `pronombre` varchar(100) NOT NULL,
   `prodetalle` varchar(512) NOT NULL,
-  `procantstock` int(11) NOT NULL
+  `procantstock` int(11) NOT NULL,
+  `precioprod` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+--
+-- Volcado de datos para la tabla `producto`
+--
+INSERT INTO `producto` (`idproducto`,`pronombre`,`prodetalle`,`procantstock`, `precioprod`) VALUES
+(1,'Dell XPS 13','Pantalla de 13.4", Intel Core i7, 16GB RAM, 512GB SSD, Windows 10',12, 1200),
+(2,'HP Spectre x360','13.5 Intel Core i5, 8GB RAM, 256GB SSD, convertible 2-en-1, Windows 11',22, 1000),
+(3,'Apple MacBook Air M1','Chip M1, 8GB RAM, 256GB SSD, macOS, Retina Display de 13.3',7, 999),
+(4,'Lenovo ThinkPad X1 Carbon','Pantalla de 14", Intel Core i7, 16GB RAM, 512GB SSD, teclado retroiluminado',15, 1300),
+(5,'Asus ROG Zephyrus G14','Pantalla de 14", AMD Ryzen 9, 16GB RAM, 1TB SSD, GPU NVIDIA RTX 3060',31, 1500),
+(6,'Acer Aspire 5','15.6", Intel Core i5, 8GB RAM, 512GB SSD, Windows 10',42, 700),
+(7,'Microsoft Surface Laptop 4','13.5", Intel Core i5, 8GB RAM, 512GB SSD, pantalla táctil',13, 1100),
+(8,'Razer Blade 15','Pantalla de 15.6", Intel Core i7, 16GB RAM, 1TB SSD, GPU NVIDIA RTX 3070',55, 2000),
+(9,'Lenovo IdeaPad 3','Pantalla de 15.6", AMD Ryzen 5, 8GB RAM, 256GB SSD, Windows 10',42, 600),
+(10,'HP Pavilion 15','15.6", Intel Core i7, 16GB RAM, 512GB SSD, Windows 11',47, 800),
+(11,'Acer Swift 3','Pantalla de 14", AMD Ryzen 7, 8GB RAM, 512GB SSD, Windows 10',44, 750),
+(12,'Dell Inspiron 15 3000','Pantalla de 15.6", Intel Core i5, 8GB RAM, 256GB SSD, Windows 11',32, 650),
+(13,'Asus ZenBook 14','Pantalla de 14", Intel Core i7, 16GB RAM, 512GB SSD, Windows 10, ultraligero',26, 900),
+(14,'HP Envy 13','Pantalla de 13.3", Intel Core i7, 8GB RAM, 256GB SSD, pantalla táctil',25, 950),
+(15,'Lenovo Yoga 7i','Pantalla de 14", Intel Core i5, 8GB RAM, 512GB SSD, convertible 2-en-1, Windows 10',21, 850),
+(16,'Apple MacBook Pro 16"','Chip M1 Pro, 16GB RAM, 512GB SSD, macOS, pantalla Liquid Retina XDR',19, 2500),
+(17,'Samsung Galaxy Book Pro','Pantalla AMOLED de 15.6", Intel Core i7, 16GB RAM, 512GB SSD, diseño ultradelgado',33, 1200),
+(18,'MSI GF63 Thin','Pantalla de 15.6", Intel Core i5, 8GB RAM, 256GB SSD, GPU NVIDIA GTX 1650',32, 750),
+(19,'Acer Nitro 5','Pantalla de 15.6", Intel Core i7, 16GB RAM, 1TB HDD + 256GB SSD, GPU NVIDIA RTX 3050',30, 1100),
+(20,'LG Gram 17','Pantalla de 17", Intel Core i7, 16GB RAM, 1TB SSD, ultraligero, batería de larga duración',28, 1400);
 
 -- --------------------------------------------------------
 
@@ -79,10 +106,10 @@ CREATE TABLE `compraestadotipo` (
 --
 
 INSERT INTO `compraestadotipo` (`idcompraestadotipo`, `cetdescripcion`, `cetdetalle`) VALUES
-(1, 'iniciada', 'cuando el usuario : cliente inicia la compra de uno o mas productos del carrito'), --cliente inicia el carrito
-(2, 'aceptada', 'cuando el cliente acepta el carrito '), --cliente acepta el carrito
-(3, 'enviada', 'cuando el usuario deposito hace el envio del carrito '), --deposito arma y el carrito
-(4, 'cancelada', 'cuando el usuario deposito cancela el envio del carrito '); --deposito
+(1, 'iniciada', 'cuando el usuario inicia la compra de uno o más productos del carrito'),
+(2, 'aceptada', 'cuando el cliente acepta el carrito'),
+(3, 'enviada', 'cuando el usuario del depósito hace el envío del carrito'),
+(4, 'cancelada', 'cuando el usuario del depósito cancela el envío del carrito');
 
 -- --------------------------------------------------------
 
@@ -122,13 +149,10 @@ INSERT INTO `menu` (`idmenu`, `menombre`, `medescripcion`, `idpadre`, `medeshabi
 (3, 'Contacto', '../Home/contacto.php', NULL, NULL),
 (4, 'Carrito', '../Home/carrito.php', NULL, NULL),
 (5, 'Mi Cuenta', '../Home/cuenta.php', NULL, NULL),
-
 (6, 'Stock', '../Home/stock.php', NULL, NULL),
 (7, 'Ordenes', '../Home/ordenes.php', NULL, NULL),
-
-(9, 'Usuarios', '../Home/listarUsuario.php', NULL, NULL),
+(9, 'Usuarios', '../Home/actualizarUsuario.php', NULL, NULL),
 (11, 'Asignar Roles', '../Home/asignarRoles.php', NULL, NULL),
-
 (12, 'Cerrar Sesión', '../Action/logout.php', NULL, NULL);
 
 -- --------------------------------------------------------
@@ -163,8 +187,6 @@ INSERT INTO `menurol` (`idmenu`, `idrol`) VALUES
 ((SELECT idmenu FROM menu WHERE menombre = 'Cerrar Sesión'), 2),
 ((SELECT idmenu FROM menu WHERE menombre = 'Cerrar Sesión'), 3);
 
-
-
 -- --------------------------------------------------------
 
 
@@ -177,8 +199,11 @@ CREATE TABLE `rol` (
   `rodescripcion` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `rol` (`idrol`, `rodescripcion`) 
-VALUES
+--
+-- Volcado de datos para la tabla `rol`
+--
+
+INSERT INTO `rol` (`idrol`, `rodescripcion`) VALUES
 (1, 'Administrador'),
 (2, 'Deposito'),
 (3, 'Cliente');
@@ -264,21 +289,21 @@ ALTER TABLE `menurol`
 --
 ALTER TABLE `producto`
   ADD PRIMARY KEY (`idproducto`),
-  ADD UNIQUE KEY `idproducto` (`idproducto`);
+  ADD UNIQUE KEY (`idproducto`);
 
 --
 -- Indices de la tabla `rol`
 --
 ALTER TABLE `rol`
   ADD PRIMARY KEY (`idrol`),
-  ADD UNIQUE KEY `idrol` (`idrol`);
+  ADD UNIQUE KEY (`idrol`);
 
 --
 -- Indices de la tabla `usuario`
 --
 ALTER TABLE `usuario`
   ADD PRIMARY KEY (`idusuario`),
-  ADD UNIQUE KEY `idusuario` (`idusuario`);
+  ADD UNIQUE KEY (`idusuario`);
 
 --
 -- Indices de la tabla `usuariorol`
@@ -382,54 +407,3 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
-
-INSERT INTO `producto` (`idproducto`,`pronombre`,`prodetalle`,`procantstock`) VALUES
-(1,'Dell XPS 13','Pantalla de 13.4", Intel Core i7, 16GB RAM, 512GB SSD, Windows 10',12),
-(2,'HP Spectre x360','13.5 Intel Core i5, 8GB RAM, 256GB SSD, convertible 2-en-1, Windows 11',22),
-(3,'Apple MacBook Air M1','Chip M1, 8GB RAM, 256GB SSD, macOS, Retina Display de 13.3',7),
-(4,'Lenovo ThinkPad X1 Carbon','Pantalla de 14", Intel Core i7, 16GB RAM, 512GB SSD, teclado retroiluminado',15),
-(5,'Asus ROG Zephyrus G14','Pantalla de 14", AMD Ryzen 9, 16GB RAM, 1TB SSD, GPU NVIDIA RTX 3060',31),
-(6,'Acer Aspire 5','15.6", Intel Core i5, 8GB RAM, 512GB SSD, Windows 10',42),
-(7,'Microsoft Surface Laptop 4','13.5", Intel Core i5, 8GB RAM, 512GB SSD, pantalla táctil',13),
-(8,'Razer Blade 15','Pantalla de 15.6", Intel Core i7, 16GB RAM, 1TB SSD, GPU NVIDIA RTX 3070',55),
-(9,'Lenovo IdeaPad 3','Pantalla de 15.6", AMD Ryzen 5, 8GB RAM, 256GB SSD, Windows 10',42),
-(10,'HP Pavilion 15','15.6", Intel Core i7, 16GB RAM, 512GB SSD, Windows 11',47),
-(11,'Acer Swift 3','Pantalla de 14", AMD Ryzen 7, 8GB RAM, 512GB SSD, Windows 10',44),
-(12,'Dell Inspiron 15 3000','Pantalla de 15.6", Intel Core i5, 8GB RAM, 256GB SSD, Windows 11',32),
-(13,'Asus ZenBook 14','Pantalla de 14", Intel Core i7, 16GB RAM, 512GB SSD, Windows 10, ultraligero',26),
-(14,'HP Envy 13','Pantalla de 13.3", Intel Core i7, 8GB RAM, 256GB SSD, pantalla táctil',25),
-(15,'Lenovo Yoga 7i','Pantalla de 14", Intel Core i5, 8GB RAM, 512GB SSD, convertible 2-en-1, Windows 10',21),
-(16,'Apple MacBook Pro 16"','Chip M1 Pro, 16GB RAM, 512GB SSD, macOS, pantalla Liquid Retina XDR',19),
-(17,'Samsung Galaxy Book Pro','Pantalla AMOLED de 15.6", Intel Core i7, 16GB RAM, 512GB SSD, diseño ultradelgado',33),
-(18,'MSI GF63 Thin','Pantalla de 15.6", Intel Core i5, 8GB RAM, 256GB SSD, GPU NVIDIA GTX 1650',32),
-(19,'Acer Nitro 5','Pantalla de 15.6", Intel Core i7, 16GB RAM, 1TB HDD + 256GB SSD, GPU NVIDIA RTX 3050',30),
-(20,'LG Gram 17','Pantalla de 17", Intel Core i7, 16GB RAM, 1TB SSD, ultraligero, batería de larga duración',28),
-
--- Ejecutar consultas en tabla producto (hacerlo por separado)
--- primera:
-ALTER TABLE producto ADD COLUMN precioprod INT;
--- segunda:
-UPDATE producto SET precioprod = CASE
-    WHEN idproducto = 1 THEN 1200
-    WHEN idproducto = 2 THEN 1000
-    WHEN idproducto = 3 THEN 999
-    WHEN idproducto = 4 THEN 1300
-    WHEN idproducto = 5 THEN 1500
-    WHEN idproducto = 6 THEN 700
-    WHEN idproducto = 7 THEN 1100
-    WHEN idproducto = 8 THEN 2000
-    WHEN idproducto = 9 THEN 600
-    WHEN idproducto = 10 THEN 800
-    WHEN idproducto = 11 THEN 750
-    WHEN idproducto = 12 THEN 650
-    WHEN idproducto = 13 THEN 900
-    WHEN idproducto = 14 THEN 950
-    WHEN idproducto = 15 THEN 850
-    WHEN idproducto = 16 THEN 2500
-    WHEN idproducto = 17 THEN 1200
-    WHEN idproducto = 18 THEN 750
-    WHEN idproducto = 19 THEN 1100
-    WHEN idproducto = 20 THEN 1400
-    ELSE precioprod
-END;
