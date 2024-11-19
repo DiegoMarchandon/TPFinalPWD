@@ -52,6 +52,20 @@ if ($carritosIniciados !== null) {
                     $response['status'] = 'success';
                     $response['message'] = 'operacion exitosa';
                     $compraConfirmada = true;
+                    
+                    $banderita = true;
+                    // Obtener el usuario asociado a la compra
+                    $idcompra = $idCompra;
+                    $compra = new ABMCompra();
+                    $objCompra = $compra->buscar(['idcompra' => $idcompra]);
+                    if (count($objCompra) > 0) {
+                        $objCompra = $objCompra[0];
+                        $usuario = $objCompra->getObjUsuario();
+                        $toName = $usuario->getUsnombre();
+                        $toEmail = $usuario->getUsmail();
+                        $response['toName'] = $toName;
+                        $response['toEmail'] = $toEmail;
+                    }
                 } else {
                     $response['status'] = 'error en el 4to condicional';
                     $response['message'] = '!$ABMcompraEstado->alta($paramCompraEstado)';

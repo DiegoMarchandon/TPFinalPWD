@@ -78,12 +78,14 @@ $totalCarrito = $resultadoCarrito['totalCarrito'];
                     response = typeof response === 'string' ? JSON.parse(response) : response;
                     // alert("alertando respuesta exitosa");
                     if(response.status === 'success'){
-                        // console.log("response succes");
-                        // alert('Compra enviada. ');
-                        window.location.href = response.redirect;
-                    }else{
-                        // alert('Compra no enviada: ');
-                        console.log("response error");
+                        var toName = response.toName;
+                        var toEmail = response.toEmail;
+                        var message = 'Su compra ha sido confirmada con éxito. Gracias por su compra.';
+                        sendEmail(toName, toEmail, message);
+                        alert('Compra confirmada con éxito. Se ha enviado un correo de confirmación.');
+                        //window.location.href = response.redirect;
+                    } else {
+                        alert('Compra no confirmada: ' + response.message);
                     }
 
                     // Manejo de la respuesta
@@ -106,14 +108,14 @@ $totalCarrito = $resultadoCarrito['totalCarrito'];
                     response = typeof response === 'string' ? JSON.parse(response) : response;
                     // alert("alertando respuesta exitosa");
                     if (response.status === 'success') {
-                        // var toName = response.toName;
-                        // var toEmail = response.toEmail;
-                        // var message = 'Su carrito ha sido cancelado. Si tiene alguna pregunta, por favor contáctenos.';
-                        // sendEmail(toName, toEmail, message);
-                        // alert('Carrito cancelado con éxito. Se ha enviado un correo de confirmación.');
-                        window.location.href = '../Home/carrito.php';
+                        var toName = response.toName;
+                        var toEmail = response.toEmail;
+                        var message = 'Usted cancelo su compra. esperamos que vuelva pronto.';
+                        sendEmail(toName, toEmail, message);
+                        alert('Compra cancelada con exito. Se ha enviado un correo de confirmación.');
+                        //window.location.href = response.redirect;
                     } else {
-                        alert('El carrito no se ha podido cancelar: ' + response.message);
+                        alert('Compra no confirmada: ' + response.message);
                     }
                     // Actualizar la página si es necesario
                 },

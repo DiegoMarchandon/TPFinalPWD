@@ -131,7 +131,7 @@ $ABMCompraItem = new ABMCompraItem();
                         var toName = response.toName;
                         var toEmail = response.toEmail;
                         var message = 'Su compra ha sido cancelada. Si tiene alguna pregunta, por favor contáctenos.';
-                        // sendEmail(toName, toEmail, message);
+                        sendEmail(toName, toEmail, message);
                         alert('Compra cancelada con éxito. Se ha enviado un correo de confirmación.');
                         window.location.href = response.redirect;
                     } else {
