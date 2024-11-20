@@ -22,7 +22,7 @@ $usuario = $abmUsuario->buscar(['idusuario' => $idUsuario])[0];
         </div>
         <div class="form-group">
             <label for="uspass">Contraseña:</label>
-            <input type="password" id="uspass" name="uspass" class="form-control" required>
+            <input type="password" id="uspass" name="uspass" class="form-control" >
         </div>
         <div class="form-group">
             <label for="usmail">Email:</label>

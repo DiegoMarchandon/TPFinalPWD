@@ -15,7 +15,7 @@ if (isset($datos['id'])) {
     $param = ['idusuario' => $datos['id']];
     $usuario = $abmUsuario->buscar($param)[0];
     $param = [
-        'idusuario' => $usuario->getIdusuario(), // Asegúrate de incluir el idusuario aquí
+        'idusuario' => $usuario->getIdusuario(), 
         'usnombre' => $usuario->getUsnombre(),
         'uspass' => $usuario->getUspass(),
         'usmail' => $usuario->getUsmail(),
