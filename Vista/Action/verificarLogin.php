@@ -24,9 +24,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Autenticación exitosa, iniciar sesión
             $session = new Session();
             if ($session->iniciar($nombreUsuario, $hashedPassword)) {
-                // Sesión iniciada correctamente
-                $response['success'] = 'Inicio de sesión exitoso.';
-                $response['redirect'] = '../Home/paginaSegura.php';
+               // Verificar el rol del usuario
+               $abmUsuarioRol = new ABMUsuarioRol();
+               $rolesUsuario = $abmUsuarioRol->buscar(['idusuario' => $usuario->getIdUsuario()]);
+               $idRolUsuario = null;
+               foreach ($rolesUsuario as $usuarioRol) {
+                   $idRolUsuario = $usuarioRol->getObjRol()->getIdrol();
+                   break; // Asumimos que un usuario tiene un solo rol
+               }
+
+               // Redirigir según el rol del usuario
+               if ($idRolUsuario == 3) {
+                   $response['redirect'] = '../Home/productos.php';
+               } elseif ($idRolUsuario == 1 || $idRolUsuario == 2) {
+                   $response['redirect'] = '../Home/paginaSegura.php';
+               } else {
+                   $response['error'] = 'Rol de usuario no válido.';
+               }
+
+               $response['success'] = 'Inicio de sesión exitoso.';
             } else {
                 // Error al iniciar sesión
                 $response['error'] = 'Error al iniciar sesión. Por favor, inténtelo de nuevo.';

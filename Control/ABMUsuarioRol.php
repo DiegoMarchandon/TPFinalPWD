@@ -203,8 +203,8 @@ class ABMUsuarioRol {
 
         // Definir los permisos para cada rol
         $permisos = [
-            'Usuario' => ['Inicio', 'Listar Usuarios'],
-            'Editor' => ['Inicio', 'Listar Usuarios', 'Actualizar Usuarios', 'Eliminar Usuarios'],
+            'Cliente' => ['Inicio', 'Listar Usuarios'],
+            'Deposito' => ['Inicio', 'Listar Usuarios', 'Actualizar Usuarios', 'Eliminar Usuarios'],
             'Administrador' => ['Inicio', 'Listar Usuarios', 'Actualizar Usuarios', 'Eliminar Usuarios', 'Asignar Roles']
         ];
 

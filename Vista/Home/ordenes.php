@@ -10,7 +10,7 @@ $idUsuario = $session->getUsuario()->getIdUsuario();
 
 // Verificar si el usuario tiene permisos para acceder a esta página (el 2 es el deposito o sea que le estoy
 // diciendo que si el usuario no es deposito lo redirija al login)
-$usuarioPermitido = $abmUsuarioRol->verificarRolUsuario($idUsuarioActual, 2);
+$usuarioPermitido = $abmUsuarioRol->verificarRolUsuario($idUsuario, 2);
 if (!$usuarioPermitido) {
     header('Location: ../Home/login.php');
     exit();

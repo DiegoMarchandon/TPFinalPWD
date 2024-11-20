@@ -2,13 +2,10 @@
 // creo un objeto de la clase abmUsuarioRol para llamar a la funcion verificarRolUsuario
 $abmUsuarioRol = new ABMUsuarioRol(); 
 
-// Obtener el ID del usuario en la sesion para verificar si tiene permisos
-$idUsuario = $session->getUsuario()->getIdUsuario();
-
-// Verificar si el usuario tiene permisos para acceder a esta página (el 1 es el administrador o sea que le estoy
-// diciendo que si el usuario no es administrador lo redirija al login)
-$usuarioPermitido = $abmUsuarioRol->verificarRolUsuario($idUsuarioActual, 1);
-if (!$usuarioPermitido) {
+// Verificar si el usuario tiene permisos para acceder a esta página (roles 1 y 2)
+$usuarioPermitidoadmin = $abmUsuarioRol->verificarRolUsuario($session->getUsuario()->getIdUsuario(), 1);
+$usuarioPermitidoDepo = $abmUsuarioRol->verificarRolUsuario($session->getUsuario()->getIdUsuario(), 2);
+if (!$usuarioPermitidoadmin && !$usuarioPermitidoDepo) {
     header('Location: ../Home/login.php');
     exit();
 } ?>

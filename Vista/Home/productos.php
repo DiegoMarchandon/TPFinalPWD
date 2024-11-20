@@ -12,7 +12,7 @@ if ($session->activa() && $session->validar()) { //si la sesion es valida se mue
 
     // Verificar si el usuario tiene permisos para acceder a esta página (el 3 es el cliente o sea que le estoy
     // diciendo que si el usuario no es cliente lo redirija al login)
-    $usuarioPermitido = $abmUsuarioRol->verificarRolUsuario($idUsuarioActual, 3);
+    $usuarioPermitido = $abmUsuarioRol->verificarRolUsuario($idUsuario, 3);
     if (!$usuarioPermitido) {
         header('Location: ../Home/login.php');
         exit();
