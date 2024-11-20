@@ -242,6 +242,20 @@ class ABMUsuarioRol {
         }
         return $resp;
     }
-    
+    /**
+     * Verifica si un usuario tiene un rol específico
+     * @param int $idUsuario
+     * @param int $idRol
+     * @return boolean
+     */
+    public function verificarRolUsuario($idUsuario, $idRol) {
+        $rolesUsuario = $this->buscar(['idusuario' => $idUsuario]);
+        foreach ($rolesUsuario as $usuarioRol) {
+            if ($usuarioRol->getObjRol()->getIdrol() == $idRol) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 ?>

@@ -4,6 +4,19 @@ $session = new Session();
 if ($session->activa() && $session->validar()) { //si la sesion es valida se muestra headerSeguro.php
     include_once('../estructura/headerSeguro.php');
     $sesionActiva = true;
+    // creo un objeto de la clase abmUsuarioRol para llamar a la funcion verificarRolUsuario
+    $abmUsuarioRol = new ABMUsuarioRol(); 
+
+    // Obtener el ID del usuario en la sesion para verificar si tiene permisos
+    $idUsuario = $session->getUsuario()->getIdUsuario();
+
+    // Verificar si el usuario tiene permisos para acceder a esta página (el 3 es el cliente o sea que le estoy
+    // diciendo que si el usuario no es cliente lo redirija al login)
+    $usuarioPermitido = $abmUsuarioRol->verificarRolUsuario($idUsuarioActual, 3);
+    if (!$usuarioPermitido) {
+        header('Location: ../Home/login.php');
+        exit();
+    }
 } else {
     include_once('../estructura/header.php');  //si la sesion no es valida se muestra header.php
     $sesionActiva = false; 

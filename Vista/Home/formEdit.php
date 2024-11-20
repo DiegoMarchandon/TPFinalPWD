@@ -1,5 +1,20 @@
+<?php include_once("../estructura/headerSeguro.php"); ?>
 <?php
 include_once '../../configuracion.php';
+
+// creo un objeto de la clase abmUsuarioRol para llamar a la funcion verificarRolUsuario
+$abmUsuarioRol = new ABMUsuarioRol(); 
+
+// Obtener el ID del usuario en la sesion para verificar si tiene permisos
+$idUsuarioActual = $session->getUsuario()->getIdUsuario();
+
+// Verificar si el usuario tiene permisos para acceder a esta página (el 1 es el administrador o sea que le estoy
+// diciendo que si el usuario no es administrador lo redirija al login)
+$usuarioPermitido = $abmUsuarioRol->verificarRolUsuario($idUsuarioActual, 1);
+if (!$usuarioPermitido) {
+    header('Location: ../Home/login.php');
+    exit();
+}
 
 //$session = new Session();
 $abmUsuario = new ABMUsuario();
@@ -11,7 +26,7 @@ $idUsuario = $datos['id'];
 $usuario = $abmUsuario->buscar(['idusuario' => $idUsuario])[0];
 ?>
 
-<?php include_once("../estructura/headerSeguro.php"); ?>
+
 <div class="container mt-5">
     <h1 class="text-center">Actualizar Usuario</h1>
     <form id="actualizarForm" action="../Action/modificarUsuarios.php" method="post" onsubmit="return hashPassword()">
