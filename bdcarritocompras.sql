@@ -153,7 +153,7 @@ INSERT INTO `menu` (`idmenu`, `menombre`, `medescripcion`, `idpadre`, `medeshabi
 (7, 'Ordenes', '../Home/ordenes.php', NULL, NULL),
 (9, 'Usuarios', '../Home/actualizarUsuario.php', NULL, NULL),
 (11, 'Asignar Roles', '../Home/asignarRoles.php', NULL, NULL),
-(12, 'Estadisticas', '../Home/estadisticas.php',NULL,NULL)
+(12, 'Estadisticas', '../Home/estadisticas.php',NULL,NULL),
 (13, 'Cerrar Sesión', '../Action/logout.php', NULL, NULL);
 
 -- --------------------------------------------------------

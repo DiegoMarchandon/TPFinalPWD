@@ -11,16 +11,24 @@ include_once('../estructura/headerSeguro.php');
 </head>
 <body>
     <div id="usersInfo">
-        <h1>composición de usuarios</h1> 
+        <h1>Composición de Usuarios</h1> 
 
         <div style="display: flex; align-items: center; width: 800px;">       
-            <div style="position: relative; width: 400px; height: 300px;">
+            <div style="width: 400px; height: 300px;">
                 <canvas id="graficoTorta"></canvas>
             </div>
             <div style="width: 200px; height: 200px; margin-left: 20px;">
                 <canvas id="subgraficoTorta"></canvas>
             </div>
         </div>
+    </div>
+
+    <div id="comprasInfo">
+        <h1>Estados de Compras</h1>
+        <div style="width: 400px; height: 600px">
+            <canvas id="graficoBarras"></canvas>
+        </div>
+
     </div>
 
 <script src="../js/chart.js"></script>
@@ -59,7 +67,7 @@ include_once('../estructura/headerSeguro.php');
                     var etiquetas = ['administrador', 'deposito', 'clientes'];
                     var datosGrafico = [contadorRoles.idrol1, contadorRoles.idrol2, contadorRoles.idrol3];
 
-                    console.log(datos.compraestado);
+                    console.log(datos.colCompraEstados);
 
                     var tortaChart = new Chart(graficoTorta, {
                         type: 'pie',
@@ -83,7 +91,7 @@ include_once('../estructura/headerSeguro.php');
                         }
                     });
 
-                    /* ------subgrafico--------- */
+                    /* ------subgrafico de tortas--------- */
                     
                     var usuariosActivos = datos.cantUsuariosActivos;
 
@@ -118,8 +126,63 @@ include_once('../estructura/headerSeguro.php');
                         }
                     });
 
-                    // Actualiza el gráfico para reflejar los nuevos datos
-                    // chart.update();
+
+                    /* ------ grafico de barras ------- */
+                    var compraEstados = datos.colCompraEstados;
+
+                    var estados = ["Iniciada","Aceptada","Enviada","Cancelada"];
+                    var colores = ['rgba(75, 220, 192, 0.6)', 'rgba(54, 162, 235, 0.6)', 'rgba(255, 206, 86, 0.6)', 'rgba(255, 99, 132, 0.6)'];
+
+                    // Procesar los datos para contar las ocurrencias
+                    var conteo = { 1: 0, 2: 0, 3: 0, 4: 0 }; // Inicializamos el conteo con 0 para todos los estados
+
+                    // proceso los datos para contar las ocurrencias
+                    compraEstados.forEach(function (valor) {
+                        conteo[valor] = (conteo[valor] || 0) + 1;
+                    });
+
+                    var datasets = estados.map(function(estado, index) {
+                        return {
+                            label: estado, // Nombre del estado
+                            data: [conteo[index + 1] || 0], // Valor para el estado. Usamos index + 1 porque los valores son 1-4
+                            backgroundColor: colores[index], // Color asociado
+                            borderColor: colores[index].replace('0.6', '1'), // Borde más intenso
+                            borderWidth: 1
+                        };
+                    });
+
+                    // var datos = Object.values(conteo);  // [número de ocurrencias de cada valor]
+
+                    // Crear el gráfico de barras
+                    var graficoBarras = document.getElementById('graficoBarras').getContext('2d');
+                    var barrasChart = new Chart(graficoBarras, {
+                        type: 'bar',
+                        data: {
+                            labels: ["Estados"], // Etiqueta genérica para agrupar los datos
+                            datasets: datasets
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    display: true, // Muestra la leyenda con colores por estado
+                                    position: 'top'
+                                },
+                                tooltip: {
+                                    enabled: true
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        stepSize: 1
+                                    }
+                                }
+                            }
+                        }
+                    });
+
                 },
                 error: function (xhr, status, error) {
                     console.error('Error al obtener los datos:', error);
