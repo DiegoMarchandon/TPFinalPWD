@@ -238,6 +238,26 @@ class ABMUsuario {
         return $arreglo;
     }
 
+    public function separarUsuariosHabilitadosYDeshabilitados() {
+        $usuarios = $this->buscar(null);
+
+        $usuariosHabilitados = [];
+        $usuariosDeshabilitados = [];
+
+        foreach ($usuarios as $usuario) {
+            if ($usuario->getUsDeshabilitado() === '0000-00-00 00:00:00') {
+                $usuariosHabilitados[] = $usuario;
+            } else {
+                $usuariosDeshabilitados[] = $usuario;
+            }
+        }
+
+        return [
+            'habilitados' => $usuariosHabilitados,
+            'deshabilitados' => $usuariosDeshabilitados
+        ];
+    }
+
 
 }
 ?>
