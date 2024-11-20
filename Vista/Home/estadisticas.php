@@ -22,7 +22,7 @@ include_once('../estructura/headerSeguro.php');
             </div>
         </div>
     </div>
-    
+
 <script src="../js/chart.js"></script>
 <script>
     $(document).ready(function () { 
@@ -34,13 +34,9 @@ include_once('../estructura/headerSeguro.php');
                 url: '../Action/enviarDatos.php', // Cambia esto a tu URL de destino
                 method: 'POST',
                 success: function (datos) {
-                    // Procesa la respuesta (suponiendo que tienes un array de etiquetas y un array de datos)
-                    // var etiquetas = datos.labels; // Asume que 'labels' es un array en la respuesta
-                    // var datos = datos.data; // Asume que 'data' es un array en la respuesta
 
                     // var usuarios = datos.usuarios;
                     var usuariosRol = datos.usuariorol;
-                    
 
                     // Contar los usuarios según el idrol
                     var contadorRoles = {
@@ -63,10 +59,7 @@ include_once('../estructura/headerSeguro.php');
                     var etiquetas = ['administrador', 'deposito', 'clientes'];
                     var datosGrafico = [contadorRoles.idrol1, contadorRoles.idrol2, contadorRoles.idrol3];
 
-                    console.log(usuariosActivos);
-                    // Actualiza los datos del gráfico
-                    // chart.data.labels = etiquetas;
-                    // chart.data.datasets[0].data = datos;
+                    console.log(datos.compraestado);
 
                     var tortaChart = new Chart(graficoTorta, {
                         type: 'pie',

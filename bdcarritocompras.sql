@@ -153,7 +153,8 @@ INSERT INTO `menu` (`idmenu`, `menombre`, `medescripcion`, `idpadre`, `medeshabi
 (7, 'Ordenes', '../Home/ordenes.php', NULL, NULL),
 (9, 'Usuarios', '../Home/actualizarUsuario.php', NULL, NULL),
 (11, 'Asignar Roles', '../Home/asignarRoles.php', NULL, NULL),
-(12, 'Cerrar Sesión', '../Action/logout.php', NULL, NULL);
+(12, 'Estadisticas', '../Home/estadisticas.php',NULL,NULL)
+(13, 'Cerrar Sesión', '../Action/logout.php', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -183,6 +184,7 @@ INSERT INTO `menurol` (`idmenu`, `idrol`) VALUES
 ((SELECT idmenu FROM menu WHERE menombre = 'Ordenes'), 2),
 ((SELECT idmenu FROM menu WHERE menombre = 'Usuarios'), 1),
 ((SELECT idmenu FROM menu WHERE menombre = 'Asignar Roles'), 1),
+((SELECT idmenu FROM menu WHERE menombre = 'Estadisticas'), 1),
 ((SELECT idmenu FROM menu WHERE menombre = 'Cerrar Sesión'), 1),
 ((SELECT idmenu FROM menu WHERE menombre = 'Cerrar Sesión'), 2),
 ((SELECT idmenu FROM menu WHERE menombre = 'Cerrar Sesión'), 3);
