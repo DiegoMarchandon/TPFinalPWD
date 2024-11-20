@@ -14,7 +14,7 @@ $ABMCompraestado = new ABMCompraEstado;
 $arrAsocUsuariosRol = [];
 $arrUsuariosActivos = [];
 $arrCompraEstados = [];
-$arrVentas = ['estadoCompras' =>[],'montoVentas' =>[]];
+$arrVentas = [];
 
 foreach($ABMUsuarioRol->buscarArray(null) as $usRol){
     $arrAsocUsuariosRol[] = ['idusuario' => $usRol['objUsuario']->getIdusuario(),'idrol' => $usRol['objRol']->getIdrol()];
@@ -28,38 +28,7 @@ foreach($ABMCompraestado->buscarArray(null) as $CompraEstado){
     $arrCompraEstados[] = $CompraEstado['objCompraEstadoTipo']->getIdcompraestadotipo();
 }
 
-/* 
-foreach($ABMCompraestado->buscarArray(null) as $arrCompraEstado){
-    $estadoCompra = $arrCompraEstado['objCompraEstadoTipo'];
-    $fechaEstado = $arrCompraEstado['cefechaini'];
-    // si el compraestado es 3 (enviado) o 4(cancelado)
-    if($estadoCompra === 3 || $estadoCompra === 4){
-
-        // en la primera clave de $arrVentas, guardo los estados de las compras
-        $arrVentas['estadoCompras'][] = ['estadoCompra' => $estadoCompra, 'fecha' => $fechaEstado];
-        
-        // si el estado es enviado:
-        if($estadoCompra === 3){
-
-            // extraigo el idcompraestado para usarlo en comparaciones
-            $IDCompra = $estadoCompra['idcompra'];
-
-            // recorro los compraitem para poder extraer la cantidad vendida
-            foreach($ABMCompraitem->buscarArray(null) as $arrCompraitem){
-
-                // si el IDCompra del compraestado coincide con el compraitem recorrido:
-                if($arrCompraitem['objCompra']->getIdcompra() == $IDCompra){
-                    // extraigo la cantidad del item
-                    $cantidad = $arrCompraitem['cicantidad'];
-                    
-
-                    $arrVentas['montoVentas'][] = ['fechaVenta' => $fechaEstado,'montoVenta'=>]
-                }
-
-            }
-        }
-    }
-} */
+$arrVentas = $ABMCompraestado->ventas();
 
 $datos = [
     'compras' => $ABMCompra->buscarArray(null),

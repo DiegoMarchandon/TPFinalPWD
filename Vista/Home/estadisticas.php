@@ -24,25 +24,39 @@ if (!$usuarioPermitido) {
     <title>Estadisticas</title>
 </head>
 <body>
-    <div id="usersInfo">
-        <h1>Composición de Usuarios</h1> 
-
-        <div style="display: flex; align-items: center; width: 800px;">       
-            <div style="width: 400px; height: 300px;">
-                <canvas id="graficoTorta"></canvas>
+    <div style="display:flex;">
+        <div style="background-color: #C0D6DF; border-radius: 20px; margin:5px;">
+            <div style="margin-left:100px;" id="usersInfo">
+                <h1 style="display:inline; text-align: center;">Composición de Usuarios</h1> 
+        
+                <div style="display: flex; align-items: center;">       
+                    <div style="width: 400px; height: 300px;">
+                        <canvas id="graficoTorta"></canvas>
+                    </div>
+                    <div style="width: 200px; height: 200px; margin-left: 20px;">
+                        <canvas id="subgraficoTorta"></canvas>
+                    </div>
+                </div>
             </div>
-            <div style="width: 200px; height: 200px; margin-left: 20px;">
-                <canvas id="subgraficoTorta"></canvas>
+        </div>
+    
+        <div style="background-color: #B7CBDC; border-radius: 20px; margin:5px;">
+            <div style="margin-left:150px;" id="comprasInfo">
+                <h1 style=" display:inline; text-align: center;">Estados de Compras</h1>
+                <div style=" width: 650px; height: 300px">
+                    <canvas id="graficoBarras"></canvas>
+                </div>
             </div>
         </div>
     </div>
 
-    <div id="comprasInfo">
-        <h1>Estados de Compras</h1>
-        <div style="width: 400px; height: 600px">
-            <canvas id="graficoBarras"></canvas>
+    <div style="background-color: #DBE9EE; border-radius: 20px; margin:5px;">
+        <div id="ventasInfo">
+            <h1>evolución de las ventas</h1>
+            <div>
+                <canvas style="height: 400px; width: 90vw" id="graficoLineaDeTiempo"></canvas>
+            </div>
         </div>
-
     </div>
 
 <script src="../js/chart.js"></script>
@@ -57,7 +71,6 @@ if (!$usuarioPermitido) {
                 method: 'POST',
                 success: function (datos) {
 
-                    // var usuarios = datos.usuarios;
                     var usuariosRol = datos.usuariorol;
 
                     // Contar los usuarios según el idrol
@@ -81,14 +94,12 @@ if (!$usuarioPermitido) {
                     var etiquetas = ['administrador', 'deposito', 'clientes'];
                     var datosGrafico = [contadorRoles.idrol1, contadorRoles.idrol2, contadorRoles.idrol3];
 
-                    console.log(datos.colCompraEstados);
-
                     var tortaChart = new Chart(graficoTorta, {
                         type: 'pie',
                         data: {
                             labels: etiquetas,
                             datasets: [{
-                                label: 'Distribución de Usuarios por idrol',
+                                label: 'Cantidad de Usuaris con este rol: ',
                                 data: datosGrafico,
                                 backgroundColor: ['yellow', 'blue', 'green'] // Colores para cada idrol
                             }]
@@ -125,7 +136,7 @@ if (!$usuarioPermitido) {
                         data: {
                             labels: ["Usuarios Activos", "Usuarios Dados de Baja"], // Etiquetas
                             datasets: [{
-                                label: "Estado de Usuarios",
+                                label: "Cantidad de Usuarios",
                                 backgroundColor: ["#4CAF50", "#F44336"], // Colores para cada categoría
                                 data: [activos, dadosDeBaja] // Datos calculados
                             }]
@@ -142,6 +153,7 @@ if (!$usuarioPermitido) {
 
 
                     /* ------ grafico de barras ------- */
+
                     var compraEstados = datos.colCompraEstados;
 
                     var estados = ["Iniciada","Aceptada","Enviada","Cancelada"];
@@ -164,8 +176,6 @@ if (!$usuarioPermitido) {
                             borderWidth: 1
                         };
                     });
-
-                    // var datos = Object.values(conteo);  // [número de ocurrencias de cada valor]
 
                     // Crear el gráfico de barras
                     var graficoBarras = document.getElementById('graficoBarras').getContext('2d');
@@ -197,6 +207,61 @@ if (!$usuarioPermitido) {
                         }
                     });
 
+                    /* ------ grafico de linea de tiempo ------- */
+                    let graficoLineaDeTiempo = document.getElementById('graficoLineaDeTiempo').getContext('2d');
+
+                    var ventasTotales = datos.ventas;
+
+                    // extraemos las claves(fechas) y valores (ventas) de los datos
+                    const labels = Object.keys(ventasTotales); // Fechas
+                    const values = Object.values(ventasTotales); // Ventas
+
+                    // Configuración del gráfico
+                    const linealGraf = document.getElementById('graficoLineaDeTiempo').getContext('2d');
+                    const linealChart = new Chart(linealGraf, {
+                        type: 'line', // Tipo de gráfico
+                        data: {
+                            labels: labels, // Fechas como etiquetas en el eje X
+                            datasets: [{
+                                label: 'Ventas por fecha', // Nombre del conjunto de datos
+                                data: values, // Ventas como valores en el eje Y
+                                borderColor: 'rgba(75, 192, 192, 1)', // Color de la línea
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)', // Relleno debajo de la línea
+                                borderWidth: 2 // Grosor de la línea
+                            }]
+                        },
+                        options: {
+                            responsive: true, // Ajuste del tamaño según la pantalla
+                            plugins: {
+                                legend: {
+                                    display: true, // Mostrar leyenda
+                                    position: 'top'
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Fechas' // Título del eje X
+                                    },
+                                    ticks: {
+                                        maxRotation: 45, // Rotación máxima de etiquetas
+                                        minRotation: 0 // Rotación mínima de etiquetas
+                                    }
+                                },
+                                y: {
+                                    title: {
+                                        display: true,
+                                        text: 'Monto de Ventas ($)' // Título del eje Y
+                                    },
+                                    beginAtZero: true // Comenzar en 0
+                                }
+                            }
+                        }
+                    });
+
+
+                    console.log(datos.ventas);
                 },
                 error: function (xhr, status, error) {
                     console.error('Error al obtener los datos:', error);

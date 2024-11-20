@@ -270,5 +270,43 @@ class ABMCompraEstado {
 
         return $comprasConfirmadasSinFinalizar;
     }
+
+
+    /**
+     * retorna la cantidad de ventas
+    */
+    public function ventas(){
+
+        $ABMCompraitem = new ABMCompraItem;
+        $ABMProducto = new ABMProducto;
+        $arrVentas = [];
+
+        foreach($this->buscarArray(null) as $arrCompraEstado){
+            // si el estado es enviado:
+            if($arrCompraEstado['objCompraEstadoTipo']->getIdcompraestadotipo() === 3){
+                $fechaEnviado = $arrCompraEstado['cefechaini'];
+
+                // recorro los compraitem para poder extraer la cantidad vendida
+                foreach($ABMCompraitem->buscarArray(['idcompra' => $arrCompraEstado['objCompra']->getIdcompra()]) as $arrCompraitem){
+
+                    foreach($ABMProducto->buscarArray(null) as $arrProducto){
+                        // si el compraitem coincide con el id del producto recorrido:
+                        if($arrCompraitem['objProducto']->getIdproducto() == $arrProducto['idproducto']){
+                            $precioXcantidad = intval($arrCompraitem['cicantidad']) * intval($arrProducto['precioprod']);
+                            
+                            // Si la fecha ya existe en el arreglo, sumamos el monto; si no, la inicializamos
+                            if (isset($arrVentas[$fechaEnviado])) {
+                                $arrVentas[$fechaEnviado] += $precioXcantidad;
+                            } else {
+                                $arrVentas[$fechaEnviado] = $precioXcantidad;
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+        return $arrVentas;
+    }
 }
 ?>
