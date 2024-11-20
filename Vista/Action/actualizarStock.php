@@ -33,8 +33,6 @@ if($productoBuscado > 0){
     $response['status'] = 'Error en 1er condicional';
     $response['message'] = '$ABMProducto->buscarArray($datos["idproducto"]) === 0';
 }
-// print_r();
-
 
 echo json_encode($response);
 exit;

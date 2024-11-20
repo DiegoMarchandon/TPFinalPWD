@@ -9,8 +9,6 @@ $ABMCompraitem = new ABMCompraItem;
 $ABMUsuarioRol = new ABMUsuarioRol;
 $ABMCompraestado = new ABMCompraEstado;
 
-// $colUsuariosRol = $ABMUsuarioRol->buscarArray(null);
-// $colUsuarios = $ABMUsuario->buscarArray(null);
 $arrAsocUsuariosRol = [];
 $arrUsuariosActivos = [];
 $arrCompraEstados = [];

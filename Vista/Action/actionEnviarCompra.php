@@ -31,9 +31,6 @@ foreach($colCompraItems as $compraitem){
 
     // almaceno la cantidad a descontar del producto:
     $cantDescontada = $compraitem['cicantidad'];
-    /* echo "<br>---<br>";
-    print_r($compraitem['objProducto']->getIdproducto());
-    echo "<br>---<br>"; */
 
     $stockActualizado = $compraitem['objProducto']->getProcantstock() - $cantDescontada;
 
@@ -51,11 +48,7 @@ foreach($colCompraItems as $compraitem){
     if($ABMproducto->modificacion($param)){
         // acá quiero almacenar una respuesta que sea decodificada con ajax
         $stockProdModificado = true;
-        // echo "<br>verificacion 1/3<br>";
-        // if (count($compraEstado) > 0) {
-            // $compraEstado = $compraEstado[0];
-            // print_r($compraEstado);
-            // modifico la fechafin de la compraestado;
+
             $param = [
                 'idcompraestado' => $compraEstado['idcompraestado'],
                 'idcompra' => $compraEstado['objCompra']->getIdcompra(),
@@ -65,7 +58,6 @@ foreach($colCompraItems as $compraitem){
             ];
             if($ABMcompraEstado->modificacion($param)){
                 $compraEstadoCambiado = true;
-                // echo "<br>verificacion 2/3<br>";
                 // ahora, creo un nuevo registro en compraestado con idcompraestadotipo = 3 y que tenga como fechaini la fechafin del compraestado = 2
                 $param = [
                     'idcompraestado' => null,
@@ -78,10 +70,8 @@ foreach($colCompraItems as $compraitem){
                 if(count($ABMcompraEstado->buscarArray(['idcompra' => $compraEstado['objCompra']->getIdcompra(), 'idcompraestadotipo' => 3])) === 0 ){
                     if($ABMcompraEstado->alta($param)){
                         $compraEstadoNuevo = true;
-                        // echo "<br>verificacion 3/3<br>";
                         $response = /* "exito"; */
                         [
-                            // 'idproducto' => $param['idproducto'],
                             'status' => 'success',
                             'message' => 'Producto actualizado',
                             'redirect' => '../Home/ordenes.php'
@@ -105,20 +95,16 @@ foreach($colCompraItems as $compraitem){
             }else{
                 $compraEstadoCambiado = false;
             }
-        // }
-
         
-    }else{
-        $stockProdModificado = false;
-        // echo "no se modificó el stock";
-        $response = /* "error"; */
-        [
-            // 'idproducto' => $param['idproducto'],
-            'status' => 'error',
-            'message' => 'Error al actualizar el producto',
-            'redirect' => '../Home/ordenes.php'
-        ];
-    }
+        }else{
+            $stockProdModificado = false;
+            $response = /* "error"; */
+            [
+                'status' => 'error',
+                'message' => 'Error al actualizar el producto',
+                'redirect' => '../Home/ordenes.php'
+            ];
+        }
 
 }
 

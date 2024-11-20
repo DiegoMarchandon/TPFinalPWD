@@ -30,7 +30,7 @@ if (!$usuarioPermitido) {
                 <h1 style="display:inline; text-align: center;">Composición de Usuarios</h1> 
         
                 <div style="display: flex; align-items: center;">       
-                    <div style="width: 400px; height: 300px;">
+                    <div style="width: 400px; height: 300px; margin-bottom: 10px">
                         <canvas id="graficoTorta"></canvas>
                     </div>
                     <div style="width: 200px; height: 200px; margin-left: 20px;">

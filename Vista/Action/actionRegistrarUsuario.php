@@ -30,7 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'usnombre' => $datos['usnombre'],
         'uspass' => $hashedPassword, // contraseña hasheada
         'usmail' => $datos['usmail'],
-        //'usdeshabilitado' => null
     ];
 
     if ($abmUsuario->alta($param)) {
