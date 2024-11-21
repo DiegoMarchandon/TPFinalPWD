@@ -250,12 +250,13 @@ class ABMUsuarioRol {
      */
     public function verificarRolUsuario($idUsuario, $idRol) {
         $rolesUsuario = $this->buscar(['idusuario' => $idUsuario]);
+        $rolPermitido = false;
         foreach ($rolesUsuario as $usuarioRol) {
             if ($usuarioRol->getObjRol()->getIdrol() == $idRol) {
-                return true;
+               $rolPermitido = true;
             }
         }
-        return false;
+        return $rolPermitido;
     }
 }
 ?>

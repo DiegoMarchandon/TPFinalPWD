@@ -67,7 +67,6 @@ if(count($colCompras) >0 || $colCompras !== null){
                 if($ABMcompraEstado->alta($paramCompraEstado)){
                     $response['status'] = 'success';
                     $response['message'] = 'operacion exitosa';
-                    // echo "<script>alert('Compra Cancelada con éxito'); window.location.href='../Home/carrito.php';</script>";
                     $banderita = true;
                     // Obtener el usuario asociado a la compra
                     $idcompra = $datos['idcompra'];
@@ -84,12 +83,10 @@ if(count($colCompras) >0 || $colCompras !== null){
                 }else{
                     $response['status'] = 'Error en 4to condicional';
                     $response['message'] = '!$ABMcompraEstado->alta($paramCompraEstado)';
-                    // echo "<script>alert('Error al insertar el nuevo estado de la compra'); window.location.href='../Home/carrito.php';</script>";
                 }
             }else{
                 $response['status'] = 'Error en 3er condicional';
                 $response['message'] = '!$ABMcompraEstado->modificacion($compraEstadoModificado)';
-                // echo "<script>alert('Error al Cancelar la compra'); window.location.href='../Home/carrito.php';</script>";
             }
         }else{
             if(!isset($datos['idcompra'])){
@@ -99,13 +96,11 @@ if(count($colCompras) >0 || $colCompras !== null){
                 $response['status'] = 'Error en 2do condicional (existe idcompra)';
                 $response['message'] = '!isset($datos["idcompra"]) || $compra->getIdcompra() != $datos["idcompra"]';
             }
-            // echo "<script>alert('Noo se encontró un estado de compra iniciado para la compra con ID: ".$datos['idcompra']."); window.location.href='../Home/carrito.php';</script>";
         }
     }
 }else{
     $response['status'] = 'Error en 1er condicional';
     $response['message'] = 'colCompras === 0 || colCompras === null';
-    // echo "<script>alert('No hay compras iniciadas'); window.location.href='../Home/carrito.php';</script>";
 }
 
 echo json_encode($response);
