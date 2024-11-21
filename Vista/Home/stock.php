@@ -26,7 +26,7 @@ if (!$usuarioPermitido) {
     
 <h1 class="text-center font-monospace">Productos</h1>
 
-<div class="container mt-5">
+<div class="container mt-5 mb-5">
     <div class="table-responsive">
         <table border="1" id="dataTable" class="table table-striped table-hover table-bordered">
             <thead class="thead-dark">
@@ -100,10 +100,13 @@ $(document).ready(function(){
                         nuevoStock: nuevoStock
                     },
                     success: function(response) {
-                        alert('Stock actualizado con éxito!');
+                        console.log("productos reservados: "+response.prodsReservados);
                         button.prop('disabled', true); // Deshabilitar el botón después de actualizar
                         if(response.status === 'success'){
+                            alert('Stock actualizado con éxito!');
                             window.location.href = response.redirect;
+                        }else{
+                            alert("Error. No se ha podido actualizar el stock.");
                         }
                     },
                     error: function() {

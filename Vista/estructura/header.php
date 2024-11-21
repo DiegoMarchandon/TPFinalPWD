@@ -34,9 +34,6 @@ include_once("../../configuracion.php");
                         <a class="nav-link" href="../Home/productos.php">Productos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Contacto</a>
-                    </li>
-                    <li class="nav-item">
                     <a class="nav-link" href="../Home/login.php">Iniciar Sesion</a>
                     </li>
                 </ul>

@@ -168,5 +168,40 @@ class ABMProducto {
         }
         return $arreglo;
     }
+
+    /**
+     * retorna el número de cierto producto que se encuentran dentro de los carritos.
+     * Para evitar que el depósito actualice el stock a un número inferior que la cantidad de productos reservados. 
+     */
+    public function productosReservados($idproducto){
+        // $productoBuscado = $this->buscarArray(['idproducto' => $idproducto]);
+
+        // variable para almacenar la cantidad de productos reservados según el id
+        $cantProds = 0;
+
+        $ABMCompraitem = new ABMCompraItem;
+        $ABMcompraestado = new ABMCompraEstado;
+
+        $colCompraItems = $ABMCompraitem->buscarArray(null);
+        $colCompraEstados = $ABMcompraestado->buscarArray(null);
+
+        foreach($colCompraItems as $compraitem){
+
+            foreach($colCompraEstados as $compraestado){
+
+                // si los idcompra coinciden Y el compraestado es igual a 1 Y la fechafin es la que está por defecto
+                if(($compraestado['objCompraEstadoTipo']->getIdcompraestadotipo() === 1) && ($compraestado['cefechafin'] === '0000-00-00 00:00:00')){
+
+                    if($compraestado['objCompra']->getIdcompra() === $compraitem['objCompra']->getIdcompra()){
+                        if($compraitem['objProducto']->getIdproducto() === $idproducto){
+                            $cantProds += $compraitem['cicantidad'];
+                        }
+                    }
+
+                }
+            }
+        }
+        return $cantProds;
+    }
 }
 ?>

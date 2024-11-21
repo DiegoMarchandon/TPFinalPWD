@@ -30,24 +30,35 @@ $ABMProducto = new ABMProducto;
 
 $productoBuscado = $ABMProducto->buscarArray(['idproducto' => $datos['idproducto']]);
 
-if($productoBuscado > 0){
-    $param = [
-        'idproducto' => $productoBuscado[0]['idproducto'],
-        'pronombre' => $productoBuscado[0]['pronombre'],
-        'prodetalle' => $productoBuscado[0]['prodetalle'],
-        'precioprod' => $productoBuscado[0]['precioprod'],
-        'procantstock' => $datos['nuevoStock']
-    ];
-    if($ABMProducto->modificacion($param)){
-        $response['status'] = 'success';
-        $response['message'] = 'actualizacion de stock exitosa';
+// verifico la existencia de productos reservados con ese id. Si los hay, verifico que el nuevo stock no sea inferior a la cantidad de productos reservados. 
+$prodsReservados = $ABMProducto->productosReservados($datos['idproducto']);
+$response['prodsReservados'] = $prodsReservados;
+/* if($prodsReservados < intval($datos['nuevoStock'])){
+    
+} */
+if($datos['nuevoStock'] > 0){
+    if($productoBuscado > 0){
+        $param = [
+            'idproducto' => $productoBuscado[0]['idproducto'],
+            'pronombre' => $productoBuscado[0]['pronombre'],
+            'prodetalle' => $productoBuscado[0]['prodetalle'],
+            'precioprod' => $productoBuscado[0]['precioprod'],
+            'procantstock' => $datos['nuevoStock']
+        ];
+        if($ABMProducto->modificacion($param)){
+            $response['status'] = 'success';
+            $response['message'] = 'actualizacion de stock exitosa';
+        }else{
+            $response['status'] = 'Error en 3er condicional';
+            $response['message'] = '!$ABMProducto->modificacion($param)';
+        }
     }else{
         $response['status'] = 'Error en 2do condicional';
-        $response['message'] = '!$ABMProducto->modificacion($param)';
+        $response['message'] = '$ABMProducto->buscarArray($datos["idproducto"]) === 0';
     }
 }else{
     $response['status'] = 'Error en 1er condicional';
-    $response['message'] = '$ABMProducto->buscarArray($datos["idproducto"]) === 0';
+    $response['message'] = '$datos["nuevoStock"] <= 0';
 }
 
 echo json_encode($response);
