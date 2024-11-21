@@ -27,8 +27,18 @@ $nombreUsuarioSesion = $session->getUsuario()->getUsNombre();
 $usuariosSeparados = $abmUsuario->separarUsuariosHabilitadosYDeshabilitados();
 $usuariosHabilitados = $usuariosSeparados['habilitados'];
 $usuariosDeshabilitados = $usuariosSeparados['deshabilitados'];
-?>
 
+$datos= darDatosSubmitted();
+?>
+<?php
+    if (isset($datos['mensaje'])) {
+        if ($datos['mensaje'] == 'error_al_modificar') {
+            echo '<div class="alert alert-danger text-center">El nombre de usuario o el email ya existen.</div>';
+        } elseif ($datos['mensaje'] == 'actualizacion_exitosa') {
+            echo '<div class="alert alert-success text-center">Actualización exitosa.</div>';
+        }
+    }
+    ?>
 <div class="container mt-5">
     <h1 class="text-center">Lista de Usuarios</h1>
     <div class="mb-4">
