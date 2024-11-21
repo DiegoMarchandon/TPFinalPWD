@@ -67,7 +67,11 @@ $datos= darDatosSubmitted();
                     echo "<div class='btn-group' role='group'>";
                     echo "<a href='formEdit.php?id=" . $usuario->getIdUsuario() . "' class='btn btn-warning btn-sm'>Editar</a>";
                     if ($usuario->getIdUsuario() !== $idUsuarioSesion) { // No permitir eliminar al administrador de la sesión
-                        echo "<a href='../Action/eliminarLogin.php?id=" . $usuario->getIdUsuario() . "' class='btn btn-danger btn-sm'>Eliminar</a>";
+                        echo "<form action='../Action/eliminarLogin.php' method='POST' style='display:inline;'>";
+                        echo "<input type='hidden' name='id' value='" . $usuario->getIdUsuario() . "'>";
+                        echo "<input type='hidden' name='form_security_token' value='valor_esperado'>"; // Token de seguridad
+                        echo "<button type='submit' class='btn btn-danger btn-sm'>Eliminar</button>";
+                        echo "</form>";
                     }
                     echo "</div>";
                     echo "</td>";
