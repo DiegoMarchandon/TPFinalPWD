@@ -49,43 +49,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    // Verificar si el nombre de usuario ya existe
-    $usuarioExistente = $abmUsuario->buscar(['usnombre' => $datos['usnombre']]);
-    if (count($usuarioExistente) > 0) {
-        echo "El nombre de usuario no está disponible.";
-        echo '<br><a href="../Home/registrarUsuario.php">Volver al registro</a>';
-        exit();
-    }
+    $response = $abmUsuario->registrarUsuario($datos);
 
-    // Verificar si el correo electrónico ya existe
-    $emailExistente = $abmUsuario->buscar(['usmail' => $datos['usmail']]);
-    if (count($emailExistente) > 0) {
-        echo "El correo electrónico ya está asociado a una cuenta.";
-        echo '<br><a href="../Home/registrarUsuario.php">Volver al registro</a>';
-        exit();
-    }
-
-    // Obtener la contraseña hasheada
-    $hashedPassword = $datos['uspass'];
-
-    $param = [
-        'usnombre' => $datos['usnombre'],
-        'uspass' => $hashedPassword, // contraseña hasheada
-        'usmail' => $datos['usmail'],
-    ];
-
-    if ($abmUsuario->alta($param)) {
-        // Obtener el ID del usuario recien creado
-        $usuarioNuevo = $abmUsuario->buscar(['usnombre' => $datos['usnombre']]);
-        $idUsuario = $usuarioNuevo[0]->getIdUsuario();
-
-        // Asignar el rol de "Usuario" por defecto
-        $abmUsuarioRol = new ABMUsuarioRol();
-        $abmUsuarioRol->alta(['idusuario' => $idUsuario, 'idrol' => 3]); // el id 3 es de "Cliente" que se le asignara a todos los que se registren por defecto
-
+    if ($response['status'] === 'success') {
         header('Location: ../Home/login.php?registro=exitoso'); // Redirigir al login con mensaje de éxito
     } else {
-        echo "Error al registrar el usuario.";
+        echo $response['message'];
         echo '<br><a href="../Home/registrarUsuario.php">Volver al registro</a>';
     }
 }
