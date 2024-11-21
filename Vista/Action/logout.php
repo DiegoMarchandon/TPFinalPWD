@@ -11,10 +11,10 @@ $isPostOrGet = $_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD
 // $isValidToken = isset($_POST['form_security_token']) && $_POST['form_security_token'] === 'valor_esperado';
 
 // Si no es AJAX ni una solicitud válida POST/GET con el token, redirige
-if (!$isAjax && (!$isPostOrGet)) {
-    header('Location: ../Home/login.php');
-    exit;
-}
+//if (!$isAjax && (!$isPostOrGet)) {
+    //header('Location: ../Home/login.php');
+    //exit;
+//}
 
 $session = new Session();
 $session->cerrar();

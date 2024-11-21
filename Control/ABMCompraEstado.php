@@ -308,5 +308,95 @@ class ABMCompraEstado {
         }
         return $arrVentas;
     }
+    /**
+ * permite buscar la compra con estado Iniciado y fecha fin null por idusuario
+ * @param int $idusuario
+ * @return mixed|null
+ */
+public function buscarCompraIniciada($idusuario) {
+    $abmCompra = new ABMCompra();
+    // busca todas las compras por el id de usuario
+    $compras = $abmCompra->buscarPorUsuario($idusuario);
+
+    foreach ($compras as $compra) {
+        // de cada compra específica, obtengo su compraEstado específico
+        $compraEstado = $this->buscarArray(['idcompra' => $compra->getIdcompra()]);
+        if (count($compraEstado) > 0) {
+            // si el 'idcompraestadotipo' de este compraEstado es 1, significa que la compra fue iniciada. Por lo que la retornamos
+            if ($compraEstado[0]['objCompraEstadoTipo']->getIdcompraestadotipo() === 1 && $compraEstado[0]['cefechafin'] === '0000-00-00 00:00:00') {
+                return $compra;
+            }
+        }
+    }
+
+    return null;
+}
+
+/**
+     * Confirmar una compra actualizando el estado y creando un nuevo estado
+     * @param int $idCompra
+     * @param string $fechaFin
+     * @return array
+     */
+    public function confirmarCompra($idCompra, $fechaFin) {
+        $response = [
+            'status' => 'default',
+            'message' => 'Parte inicial del action',
+            'redirect' => '../Home/carrito.php'
+        ];
+
+        // Buscar el estado de la compra con idcompraestadotipo = 1
+        $compraEstado = $this->buscar(['idcompra' => $idCompra, 'idcompraestadotipo' => 1]);
+
+        if (count($compraEstado) > 0) {
+            $compraEstado = $compraEstado[0];
+
+            $compraEstadoModificado = [
+                'idcompraestado' => $compraEstado->getIdcompraestado(),
+                'idcompra' => $idCompra,
+                'idcompraestadotipo' => $compraEstado->getObjCompraEstadoTipo()->getIdcompraestadotipo(),
+                'cefechaini' => $compraEstado->getCefechaini(),
+                'cefechafin' => $fechaFin
+            ];
+
+            if ($this->modificacion($compraEstadoModificado)) {
+                // Insertar una nueva entrada en la tabla compraestado con idcompraestadotipo = 2
+                $paramCompraEstado = [
+                    'idcompraestado' => null,
+                    'idcompra' => $idCompra,
+                    'idcompraestadotipo' => 2, // Estado "confirmada"
+                    'cefechaini' => $fechaFin,
+                    'cefechafin' => null
+                ];
+
+                if ($this->alta($paramCompraEstado)) {
+                    $response['status'] = 'success';
+                    $response['message'] = 'operacion exitosa';
+
+                    // Obtener el usuario asociado a la compra
+                    $compra = new ABMCompra();
+                    $objCompra = $compra->buscar(['idcompra' => $idCompra]);
+                    if (count($objCompra) > 0) {
+                        $objCompra = $objCompra[0];
+                        $usuario = $objCompra->getObjUsuario();
+                        $response['toName'] = $usuario->getUsnombre();
+                        $response['toEmail'] = $usuario->getUsmail();
+                    }
+                } else {
+                    $response['status'] = 'error';
+                    $response['message'] = 'Error al confirmar la compra.';
+                }
+            } else {
+                $response['status'] = 'error';
+                $response['message'] = 'Error al modificar el estado de la compra.';
+            }
+        } else {
+            $response['status'] = 'error';
+            $response['message'] = 'Estado de compra no encontrado.';
+        }
+
+        return $response;
+    }
+
 }
 ?>
