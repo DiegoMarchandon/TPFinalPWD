@@ -89,3 +89,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo '<br><a href="../Home/registrarUsuario.php">Volver al registro</a>';
     }
 }
+?>

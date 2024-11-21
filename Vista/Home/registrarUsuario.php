@@ -2,6 +2,7 @@
     <div class="container mt-5">
         <h1 class="text-center">Registrar Usuario</h1>
         <form id="registroForm" action="../Action/actionRegistrarUsuario.php" method="post" onsubmit="return verificarFormulario(event)" novalidate>
+            <input type="hidden" name="form_security_token" value="valor_esperado"> <!-- Token de seguridad -->
             <div class="form-group">
                 <label for="usnombre">Nombre:</label>
                 <input type="text" id="usnombre" name="usnombre" class="form-control" required pattern="[a-zA-Z]+" title="El nombre solo debe contener letras y no puede estar vacío o tener espacios.">
@@ -25,6 +26,7 @@
             </div>
             <button type="submit" class="btn btn-primary mt-3">Registrar</button>
         </form>
+        <div id="mensaje" class="text-center mt-3"></div>
     </div>
 
 <script>
@@ -47,6 +49,7 @@ function verificarFormulario(event) {
     var form = document.getElementById('registroForm');
     var nombreField = document.getElementById('usnombre');
     var emailField = document.getElementById('usmail');
+    var mensajeDiv = document.getElementById('mensaje');
 
     // Validar el formulario
     if (form.checkValidity() === false) {
@@ -59,7 +62,8 @@ function verificarFormulario(event) {
             data: {
                 verificar: true,
                 usnombre: nombreField.value.trim(),
-                usmail: emailField.value.trim()
+                usmail: emailField.value.trim(),
+                form_security_token: 'valor_esperado' // Token de seguridad
             },
             success: function(response) {
                 var nombreError = document.getElementById('nombreError');
@@ -83,6 +87,9 @@ function verificarFormulario(event) {
                         form.submit();
                     }
                 }
+            },
+            error: function() {
+                mensajeDiv.innerHTML = '<div class="alert alert-danger">Error al verificar los datos. Por favor, inténtelo de nuevo.</div>';
             }
         });
     }
