@@ -5,9 +5,9 @@
             <input type="hidden" name="form_security_token" value="valor_esperado"> <!-- Token de seguridad -->
             <div class="form-group">
                 <label for="usnombre">Nombre:</label>
-                <input type="text" id="usnombre" name="usnombre" class="form-control" required pattern="[a-zA-Z]+" title="El nombre solo debe contener letras y no puede estar vacío o tener espacios.">
+                <input type="text" id="usnombre" name="usnombre" class="form-control" required pattern="[a-zA-Z0-9]+" title="no puede estar vacío o tener espacios.">
                 <div class="invalid-feedback">
-                    El nombre solo debe contener letras y no puede estar vacío o tener espacios.
+                   no puede estar vacío o tener espacios.
                 </div>
             </div>
             <div class="form-group">

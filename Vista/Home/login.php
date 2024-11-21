@@ -17,9 +17,9 @@ $datos = darDatosSubmitted();
     <form id="loginForm" method="POST" onsubmit="return verificarLogin(event)" novalidate>
         <div class="form-group">
             <label for="nombreUsuario">Nombre de Usuario</label>
-            <input type="text" class="form-control" id="nombreUsuario" name="nombreUsuario" required pattern="[a-zA-Z0-9]+" title="El nombre de usuario solo debe contener letras y no puede estar vacío o tener espacios.">
+            <input type="text" class="form-control" id="nombreUsuario" name="nombreUsuario" required pattern="[a-zA-Z0-9]+" title="no puede estar vacío o tener espacios.">
             <div class="invalid-feedback">
-                El nombre de usuario solo debe contener letras y no puede estar vacío o tener espacios.
+                no puede estar vacío o tener espacios.
             </div>
         </div>
         <div class="form-group">

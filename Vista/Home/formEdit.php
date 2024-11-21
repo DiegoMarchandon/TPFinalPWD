@@ -36,9 +36,9 @@ $usuario = $abmUsuario->buscar(['idusuario' => $idUsuario])[0];
         <input type="hidden" name="idusuario" value="<?php echo $usuario->getIdUsuario(); ?>">
         <div class="form-group">
             <label for="usnombre">Nombre:</label>
-            <input type="text" id="usnombre" name="usnombre" class="form-control" value="<?php echo $usuario->getUsNombre(); ?>" required pattern="[a-zA-Z]+">
+            <input type="text" id="usnombre" name="usnombre" class="form-control" value="<?php echo $usuario->getUsNombre(); ?>" required pattern="[a-zA-Z0-9]+">
             <div class="invalid-feedback">
-                El nombre solo debe contener letras y no puede estar vacío.
+                no puede estar vacío.
             </div>
         </div>
         <div class="form-group">
