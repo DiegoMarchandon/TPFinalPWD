@@ -98,7 +98,7 @@ $totalCarrito = $resultadoCarrito['totalCarrito'];
                         var message = 'Su compra ha sido confirmada con éxito. Gracias por su compra.';
                         sendEmail(toName, toEmail, message);
                         alert('Compra confirmada con éxito. Se ha enviado un correo de confirmación.');
-                        window.location.href = '../Home/carrito.php';
+                        //window.location.href = '../Home/carrito.php';
                     } else {
                         alert('Compra no confirmada: ' + response.message);
                     }
@@ -130,7 +130,7 @@ $totalCarrito = $resultadoCarrito['totalCarrito'];
                         var message = 'Su carrito ha sido cancelado. Si tiene alguna pregunta, por favor contáctenos.';
                         sendEmail(toName, toEmail, message);
                         // alert('Carrito cancelado con éxito. Se ha enviado un correo de confirmación.');
-                        window.location.href = '../Home/carrito.php';
+                        //window.location.href = '../Home/carrito.php';
                     } else {
                         alert('Compra no confirmada: ' + response.message);
                     }

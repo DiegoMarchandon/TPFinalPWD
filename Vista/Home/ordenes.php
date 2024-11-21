@@ -116,7 +116,7 @@ $ABMCompraItem = new ABMCompraItem();
                         var message = 'Su compra ha sido enviada con éxito. Gracias por su compra.';
                         sendEmail(toName, toEmail, message);
                         alert('Compra enviada con éxito. Se ha enviado un correo de confirmación.');
-                        window.location.href = response.redirect;
+                        //window.location.href = response.redirect;
                     }else{
                         alert('Compra no enviada: ' + response.message);
                     }
@@ -149,7 +149,7 @@ $ABMCompraItem = new ABMCompraItem();
                         var message = 'Su compra ha sido cancelada. Si tiene alguna pregunta, por favor contáctenos.';
                         sendEmail(toName, toEmail, message);
                         alert('Compra cancelada con éxito. Se ha enviado un correo de confirmación.');
-                        window.location.href = response.redirect;
+                       // window.location.href = response.redirect;
                     } else {
                         alert('la Compra no se ha podido cancelar: ' + response.message);
                     }
