@@ -398,5 +398,105 @@ public function buscarCompraIniciada($idusuario) {
         return $response;
     }
 
+    /**
+     * Enviar una compra actualizando el estado y modificando el stock de los productos
+     * @param int $idCompra
+     * @param string $fechaFin
+     * @return array
+     */
+    public function enviarCompra($idCompra, $fechaFin) {
+        $response = [
+            'status' => 'default',
+            'message' => 'Parte inicial del action',
+            'redirect' => '../Home/ordenes.php'
+        ];
+
+        $ABMcompraitem = new ABMCompraItem;
+        $ABMproducto = new ABMProducto;
+        $ABMcompraEstado = new ABMCompraEstado;
+
+        // Colección de compraitems relacionados con ese idcompra
+        $colCompraItems = $ABMcompraitem->buscarArray(['idcompra' => $idCompra]);
+
+        // Buscamos el compraEstado relacionado a ese idcompra y con un idcompraestadotipo = 2
+        $compraEstado = $ABMcompraEstado->buscarArray(['idcompra' => $idCompra, 'idcompraestadotipo' => 2])[0];
+
+        // Banderas para verificar las modificaciones
+        $stockProdModificado = false;
+        $compraEstadoCambiado = false;
+        $compraEstadoNuevo = false;
+
+        foreach ($colCompraItems as $compraitem) {
+            // Almaceno la cantidad a descontar del producto
+            $cantDescontada = $compraitem['cicantidad'];
+            $stockActualizado = $compraitem['objProducto']->getProcantstock() - $cantDescontada;
+
+            // Modifico la cantidad descontada del producto
+            $param = [
+                'idproducto' => $compraitem['objProducto']->getIdproducto(),
+                'pronombre' => $compraitem['objProducto']->getPronombre(),
+                'prodetalle' => $compraitem['objProducto']->getProdetalle(),
+                'procantstock' => $stockActualizado,
+                'precioprod' => $compraitem['objProducto']->getPrecioprod()
+            ];
+
+            if ($ABMproducto->modificacion($param)) {
+                $stockProdModificado = true;
+
+                $param = [
+                    'idcompraestado' => $compraEstado['idcompraestado'],
+                    'idcompra' => $compraEstado['objCompra']->getIdcompra(),
+                    'idcompraestadotipo' => $compraEstado['objCompraEstadoTipo']->getIdcompraestadotipo(),
+                    'cefechaini' => $compraEstado['cefechaini'],
+                    'cefechafin' => $fechaFin
+                ];
+
+                if ($ABMcompraEstado->modificacion($param)) {
+                    $compraEstadoCambiado = true;
+
+                    $param = [
+                        'idcompraestado' => null,
+                        'idcompra' => $compraEstado['objCompra']->getIdcompra(),
+                        'idcompraestadotipo' => 3,
+                        'cefechaini' => $fechaFin,
+                        'cefechafin' => null
+                    ];
+
+                    if (count($ABMcompraEstado->buscarArray(['idcompra' => $compraEstado['objCompra']->getIdcompra(), 'idcompraestadotipo' => 3])) === 0) {
+                        if ($ABMcompraEstado->alta($param)) {
+                            $compraEstadoNuevo = true;
+                            $response['status'] = 'success';
+                            $response['message'] = 'Producto actualizado';
+
+                            // Obtener el usuario asociado a la compra
+                            $compra = new ABMCompra();
+                            $objCompra = $compra->buscar(['idcompra' => $idCompra]);
+                            if (count($objCompra) > 0) {
+                                $objCompra = $objCompra[0];
+                                $usuario = $objCompra->getObjUsuario();
+                                $response['toName'] = $usuario->getUsnombre();
+                                $response['toEmail'] = $usuario->getUsmail();
+                            }
+                        } else {
+                            $compraEstadoNuevo = false;
+                            $response['status'] = 'error';
+                            $response['message'] = 'Error al crear el nuevo estado de la compra.';
+                        }
+                    }
+                } else {
+                    $compraEstadoCambiado = false;
+                    $response['status'] = 'error';
+                    $response['message'] = 'Error al actualizar el estado de la compra.';
+                }
+            } else {
+                $stockProdModificado = false;
+                $response['status'] = 'error';
+                $response['message'] = 'Error al actualizar el producto.';
+            }
+        }
+
+        return $response;
+    }
+
 }
 ?>
