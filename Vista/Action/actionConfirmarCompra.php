@@ -28,9 +28,16 @@ if ($carritosIniciados !== null) {
 
         if (count($compraEstado) > 0) {
             $compraEstado = $compraEstado[0];
-            $compraEstado->setCefechafin($fechaFin);
 
-            if ($compraEstado->modificar()) {
+            $compraEstadoModificado = [
+                'idcompraestado' => $compraEstado->getIdcompraestado(),
+                'idcompra' => $idCompra,
+                'idcompraestadotipo' => $compraEstado->getObjCompraEstadoTipo()->getIdcompraestadotipo(),
+                'cefechaini' => $compraEstado->getCefechaini(),
+                'cefechafin' => $fechaFin
+            ];
+
+            if ($ABMcompraEstado->modificacion($compraEstadoModificado)) {
                 // Insertar una nueva entrada en la tabla compraestado con idcompraestadotipo = 2
                 $paramCompraEstado = [
                     'idcompraestado' => null,
@@ -45,7 +52,6 @@ if ($carritosIniciados !== null) {
                     $response['message'] = 'operacion exitosa';
                     $compraConfirmada = true;
                     
-                    $banderita = true;
                     // Obtener el usuario asociado a la compra
                     $idcompra = $idCompra;
                     $compra = new ABMCompra();
