@@ -1,6 +1,7 @@
 <?php
 include_once '../../configuracion.php';
 $session = new Session();
+// verificación para saber si el usuario está logueado o no y así saber si mostrarle la vista pública o privada.
 if ($session->activa() && $session->validar()) { //si la sesion es valida se muestra headerSeguro.php
     include_once('../estructura/headerSeguro.php');
     $sesionActiva = true;

@@ -208,5 +208,58 @@ class ABMCompra {
 
         return $compras;
     }
+
+    /**
+     * actualiza una compra y las tablas relacionadas
+     * ¿hay alguun problema con instanciar otros ABM dentro de este?
+     */
+    public function actualizarCompra($idUsuario, $idProducto,$cantSeleccionada){
+        $ABMCompraEstado = new ABMCompraEstado;
+        $ABMCompraItem = new ABMCompraItem;
+        $bandera = false;
+        $fechaCompra = date('Y-m-d H:i:s');
+        
+        // busco si existe el carrito
+        $compraIniciada = $ABMCompraEstado->buscarCompraIniciadaPorUsuario($idUsuario);
+        if ($compraIniciada === null) {
+
+            // Insertar la compra utilizando ABMCompra
+            if ($this->alta(['idcompra' => null,'cofecha' => $fechaCompra,'idusuario' => $idUsuario])) {
+                // Obtener el ID de la compra recien creada
+                $idCompra = $this->buscar(['cofecha' => $fechaCompra, 'idusuario' => $idUsuario])[0]->getIdcompra();
+
+                // Insertar el estado de la compra utilizando ABMCompraEstado
+                if ($ABMCompraEstado->alta(['idcompraestado' => null,'idcompra' => $idCompra,'idcompraestadotipo' => 1, 'cefechaini' => $fechaCompra,'cefechafin' => null])) {
+                    // Insertar los elementos del carrito en la tabla compraitem
+
+                    if ($ABMCompraItem->alta(['idcompraitem' => null,'idproducto' => $idProducto, 'idcompra' => $idCompra,'cicantidad' => $cantSeleccionada])) {
+                        $bandera = true;
+                    }
+                }
+            }
+        } else { // Si ya tiene una compra iniciada
+            // Extraer el idcompra de la compra iniciada
+            $idCompraIniciada = $compraIniciada[0]->getIdcompra();
+            // Verificar si ya existe un CompraItem con el mismo idproducto y idcompra
+            $compraItemExistente = $ABMCompraItem->buscar(['idcompra' => $idCompraIniciada, 'idproducto' => $idProducto]);
+            if (count($compraItemExistente) > 0) {
+                // Si ya existe, actualizar la cantidad
+                $compraItemExistente = $compraItemExistente[0];
+                $nuevaCantidad = $compraItemExistente->getCicantidad() + $cantSeleccionada;
+    
+                // obtengo el id producto y la nueva cantidad
+                if ($ABMCompraItem->modificacion(['idcompraitem' => $compraItemExistente->getIdcompraitem(),'idproducto' => $idProducto,'idcompra' => $idCompraIniciada,'cicantidad' => $nuevaCantidad])) {
+                    $bandera = true;
+                }
+            } else {
+                // Si no existe, insertar un nuevo CompraItem
+                // paso la cantidad seleccionada por el cliente
+                if ($ABMCompraItem->alta(['idcompraitem' => null,'idproducto' => $idProducto, 'idcompra' => $idCompraIniciada,'cicantidad' => $cantSeleccionada])) {
+                    $bandera = true;
+                }
+            }
+        }
+        return $bandera;
+    }
 }
 ?>
