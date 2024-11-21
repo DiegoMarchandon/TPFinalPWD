@@ -139,6 +139,7 @@ $ABMCompraItem = new ABMCompraItem();
                 method: 'POST',
                 data: { idcompra: idCompra, comprasRol: "deposito" },
                 success: function (response) {
+                    console.log(response);
                     // Manejo de la respuesta
                     response = typeof response === 'string' ? JSON.parse(response) : response;
                     
