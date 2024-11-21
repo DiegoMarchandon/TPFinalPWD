@@ -1,5 +1,4 @@
 <?php
-// include_once '../../configuracion.php';
 include_once('../estructura/headerSeguro.php');
 
 // creo un objeto de la clase abmUsuarioRol para llamar a la funcion verificarRolUsuario
@@ -17,25 +16,6 @@ if (!$usuarioPermitido) {
 }
 
 $ABMUsuario = new ABMUsuario;
-// $session = new Session;
-
-// $colUsers = $ABMUsuario->buscarArray(null);
-// print_r($colUsers[0]['usnombre']);
-
-// echo "<br>usuario actual:<br>";
-
-// $userActual = $ABMUsuario->buscarArray($session->getUsuario());
-/* 
-print_r($userActual);
-
-Array ( [idusuario] => 4 
-    [usnombre] => ana567 
-    [uspass] => 97a6d21df7c51e8289ac1a8c026aaac143e15aa1957f54f42e30d8f8a85c3a55 
-    [usmail] => ana@ana.com.ar 
-    [usdeshabilitado] => 0000-00-00 00:00:00 
-    [mensajeoperacion] => )
-*/
-// echo $userActual['usnombre'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -49,47 +29,46 @@ Array ( [idusuario] => 4
     <h2 class="text-center">Cambiar Datos de Usuario</h2>
     <p class=" text-center text-muted">Deje el campo vacío de los datos que no desea actualizar.</p>
     <form action="../Action/actualizarLogin.php" method="POST" id="modificarDatos">
+        <input type="hidden" name="form_security_token" value="valor_esperado"> <!-- Token de seguridad -->
 
         <!-- Nombre de Usuario -->
-
         <div class="form-floating m-2">
-        <input type="text" class="form-control" name="nombreActual" id="nombreActual" placeholder="Ingrese su nombre de usuario actual">
-        <label for="nombreActual" for="floatingUsername">Nombre de Usuario Actual <small><b>(obligatorio)</b></small></label>
+            <input type="text" class="form-control" name="nombreActual" id="nombreActual" placeholder="Ingrese su nombre de usuario actual">
+            <label for="nombreActual" for="floatingUsername">Nombre de Usuario Actual <small><b>(obligatorio)</b></small></label>
         </div>
 
         <div class="form-floating m-2">
-        <input type="text" class="form-control" name="nuevoNombre" id="nuevoNombre" placeholder="Ingrese su nuevo nombre de usuario">
-        <label for="nuevoNombre" for="floatingUsername">Nuevo Nombre de Usuario </label>
+            <input type="text" class="form-control" name="nuevoNombre" id="nuevoNombre" placeholder="Ingrese su nuevo nombre de usuario">
+            <label for="nuevoNombre" for="floatingUsername">Nuevo Nombre de Usuario </label>
         </div>
 
         <!-- Contraseña -->
         <div class=" bg-secondary p-2">
             <div class="form-floating m-2">
-            <input type="text" class="form-control" name="contraseñaActual" id="contraseñaActual" placeholder="Ingrese su contraseña actual">
-            <label for="contraseñaActual" for="floatingPassword">Contraseña Actual <small><b>(obligatorio)</b></small></label>
+                <input type="text" class="form-control" name="contraseñaActual" id="contraseñaActual" placeholder="Ingrese su contraseña actual">
+                <label for="contraseñaActual" for="floatingPassword">Contraseña Actual <small><b>(obligatorio)</b></small></label>
             </div>
     
             <div class="form-floating m-2">
-            <input type="password" class="form-control" name="nuevaContraseña" id="nuevaContraseña" placeholder="Ingrese la nueva contraseña">
-            <label for="nuevaContraseña" for="floatingPassword">Nueva Contraseña</label>
+                <input type="password" class="form-control" name="nuevaContraseña" id="nuevaContraseña" placeholder="Ingrese la nueva contraseña">
+                <label for="nuevaContraseña" for="floatingPassword">Nueva Contraseña</label>
             </div>
     
             <div class="form-floating m-2">
-            <input type="password" class="form-control" name="nuevaContraseñaConfirm" id="nuevaContraseñaConfirm" placeholder="verifique la nueva contraseña">
-            <label for="contraNuevaConfirmada" for="floatingPassword">Confirmar Nueva Contraseña</label>
+                <input type="password" class="form-control" name="nuevaContraseñaConfirm" id="nuevaContraseñaConfirm" placeholder="verifique la nueva contraseña">
+                <label for="contraNuevaConfirmada" for="floatingPassword">Confirmar Nueva Contraseña</label>
             </div>
         </div>
 
         <!-- Correo Electrónico -->
-
         <div class="form-floating m-2">
-        <input type="email" class="form-control" name="emailActual" id="emailActual" placeholder="Ingrese su email actual">
-        <label for="emailActual" for="floatingEmail">Email actual <small><b>(obligatorio)</b></small></label>
+            <input type="email" class="form-control" name="emailActual" id="emailActual" placeholder="Ingrese su email actual">
+            <label for="emailActual" for="floatingEmail">Email actual <small><b>(obligatorio)</b></small></label>
         </div>
 
         <div class="form-floating m-2">
-        <input type="email" class="form-control" name="nuevoEmail" id="nuevoEmail" placeholder="Ingrese el nuevo email">
-        <label for="nuevoEmail" for="floatingEmail">Nuevo Email</label>
+            <input type="email" class="form-control" name="nuevoEmail" id="nuevoEmail" placeholder="Ingrese el nuevo email">
+            <label for="nuevoEmail" for="floatingEmail">Nuevo Email</label>
         </div>
 
         <!-- Botón de Enviar -->
@@ -125,6 +104,15 @@ $(document).ready(function(){
         $.ajax({
             url: '../Action/compararDatos.php', // Ruta al script en Action
             method: 'POST',
+            data: {
+                nombreActual: actualName,
+                nuevoNombre: newName,
+                contraseñaActual: passHash,
+                nuevaContraseña: newPassHash,
+                emailActual: actualEmail,
+                nuevoEmail: newEmail,
+                form_security_token: 'valor_esperado' // Token de seguridad
+            },
             success: function(data){
                 console.log("colusers: "+data.usersBD[0]['usnombre']);
                 
