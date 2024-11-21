@@ -3,6 +3,7 @@ include_once '../../configuracion.php';
 
 $session = new Session();
 $abmUsuario = new ABMUsuario();
+echo "<h1>action del login</h1>";
 // Verificar que el método sea POST
 
 $datos = darDatosSubmitted();
