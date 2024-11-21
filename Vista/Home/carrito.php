@@ -91,6 +91,7 @@ $totalCarrito = $resultadoCarrito['totalCarrito'];
                 success: function (response) {
                     response = typeof response === 'string' ? JSON.parse(response) : response;
                     // alert("alertando respuesta exitosa");
+                    console.log(response);
                     if(response.status === 'success'){
                         var toName = response.toName;
                         var toEmail = response.toEmail;
@@ -125,13 +126,13 @@ $totalCarrito = $resultadoCarrito['totalCarrito'];
                         var toName = response.toName;
                         var toEmail = response.toEmail;
                         var message = 'Su carrito ha sido cancelado. Si tiene alguna pregunta, por favor contáctenos.';
-//---------------------- sendEmail(toName, toEmail, message);
+                        sendEmail(toName, toEmail, message);
                         // alert('Carrito cancelado con éxito. Se ha enviado un correo de confirmación.');
                         window.location.href = '../Home/carrito.php';
                         var toName = response.toName;
                         var toEmail = response.toEmail;
                         var message = 'Usted cancelo su compra. esperamos que vuelva pronto.';
-//---------------------- sendEmail(toName, toEmail, message);
+                        sendEmail(toName, toEmail, message);
                         alert('Compra cancelada con exito. Se ha enviado un correo de confirmación.');
                     } else {
                         alert('Compra no confirmada: ' + response.message);
