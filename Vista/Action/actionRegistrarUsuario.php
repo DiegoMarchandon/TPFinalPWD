@@ -7,6 +7,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $abmUsuario = new ABMUsuario();
 
+    // Verificar si se está realizando una verificación AJAX
+    if (isset($datos['verificar']) && $datos['verificar'] == true) {
+        $response = [
+            'nombreExiste' => false,
+            'emailExiste' => false
+        ];
+
+        // Verificar si el nombre de usuario ya existe en la base de datos
+        if (isset($datos['usnombre'])) {
+            $usuariosConMismoNombre = $abmUsuario->buscar(['usnombre' => $datos['usnombre']]);
+            if (count($usuariosConMismoNombre) > 0) {
+                $response['nombreExiste'] = true;
+            }
+        }
+
+        // Verificar si el email ya existe en la base de datos
+        if (isset($datos['usmail'])) {
+            $usuariosConMismoEmail = $abmUsuario->buscar(['usmail' => $datos['usmail']]);
+            if (count($usuariosConMismoEmail) > 0) {
+                $response['emailExiste'] = true;
+            }
+        }
+
+        echo json_encode($response);
+        exit();
+    }
+
     // Verificar si el nombre de usuario ya existe
     $usuarioExistente = $abmUsuario->buscar(['usnombre' => $datos['usnombre']]);
     if (count($usuarioExistente) > 0) {
