@@ -14,14 +14,20 @@ $datos = darDatosSubmitted();
         echo '<div class="alert alert-success text-center">Cuenta creada exitosamente. Ahora puede iniciar sesión.</div>';
     }
     ?>
-    <form id="loginForm" method="POST" onsubmit="return verificarLogin(event)">
+    <form id="loginForm" method="POST" onsubmit="return verificarLogin(event)" novalidate>
         <div class="form-group">
             <label for="nombreUsuario">Nombre de Usuario</label>
             <input type="text" class="form-control" id="nombreUsuario" name="nombreUsuario" required>
+            <div class="invalid-feedback">
+                El nombre de usuario solo debe contener letras y no puede estar vacío.
+            </div>
         </div>
         <div class="form-group">
             <label for="uspass">Contraseña</label>
             <input type="password" class="form-control" id="uspass" name="uspass" required>
+            <div class="invalid-feedback">
+                La contraseña no puede estar vacía.
+            </div>
         </div>
         <div class="text-center">
             <a href="../Home/registrarUsuario.php">Registrarse</a>
@@ -38,9 +44,36 @@ function hashPassword(password) {
 function verificarLogin(event) {
     event.preventDefault(); // Evitar el envío del formulario
 
-    const nombreUsuario = document.getElementById('nombreUsuario').value;
+    const form = document.getElementById('loginForm');
+    const nombreUsuario = document.getElementById('nombreUsuario').value.trim();
     const uspassField = document.getElementById('uspass');
-    const uspass = uspassField.value;
+    const uspass = uspassField.value.trim();
+
+    // Validar que el nombre de usuario solo contenga letras
+    const nombreUsuarioRegex = /^[a-zA-Z]+$/;
+    if (!nombreUsuarioRegex.test(nombreUsuario)) {
+        document.getElementById('nombreUsuario').classList.add('is-invalid');
+        return false;
+    } else {
+        document.getElementById('nombreUsuario').classList.remove('is-invalid');
+        document.getElementById('nombreUsuario').classList.add('is-valid');
+    }
+
+    // Validar que los campos no estén vacíos
+    if (nombreUsuario === '' || uspass === '') {
+        if (nombreUsuario === '') {
+            document.getElementById('nombreUsuario').classList.add('is-invalid');
+        }
+        if (uspass === '') {
+            uspassField.classList.add('is-invalid');
+        }
+        return false;
+    } else {
+        document.getElementById('nombreUsuario').classList.remove('is-invalid');
+        document.getElementById('nombreUsuario').classList.add('is-valid');
+        uspassField.classList.remove('is-invalid');
+        uspassField.classList.add('is-valid');
+    }
 
     // Hashear la contraseña
     const hashedPassword = hashPassword(uspass);

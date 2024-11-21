@@ -131,7 +131,22 @@ $totalCarrito = $resultadoCarrito['totalCarrito'];
                         var toName = response.toName;
                         var toEmail = response.toEmail;
                         var message = 'Usted cancelo su compra. esperamos que vuelva pronto.';
-                        sendEmail(toName, toEmail, message);
+                        //sendEmail(toName, toEmail, message);
+                        (function(){
+                            emailjs.init("dgc2Clo0soEeyxVnL"); // Inicializa EmailJS con tu clave pública
+                            })();
+                        document.addEventListener('DOMContentLoaded', function () {
+                        emailjs.send('service_0z1cn1z', 'template_fpc9kkb', {
+                        to_name: 'tiene andar',
+                        to_email: 'diegomarc2020@gmail.com', //aca pone tu mail
+                        from_name: 'E-Commerce Team',
+                        message: 'Usted ha confirmado una compra. Este pendiente a la respuesta de la misma, en breve le notificaremos.'
+                        }).then(function(response) {
+                console.log('SUCCESS!', response.status, response.text);
+            }, function(error) {
+                console.log('FAILED...', error);
+            });
+        });
                         alert('Compra cancelada con exito. Se ha enviado un correo de confirmación.');
                     } else {
                         alert('Compra no confirmada: ' + response.message);
