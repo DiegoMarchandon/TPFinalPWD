@@ -61,7 +61,7 @@ $param = [
 
 if ($abmUsuario->modificacion($param)) {
     echo "Actualización exitosa<br>";
-    header('Location: ../Home/paginaSegura.php?mensaje=actualizacion_exitosa');
+    header('Location: ../Home/actualizarUsuario.php?mensaje=actualizacion_exitosa');
 } else {
     echo "Error al actualizar el usuario.<br>";
     echo '<br><a href="../Home/actualizarUsuario.php">Volver a intentar</a>';
