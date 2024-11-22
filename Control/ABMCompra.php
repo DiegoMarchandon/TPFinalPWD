@@ -211,14 +211,13 @@ class ABMCompra {
 
     /**
      * actualiza una compra y las tablas relacionadas
-     * ¿hay alguun problema con instanciar otros ABM dentro de este?
      */
     public function actualizarCompra($idUsuario, $idProducto,$cantSeleccionada){
         $ABMCompraEstado = new ABMCompraEstado;
         $ABMCompraItem = new ABMCompraItem;
         $bandera = false;
         $fechaCompra = date('Y-m-d H:i:s');
-        
+
         // busco si existe el carrito
         $compraIniciada = $ABMCompraEstado->buscarCompraIniciadaPorUsuario($idUsuario);
         if ($compraIniciada === null) {
@@ -260,6 +259,22 @@ class ABMCompra {
             }
         }
         return $bandera;
+    }
+
+    /**
+     * recibe un compraestado y retorna un arreglo asociativo con las claves ['nombreUsuario'] y ['mailUsuario'] para ser usadas en sendEmail
+     */
+    public function mailInfo($idcompra){
+
+        $arrClaves = [];
+
+        $objCompra = $this->buscar(['idcompra'=>$idcompra])[0];
+        if(!empty($objCompra)){
+            $arrClaves['nombreUsuario'] = $objCompra->getObjUsuario()->getUsnombre();
+            $arrClaves['mailUsuario'] = $objCompra->getObjUsuario()->getUsmail();
+        }
+
+        return $arrClaves;
     }
 }
 ?>
