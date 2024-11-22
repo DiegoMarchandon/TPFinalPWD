@@ -137,7 +137,7 @@ $ABMCompraItem = new ABMCompraItem();
             $.ajax({
                 url: '../Action/actionCancelarCompra.php',
                 method: 'POST',
-                data: { idcompra: idCompra, comprasRol: "deposito" }, // NO TOCAR 
+                data: { idcompra: idCompra, comprasRol: "deposito" },
                 success: function (response) {
                     console.log(response);
                     // Manejo de la respuesta
