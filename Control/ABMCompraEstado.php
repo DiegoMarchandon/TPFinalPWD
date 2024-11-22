@@ -508,14 +508,24 @@ public function buscarCompraIniciada($idusuario) {
         $response = [
             'status' => 'default',
             'message' => 'Parte inicial del action',
-            'redirect' => '../Home/ordenes.php'
+            //'redirect' => '../Home/ordenes.php'
         ];
 
         // Verificar si este action fue llamado desde el cliente (en el botón cancelar de carrito.php) o desde depósito (en el botón de cancelar de ordenes.php)
         if ($datos['comprasRol'] === 'deposito') {
             $colCompras = $this->buscarComprasConfirmadasSinFinalizar();
+            $response = [
+                //'status' => 'default',
+                //'message' => 'Parte inicial del action',
+                'redirect' => '../Home/ordenes.php'
+            ];
         } else {
             $colCompras = $this->buscarCompraIniciadaPorUsuario($idUsuarioActual);
+            $response = [
+                //'status' => 'default',
+                //'message' => 'Parte inicial del action',
+                'redirect' => '../Home/carrito.php'
+            ];
         }
 
         if ($colCompras !== null && count($colCompras) > 0) {
