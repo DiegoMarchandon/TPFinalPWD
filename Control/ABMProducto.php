@@ -203,5 +203,50 @@ class ABMProducto {
         }
         return $cantProds;
     }
+    /**
+     * Actualizar el stock de un producto
+     * @param array $datos
+     * @return array
+     */
+    public function actualizarStock($datos) {
+        $response = [
+            'status' => 'default',
+            'message' => 'Parte inicial del action',
+            'redirect' => '../Home/stock.php'
+        ];
+
+        $productoBuscado = $this->buscarArray(['idproducto' => $datos['idproducto']]);
+
+        // Verifico la existencia de productos reservados con ese id. Si los hay, verifico que el nuevo stock no sea inferior a la cantidad de productos reservados. 
+        $prodsReservados = $this->productosReservados($datos['idproducto']);
+        $response['prodsReservados'] = $prodsReservados;
+
+        if ($datos['nuevoStock'] > 0) {
+            if (count($productoBuscado) > 0) {
+                $param = [
+                    'idproducto' => $productoBuscado[0]['idproducto'],
+                    'pronombre' => $productoBuscado[0]['pronombre'],
+                    'prodetalle' => $productoBuscado[0]['prodetalle'],
+                    'precioprod' => $productoBuscado[0]['precioprod'],
+                    'procantstock' => $datos['nuevoStock']
+                ];
+                if ($this->modificacion($param)) {
+                    $response['status'] = 'success';
+                    $response['message'] = 'Actualización de stock exitosa';
+                } else {
+                    $response['status'] = 'error';
+                    $response['message'] = 'Error al actualizar el stock del producto.';
+                }
+            } else {
+                $response['status'] = 'error';
+                $response['message'] = 'Producto no encontrado.';
+            }
+        } else {
+            $response['status'] = 'error';
+            $response['message'] = 'El nuevo stock debe ser mayor a 0.';
+        }
+
+        return $response;
+    }
 }
 ?>
