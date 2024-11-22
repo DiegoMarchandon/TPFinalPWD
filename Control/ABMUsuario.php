@@ -257,6 +257,108 @@ class ABMUsuario {
             'deshabilitados' => $usuariosDeshabilitados
         ];
     }
+    /**
+     * Registrar un nuevo usuario
+     * @param array $datos
+     * @return array
+     */
+    public function registrarUsuario($datos) {
+        $response = [
+            'status' => 'default',
+            'message' => 'Parte inicial del action'
+        ];
+
+        // Verificar si el nombre de usuario ya existe
+        $usuarioExistente = $this->buscar(['usnombre' => $datos['usnombre']]);
+        if (count($usuarioExistente) > 0) {
+            $response['status'] = 'error';
+            $response['message'] = 'El nombre de usuario no está disponible.';
+            return $response;
+        }
+
+        // Verificar si el correo electrónico ya existe
+        $emailExistente = $this->buscar(['usmail' => $datos['usmail']]);
+        if (count($emailExistente) > 0) {
+            $response['status'] = 'error';
+            $response['message'] = 'El correo electrónico ya está asociado a una cuenta.';
+            return $response;
+        }
+
+        // Obtener la contraseña hasheada
+        $hashedPassword = $datos['uspass'];
+
+        $param = [
+            'usnombre' => $datos['usnombre'],
+            'uspass' => $hashedPassword, // contraseña hasheada
+            'usmail' => $datos['usmail'],
+        ];
+
+        if ($this->alta($param)) {
+            // Obtener el ID del usuario recien creado
+            $usuarioNuevo = $this->buscar(['usnombre' => $datos['usnombre']]);
+            $idUsuario = $usuarioNuevo[0]->getIdUsuario();
+
+            // Asignar el rol de "Usuario" por defecto
+            $abmUsuarioRol = new ABMUsuarioRol();
+            $abmUsuarioRol->alta(['idusuario' => $idUsuario, 'idrol' => 3]); // el id 3 es de "Cliente" que se le asignara a todos los que se registren por defecto
+
+            $response['status'] = 'success';
+            $response['message'] = 'Registro exitoso.';
+        } else {
+            $response['status'] = 'error';
+            $response['message'] = 'Error al registrar el usuario.';
+        }
+
+        return $response;
+    }
+    /**
+     * Actualizar los datos de un usuario
+     * @param array $datos
+     * @return array
+     */
+    public function actualizarUsuario($datos) {
+        $response = [
+            'status' => 'default',
+            'message' => 'Parte inicial del action'
+        ];
+
+        // Buscar el usuario actual por nombre de usuario
+        $userActual = $this->buscarArray(['usnombre' => $datos['nombreActual']]);
+
+        if (count($userActual) > 0) {
+            $userActual = $userActual[0];
+
+            // Si el campo está vacío, se mantiene el nombre actual del usuario
+            $nombreUsuario = $datos['nuevoNombre'] === '' ? $userActual['usnombre'] : $datos['nuevoNombre'];
+
+            // Si el campo de la contraseña está vacío, se mantiene la contraseña actual del usuario
+            $hashedPassword = $datos['nuevaContraseña'] === '' || $datos['nuevaContraseñaConfirm'] === '' ? $userActual['uspass'] : $datos['nuevaContraseña'];
+
+            // Si el campo del email está vacío, se mantiene el email actual del usuario
+            $email = $datos['nuevoEmail'] === '' ? $userActual['usmail'] : $datos['nuevoEmail'];
+
+            $param = [
+                'idusuario' => $userActual['idusuario'],
+                'usnombre' => $nombreUsuario,
+                'uspass' => $hashedPassword,
+                'usmail' => $email,
+                'usdeshabilitado' => $userActual['usdeshabilitado']
+            ];
+
+            if ($this->modificacion($param)) {
+                $response['status'] = 'success';
+                $response['message'] = 'Actualización exitosa';
+            } else {
+                $response['status'] = 'error';
+                $response['message'] = 'Error al actualizar el usuario.';
+            }
+        } else {
+            $response['status'] = 'error';
+            $response['message'] = 'Usuario no encontrado.';
+        }
+
+        return $response;
+    }
 
 
 }
