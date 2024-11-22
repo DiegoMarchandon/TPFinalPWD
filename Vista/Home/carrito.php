@@ -117,7 +117,7 @@ $totalCarrito = $resultadoCarrito['totalCarrito'];
             $.ajax({
                 url: '../Action/actionCancelarCompra.php',
                 method: 'POST',
-                data: { comprasRol: "cliente" },
+                data: { comprasRol: "cliente" }, // NO TOCAR 
                 success: function (response) {
                     // Manejo de la respuesta
                     response = typeof response === 'string' ? JSON.parse(response) : response;

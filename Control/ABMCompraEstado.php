@@ -198,21 +198,17 @@ class ABMCompraEstado {
 
                     // si el 'idcompraestadotipo' de este compraEstado es 1, significa que la compra fue iniciada. Por lo que la almacenamos
                     if($compraEstado[0]['objCompraEstadoTipo']->getIdcompraestadotipo() === 1 &&  $compraEstado[0]['cefechafin'] === '0000-00-00 00:00:00'){
-                        $compraEstadoIniciado[] = $compra; 
+                        $compraEstadoIniciado = $compra; 
                     }
                 }
             }
         } 
 
-        if(count($compraEstadoIniciado) === 0){
-            $compraEstadoIniciado = null;
-        }
-
         return $compraEstadoIniciado;
     }
 
     /**
-     * permite buscar las compras con un idusuario, compraestado y fecha fin especificados 
+     * permite buscar LA compra con un idusuario, compraestado y fecha fin especificados 
      * ($fechafin === true === null === '0000-00-00 00:00:00' ).
      * @return array|null 
     */
@@ -240,6 +236,35 @@ class ABMCompraEstado {
         return $comprasEspecificadas;
     }
 
+    /**
+     * cancela una compra dependiendo del rol que lo haga (deposito o cliente) para así saber su estado.
+     * Si paso un $idCompra pero dejo $idUsuario null, busco por depósito. Si paso un $idusuario pero dejo $idcompra como null, busco por cliente.
+     * @return boolean
+     */
+    public function cancelarCompra($idCompra,$idUsuario){
+        
+        $compraEstadoBuscado = [];
+
+        $fechaFinEstado = date('Y-m-d H:i:s');
+        if($idCompra !== null && $idUsuario === null){
+            $compraEstadoBuscado = $this->buscarArray(['idcompra' => $idCompra,'idcompraestadotipo' => 2])[0];
+        }elseif($idCompra === null && $idUsuario !== null){
+            $compraEstadoBuscado = $this->buscarCompraIniciadaPorUsuario($idUsuario)[0];
+        }
+
+        if(!empty($compraEstadoBuscado)){
+            // si pudo modificarse exitosamente el compraestado Actual con la fechaFin, continuo creando el siguiente compraestado 
+            if($this->modificacion(['idcompraestado' => $compraEstadoBuscado['idcompraestado'],'idcompra' => $compraEstadoBuscado['objCompra']->getIdcompra(), 'idcompraestadotipo' =>$compraEstadoBuscado['objCompraEstadoTipo']->getIdcompraestadotipo(),'cefechaini' => $compraEstadoBuscado['cefechaini'],'cefechafin' => $fechaFinEstado])){
+                if(!($this->alta(['idcompraestado' => null,'idcompra' => $compraEstadoBuscado['objCompra']->getIdcompra(),'idcompraestadotipo' => 4,'cefechaini'=>$fechaFinEstado,'cefechafin' => null]))){
+                    // si no se pudo realizar el alta del nuevo compraestado, vuelvo a vaciar el arreglo para indicar que no todas las operaciones se realizaron correctamente.
+                    $compraEstadoBuscado = [];
+                }
+                
+            }
+        }
+
+        return $compraEstadoBuscado;
+    }
 
     /**
      * permite buscar compras confirmadas sin finalizar
@@ -274,6 +299,7 @@ class ABMCompraEstado {
 
     /**
      * retorna la cantidad de ventas
+     * @return array
     */
     public function ventas(){
 
