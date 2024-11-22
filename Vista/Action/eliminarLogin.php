@@ -27,20 +27,14 @@ if (!$session->activa() || !$session->validar()) {
 
 $abmUsuario = new ABMUsuario();
 $datos = darDatosSubmitted(); 
+$response = [];
+
 if (isset($datos['id'])) {
-    $param = ['idusuario' => $datos['id']];
-    $usuario = $abmUsuario->buscar($param)[0];
-    $param = [
-        'idusuario' => $usuario->getIdusuario(), 
-        'usnombre' => $usuario->getUsnombre(),
-        'uspass' => $usuario->getUspass(),
-        'usmail' => $usuario->getUsmail(),
-        'usdeshabilitado' => date('Y-m-d H:i:s')
-    ];
-    if ($abmUsuario->modificacion($param)) {
+    $response = $abmUsuario->deshabilitarUsuario($datos['id']);
+    if ($response['status'] === 'success') {
         header('Location: ../Home/actualizarUsuario.php?mensaje=eliminacion_exitosa');
     } else {
-        echo "Error al deshabilitar el usuario.";
+        echo $response['message'];
         echo '<br><a href="../Home/actualizarUsuario.php">Volver a intentar</a>';
     }
 }

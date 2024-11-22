@@ -262,6 +262,38 @@ class ABMCompraItem {
         $resultado = ['productosCarrito' => $productosCarrito, 'totalCarrito' => $totalCarrito];
         return $resultado;
     }
+     /**
+     * Verificar el estado de un producto
+     * @param int $idProducto
+     * @param int $idUsuario
+     * @return string
+     */
+    public function verificarEstadoProducto($idProducto, $idUsuario) {
+        $response = '';
+
+        // Verificar que existan compraitem con ese idproducto
+        $compraItem = $this->buscarArray(['idproducto' => $idProducto]);
+        if (isset($compraItem[0])) {
+            $compraItem = $compraItem[0];
+
+            // Obtener el idcompra del compraitem
+            $idCompra = $compraItem['objCompra']->getIdcompra();
+
+            $ABMcompra = new ABMCompra();
+            // Verificar que la compra pertenezca al usuario actual
+            if (count($ABMcompra->buscar(['idcompra' => $idCompra, 'idusuario' => $idUsuario])) > 0) {
+                // Obtener el estado del compraitem
+                $estado = $this->estadoCompraItem($idProducto);
+                $response = $estado;
+            } else {
+                $response = 'La compra no pertenece al usuario actual.';
+            }
+        } else {
+            $response = 'No existe el compraitem con ese idproducto.';
+        }
+
+        return $response;
+    }
 
 
 }

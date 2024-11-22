@@ -258,5 +258,44 @@ class ABMUsuarioRol {
         }
         return $rolPermitido;
     }
+    /**
+     * Asignar un único rol a un usuario
+     * @param array $datos
+     * @return array
+     */
+    public function asignarRolUnico($datos) {
+        $response = [
+            'status' => 'default',
+            'message' => 'Parte inicial del action'
+        ];
+
+        $idUsuario = $datos['idusuario'];
+        $idRol = $datos['idrol'];
+
+        // Verificar si el usuario ya tiene algún rol asignado
+        $usuarioRolesExistentes = $this->buscar(['idusuario' => $idUsuario]);
+        if (count($usuarioRolesExistentes) > 0) {
+            // Eliminar todos los roles existentes del usuario
+            foreach ($usuarioRolesExistentes as $usuarioRol) {
+                $this->baja(['idusuario' => $idUsuario, 'idrol' => $usuarioRol->getObjRol()->getIdrol()]);
+            }
+        }
+
+        // Asignar el nuevo rol al usuario
+        $param = [
+            'idusuario' => $idUsuario,
+            'idrol' => $idRol
+        ];
+
+        if ($this->alta($param)) {
+            $response['status'] = 'success';
+            $response['message'] = 'Rol asignado exitosamente.';
+        } else {
+            $response['status'] = 'error';
+            $response['message'] = 'Error al asignar el rol.';
+        }
+
+        return $response;
+    }
 }
 ?>

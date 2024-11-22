@@ -497,6 +497,83 @@ public function buscarCompraIniciada($idusuario) {
 
         return $response;
     }
+     /**
+     * Cancelar una compra actualizando el estado
+     * @param array $datos
+     * @param string $fechaFin
+     * @param int $idUsuarioActual
+     * @return array
+     */
+    public function cancelarCompra($datos, $fechaFin, $idUsuarioActual) {
+        $response = [
+            'status' => 'default',
+            'message' => 'Parte inicial del action',
+            'redirect' => '../Home/ordenes.php'
+        ];
+
+        // Verificar si este action fue llamado desde el cliente (en el botón cancelar de carrito.php) o desde depósito (en el botón de cancelar de ordenes.php)
+        if ($datos['comprasRol'] === 'deposito') {
+            $colCompras = $this->buscarComprasConfirmadasSinFinalizar();
+        } else {
+            $colCompras = $this->buscarCompraIniciadaPorUsuario($idUsuarioActual);
+        }
+
+        if ($colCompras !== null && count($colCompras) > 0) {
+            foreach ($colCompras as $compra) {
+                if (!isset($datos['idcompra']) || $compra->getIdcompra() == $datos['idcompra']) {
+                    if (!isset($datos['idcompra'])) {
+                        $datos['idcompra'] = $compra->getIdcompra();
+                    }
+
+                    $compraEstadoBuscado = $datos['comprasRol'] === 'deposito' ? $this->buscarArray(['idcompra' => $datos['idcompra']])[1] : $this->buscarArray(['idcompra' => $datos['idcompra']])[0];
+
+                    $compraEstadoModificado = [
+                        'idcompraestado' => $compraEstadoBuscado['idcompraestado'],
+                        'idcompra' => $datos['idcompra'],
+                        'idcompraestadotipo' => $compraEstadoBuscado['objCompraEstadoTipo']->getIdcompraestadotipo(),
+                        'cefechaini' => $compraEstadoBuscado['cefechaini'],
+                        'cefechafin' => $fechaFin
+                    ];
+
+                    if ($this->modificacion($compraEstadoModificado)) {
+                        $paramCompraEstado = [
+                            'idcompraestado' => null,
+                            'idcompra' => $datos['idcompra'],
+                            'idcompraestadotipo' => 4, // Estado "cancelado"
+                            'cefechaini' => $fechaFin,
+                            'cefechafin' => null
+                        ];
+
+                        if ($this->alta($paramCompraEstado)) {
+                            $response['status'] = 'success';
+                            $response['message'] = 'operacion exitosa';
+
+                            $idcompra = $datos['idcompra'];
+                            $compra = new ABMCompra();
+                            $objCompra = $compra->buscar(['idcompra' => $idcompra]);
+                            if (count($objCompra) > 0) {
+                                $objCompra = $objCompra[0];
+                                $usuario = $objCompra->getObjUsuario();
+                                $response['toName'] = $usuario->getUsnombre();
+                                $response['toEmail'] = $usuario->getUsmail();
+                            }
+                        } else {
+                            $response['status'] = 'error';
+                            $response['message'] = 'Error al crear el nuevo estado de la compra.';
+                        }
+                    } else {
+                        $response['status'] = 'error';
+                        $response['message'] = 'Error al modificar el estado de la compra.';
+                    }
+                }
+            }
+        } else {
+            $response['status'] = 'error';
+            $response['message'] = 'No hay compras para cancelar.';
+        }
+
+        return $response;
+    }
 
 }
 ?>

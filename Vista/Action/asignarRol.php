@@ -16,39 +16,24 @@ if (!$isAjax && (!$isPostOrGet || !$isValidToken)) {
     exit;
 }
 
-$session = new Session();
-$abmUsuarioRol = new ABMUsuarioRol();
+header('Content-Type: application/json');
 
 $datos = darDatosSubmitted();
 $response = [];
 
+// Depuración: agregar los datos recibidos a la respuesta
+$response['debug']['datos'] = $datos;
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($datos['id']) && isset($datos['rol'])) {
-    $idUsuario = $datos['id'];
-    $idRol = $datos['rol'];
-
-    $param = [
-        'idusuario' => $idUsuario,
-        'idrol' => $idRol
-    ];
-
-    // Verifica si el usuario ya tiene el rol asignado
-    $usuarioRolExistente = $abmUsuarioRol->buscar($param);
-    if (count($usuarioRolExistente) > 0) {
-        // El usuario ya tiene este rol
-        $response['mensaje'] = 'rol_existente';
-    } else {
-        // Modificar el rol del usuario
-        if ($abmUsuarioRol->modificarRol($param)) {
-            $response['mensaje'] = 'asignacion_exitosa';
-        } else {
-            $response['error'] = 'Error al asignar el rol.';
-        }
-    }
+    $abmUsuarioRol = new ABMUsuarioRol();
+    $datos['idusuario'] = $datos['id']; // Se espera que el ID del usuario esté en 'id'
+    $datos['idrol'] = $datos['rol'];  // Se espera que el ID del rol esté en 'rol'
+    $response = array_merge($response, $abmUsuarioRol->asignarRolUnico($datos));
 } else {
-    $response['error'] = 'Método no permitido o parámetros faltantes.';
+    $response['status'] = 'error';
+    $response['message'] = 'Método no permitido o parámetros faltantes.';
 }
 
-header('Content-Type: application/json');
 echo json_encode($response);
 exit;
 ?>

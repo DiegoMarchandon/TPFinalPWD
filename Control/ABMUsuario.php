@@ -359,7 +359,172 @@ class ABMUsuario {
 
         return $response;
     }
+    /**
+     * Deshabilitar un usuario
+     * @param int $idUsuario
+     * @return array
+     */
+    public function deshabilitarUsuario($idUsuario) {
+        $response = [
+            'status' => 'default',
+            'message' => 'Parte inicial del action'
+        ];
 
+        $usuario = $this->buscar(['idusuario' => $idUsuario]);
+        if (count($usuario) > 0) {
+            $usuario = $usuario[0];
+            $param = [
+                'idusuario' => $usuario->getIdusuario(),
+                'usnombre' => $usuario->getUsnombre(),
+                'uspass' => $usuario->getUspass(),
+                'usmail' => $usuario->getUsmail(),
+                'usdeshabilitado' => date('Y-m-d H:i:s')
+            ];
+
+            if ($this->modificacion($param)) {
+                $response['status'] = 'success';
+                $response['message'] = 'Usuario deshabilitado exitosamente.';
+            } else {
+                $response['status'] = 'error';
+                $response['message'] = 'Error al deshabilitar el usuario.';
+            }
+        } else {
+            $response['status'] = 'error';
+            $response['message'] = 'Usuario no encontrado.';
+        }
+
+        return $response;
+    }
+    /**
+     * Modificar los datos de un usuario
+     * @param array $datos
+     * @return array
+     */
+    public function modificarUsuario($datos) {
+        $response = [
+            'status' => 'default',
+            'message' => 'Parte inicial del action'
+        ];
+
+        $userActual = $this->buscarArray(['idusuario' => $datos['idusuario']]);
+
+        // Verificar si se encontró el usuario
+        if (count($userActual) > 0) {
+            $userActual = $userActual[0];
+
+            // Si el campo está vacío, se mantiene el nombre actual del usuario
+            $nombreUsuario = $datos['usnombre'] === '' ? $userActual['usnombre'] : $datos['usnombre'];
+
+            // Si el campo de la contraseña está vacío, se mantiene la contraseña actual del usuario
+            $hashedPassword = $datos['uspass'] === '' ? $userActual['uspass'] : $datos['uspass'];
+
+            // Si el campo del email está vacío, se mantiene el email actual del usuario
+            $email = $datos['usmail'] === '' ? $userActual['usmail'] : $datos['usmail'];
+
+            $param = [
+                'idusuario' => $userActual['idusuario'],
+                'usnombre' => $nombreUsuario,
+                'uspass' => $hashedPassword,
+                'usmail' => $email,
+                'usdeshabilitado' => $userActual['usdeshabilitado']
+            ];
+
+            $usuariosConMismoNombre = $this->buscar(['usnombre' => $nombreUsuario]);
+            $usuariosConMismoEmail = $this->buscar(['usmail' => $email]);
+
+            $datosExistentes = false;
+
+            foreach ($usuariosConMismoNombre as $usuario) {
+                if ($usuario->getIdUsuario() != $userActual['idusuario']) {
+                    $datosExistentes = true;
+                    break;
+                }
+            }
+
+            foreach ($usuariosConMismoEmail as $usuario) {
+                if ($usuario->getIdUsuario() != $userActual['idusuario']) {
+                    $datosExistentes = true;
+                    break;
+                }
+            }
+
+            if ($datosExistentes) {
+                $response['status'] = 'error';
+                $response['message'] = 'El nombre de usuario o el email ya existen.';
+            } else {
+                if ($this->modificacion($param)) {
+                    $response['status'] = 'success';
+                    $response['message'] = 'Actualización exitosa.';
+                } else {
+                    $response['status'] = 'error';
+                    $response['message'] = 'Error al actualizar el usuario.';
+                }
+            }
+        } else {
+            $response['status'] = 'error';
+            $response['message'] = 'Usuario no encontrado.';
+        }
+
+        return $response;
+    }
+
+    /**
+     * Verificar el login de un usuario
+     * @param array $datos
+     * @return array
+     */
+    public function verificarLogin($datos) {
+        $response = [];
+
+        $nombreUsuario = $datos['nombreUsuario'];
+        $psw = $datos['uspass'];
+
+        // Buscar el usuario por nombre de usuario
+        $usuario = $this->buscar(['usnombre' => $nombreUsuario]);
+
+        if (count($usuario) > 0) {
+            $usuario = $usuario[0];
+            $hashedPassword = $usuario->getUsPass();
+
+            // Verificar la contraseña
+            if ($hashedPassword === $psw) {
+                // Autenticación exitosa, iniciar sesión
+                $session = new Session();
+                if ($session->iniciar($nombreUsuario, $hashedPassword)) {
+                    // Verificar el rol del usuario
+                    $abmUsuarioRol = new ABMUsuarioRol();
+                    $rolesUsuario = $abmUsuarioRol->buscar(['idusuario' => $usuario->getIdUsuario()]);
+                    $idRolUsuario = null;
+                    foreach ($rolesUsuario as $usuarioRol) {
+                        $idRolUsuario = $usuarioRol->getObjRol()->getIdrol();
+                        break; // Asumimos que un usuario tiene un solo rol
+                    }
+
+                    // Redirigir según el rol del usuario
+                    if ($idRolUsuario == 3) {
+                        $response['redirect'] = '../Home/productos.php';
+                    } elseif ($idRolUsuario == 1 || $idRolUsuario == 2) {
+                        $response['redirect'] = '../Home/paginaSegura.php';
+                    } else {
+                        $response['error'] = 'Rol de usuario no válido.';
+                    }
+
+                    $response['success'] = 'Inicio de sesión exitoso.';
+                } else {
+                    // Error al iniciar sesión
+                    $response['error'] = 'Error al iniciar sesión. Por favor, inténtelo de nuevo.';
+                }
+            } else {
+                // Contraseña Incorrecta
+                $response['error'] = 'Credenciales incorrectas. Por favor, inténtelo de nuevo.';
+            }
+        } else {
+            // Usuario no encontrado
+            $response['error'] = 'Credenciales incorrectas. Por favor, inténtelo de nuevo.';
+        }
+
+        return $response;
+    }
 
 }
 ?>
