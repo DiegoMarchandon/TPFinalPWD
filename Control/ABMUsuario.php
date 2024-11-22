@@ -311,6 +311,54 @@ class ABMUsuario {
 
         return $response;
     }
+    /**
+     * Actualizar los datos de un usuario
+     * @param array $datos
+     * @return array
+     */
+    public function actualizarUsuario($datos) {
+        $response = [
+            'status' => 'default',
+            'message' => 'Parte inicial del action'
+        ];
+
+        // Buscar el usuario actual por nombre de usuario
+        $userActual = $this->buscarArray(['usnombre' => $datos['nombreActual']]);
+
+        if (count($userActual) > 0) {
+            $userActual = $userActual[0];
+
+            // Si el campo está vacío, se mantiene el nombre actual del usuario
+            $nombreUsuario = $datos['nuevoNombre'] === '' ? $userActual['usnombre'] : $datos['nuevoNombre'];
+
+            // Si el campo de la contraseña está vacío, se mantiene la contraseña actual del usuario
+            $hashedPassword = $datos['nuevaContraseña'] === '' || $datos['nuevaContraseñaConfirm'] === '' ? $userActual['uspass'] : $datos['nuevaContraseña'];
+
+            // Si el campo del email está vacío, se mantiene el email actual del usuario
+            $email = $datos['nuevoEmail'] === '' ? $userActual['usmail'] : $datos['nuevoEmail'];
+
+            $param = [
+                'idusuario' => $userActual['idusuario'],
+                'usnombre' => $nombreUsuario,
+                'uspass' => $hashedPassword,
+                'usmail' => $email,
+                'usdeshabilitado' => $userActual['usdeshabilitado']
+            ];
+
+            if ($this->modificacion($param)) {
+                $response['status'] = 'success';
+                $response['message'] = 'Actualización exitosa';
+            } else {
+                $response['status'] = 'error';
+                $response['message'] = 'Error al actualizar el usuario.';
+            }
+        } else {
+            $response['status'] = 'error';
+            $response['message'] = 'Usuario no encontrado.';
+        }
+
+        return $response;
+    }
 
 
 }
