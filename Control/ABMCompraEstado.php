@@ -505,27 +505,27 @@ public function buscarCompraIniciada($idusuario) {
      * @return array
      */
     public function cancelarCompra($datos, $fechaFin, $idUsuarioActual) {
-        $response = [
-            'status' => 'default',
-            'message' => 'Parte inicial del action',
+        //$response = [
+            //'status' => 'default',
+            //'message' => 'Parte inicial del action',
             //'redirect' => '../Home/ordenes.php'
-        ];
-
+        //];
+        $cancelacionExitosa = false;
         // Verificar si este action fue llamado desde el cliente (en el botón cancelar de carrito.php) o desde depósito (en el botón de cancelar de ordenes.php)
         if ($datos['comprasRol'] === 'deposito') {
             $colCompras = $this->buscarComprasConfirmadasSinFinalizar();
-            $response = [
+            //$response = [
                 //'status' => 'default',
                 //'message' => 'Parte inicial del action',
-                'redirect' => '../Home/ordenes.php'
-            ];
+                //'redirect' => '../Home/ordenes.php'
+            //];
         } else {
             $colCompras = $this->buscarCompraIniciadaPorUsuario($idUsuarioActual);
-            $response = [
+            //$response = [
                 //'status' => 'default',
                 //'message' => 'Parte inicial del action',
-                'redirect' => '../Home/carrito.php'
-            ];
+                //'redirect' => '../Home/carrito.php'
+            //];
         }
 
         if ($colCompras !== null && count($colCompras) > 0) {
@@ -555,9 +555,11 @@ public function buscarCompraIniciada($idusuario) {
                         ];
 
                         if ($this->alta($paramCompraEstado)) {
-                            $response['status'] = 'success';
-                            $response['message'] = 'operacion exitosa';
-
+                            
+                            $cancelacionExitosa=true;
+                            
+                            //$response['status'] = 'success';
+                            //$response['message'] = 'operacion exitosa';
                             $idcompra = $datos['idcompra'];
                             $compra = new ABMCompra();
                             $objCompra = $compra->buscar(['idcompra' => $idcompra]);
@@ -567,22 +569,26 @@ public function buscarCompraIniciada($idusuario) {
                                 $response['toName'] = $usuario->getUsnombre();
                                 $response['toEmail'] = $usuario->getUsmail();
                             }
+                            
                         } else {
-                            $response['status'] = 'error';
-                            $response['message'] = 'Error al crear el nuevo estado de la compra.';
+                            $cancelacionExitosa=false;
+                            //$response['status'] = 'error';
+                            //$response['message'] = 'Error al crear el nuevo estado de la compra.';
                         }
                     } else {
-                        $response['status'] = 'error';
-                        $response['message'] = 'Error al modificar el estado de la compra.';
+                        $cancelacionExitosa=false;
+                        //$response['status'] = 'error';
+                        //$response['message'] = 'Error al modificar el estado de la compra.';
                     }
                 }
             }
         } else {
-            $response['status'] = 'error';
-            $response['message'] = 'No hay compras para cancelar.';
+            $cancelacionExitosa=false;
+            //$response['status'] = 'error';
+            //$response['message'] = 'No hay compras para cancelar.';
         }
 
-        return $response;
+        return $cancelacionExitosa;
     }
 
 }
