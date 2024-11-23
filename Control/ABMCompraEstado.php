@@ -380,11 +380,8 @@ public function buscarCompraIniciada($idusuario) {
      * @return array
      */
     public function enviarCompra($idCompra, $fechaFin) {
-        $response = [
-            'status' => 'default',
-            'message' => 'Parte inicial del action',
-            'redirect' => '../Home/ordenes.php'
-        ];
+        
+        $compraEnviada=false;
 
         $ABMcompraitem = new ABMCompraItem;
         $ABMproducto = new ABMProducto;
@@ -395,11 +392,6 @@ public function buscarCompraIniciada($idusuario) {
 
         // Buscamos el compraEstado relacionado a ese idcompra y con un idcompraestadotipo = 2
         $compraEstado = $ABMcompraEstado->buscarArray(['idcompra' => $idCompra, 'idcompraestadotipo' => 2])[0];
-
-        // Banderas para verificar las modificaciones
-        $stockProdModificado = false;
-        $compraEstadoCambiado = false;
-        $compraEstadoNuevo = false;
 
         foreach ($colCompraItems as $compraitem) {
             // Almaceno la cantidad a descontar del producto
@@ -416,7 +408,6 @@ public function buscarCompraIniciada($idusuario) {
             ];
 
             if ($ABMproducto->modificacion($param)) {
-                $stockProdModificado = true;
 
                 $param = [
                     'idcompraestado' => $compraEstado['idcompraestado'],
@@ -427,7 +418,6 @@ public function buscarCompraIniciada($idusuario) {
                 ];
 
                 if ($ABMcompraEstado->modificacion($param)) {
-                    $compraEstadoCambiado = true;
 
                     $param = [
                         'idcompraestado' => null,
@@ -439,38 +429,14 @@ public function buscarCompraIniciada($idusuario) {
 
                     if (count($ABMcompraEstado->buscarArray(['idcompra' => $compraEstado['objCompra']->getIdcompra(), 'idcompraestadotipo' => 3])) === 0) {
                         if ($ABMcompraEstado->alta($param)) {
-                            $compraEstadoNuevo = true;
-                            $response['status'] = 'success';
-                            $response['message'] = 'Producto actualizado';
-
-                            // Obtener el usuario asociado a la compra
-                            $compra = new ABMCompra();
-                            $objCompra = $compra->buscar(['idcompra' => $idCompra]);
-                            if (count($objCompra) > 0) {
-                                $objCompra = $objCompra[0];
-                                $usuario = $objCompra->getObjUsuario();
-                                $response['toName'] = $usuario->getUsnombre();
-                                $response['toEmail'] = $usuario->getUsmail();
-                            }
-                        } else {
-                            $compraEstadoNuevo = false;
-                            $response['status'] = 'error';
-                            $response['message'] = 'Error al crear el nuevo estado de la compra.';
-                        }
+                            $compraEnviada=true;
+                        } 
                     }
-                } else {
-                    $compraEstadoCambiado = false;
-                    $response['status'] = 'error';
-                    $response['message'] = 'Error al actualizar el estado de la compra.';
-                }
-            } else {
-                $stockProdModificado = false;
-                $response['status'] = 'error';
-                $response['message'] = 'Error al actualizar el producto.';
-            }
+                } 
+            } 
         }
 
-        return $response;
+        return $compraEnviada;
     }
      /**
      * Cancelar una compra actualizando el estado

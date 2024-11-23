@@ -16,24 +16,34 @@ if (!$isAjax && (!$isPostOrGet || !$isValidToken)) {
     echo json_encode(['status' => 'error', 'message' => 'Solicitud no válida.']);
     exit;
 }
-
+// Configurar la zona horaria a Argentina
+date_default_timezone_set('America/Argentina/Buenos_Aires');
 header('Content-Type: application/json');
+//--------------------------------------------------------------------------------------------
 // voy creando el arreglo asociativo que voy a pasar como respuesta en formato JSON
 $response = [
-    'status' => 'default',
-    'message' => 'Parte inicial del action',
+    'status' => 'error',
+    'message' => 'Error al enviar la compra.',
     'redirect' => '../Home/ordenes.php'
 ];
 
-// Configurar la zona horaria a Argentina
-date_default_timezone_set('America/Argentina/Buenos_Aires');
-
-$fechaFin = date('Y-m-d H:i:s');
 $datos = darDatosSubmitted();
+$fechaFin = date('Y-m-d H:i:s');
 $idCompra = $datos['idcompra'];
 
 $ABMcompraEstado = new ABMCompraEstado;
-$response = $ABMcompraEstado->enviarCompra($idCompra, $fechaFin);
+$compraEnviada = $ABMcompraEstado->enviarCompra($idCompra, $fechaFin);
+
+if($compraEnviada){
+    $compra = new ABMCompra();
+    $usuario = $compra->clienteAsociadoALaCompra($idCompra);
+    $response['status'] = 'success';
+    $response['message'] = 'Producto Enviado';
+    $response['toName'] = $usuario['name'];
+    $response['toEmail'] = $usuario['email'];
+    $response['redirect'] = '../Home/ordenes.php';
+}
+
 
 echo json_encode($response);
 exit;
