@@ -339,12 +339,8 @@ public function buscarCompraIniciada($idusuario) {
      * @return array
      */
     public function confirmarCompra($idCompra, $fechaFin) {
-        $response = [
-            'status' => 'default',
-            'message' => 'Parte inicial del action',
-            'redirect' => '../Home/carrito.php'
-        ];
-
+        
+        $compraConfirmada=false;
         // Buscar el estado de la compra con idcompraestadotipo = 1
         $compraEstado = $this->buscar(['idcompra' => $idCompra, 'idcompraestadotipo' => 1]);
 
@@ -370,32 +366,11 @@ public function buscarCompraIniciada($idusuario) {
                 ];
 
                 if ($this->alta($paramCompraEstado)) {
-                    $response['status'] = 'success';
-                    $response['message'] = 'operacion exitosa';
-
-                    // Obtener el usuario asociado a la compra
-                    $compra = new ABMCompra();
-                    $objCompra = $compra->buscar(['idcompra' => $idCompra]);
-                    if (count($objCompra) > 0) {
-                        $objCompra = $objCompra[0];
-                        $usuario = $objCompra->getObjUsuario();
-                        $response['toName'] = $usuario->getUsnombre();
-                        $response['toEmail'] = $usuario->getUsmail();
-                    }
-                } else {
-                    $response['status'] = 'error';
-                    $response['message'] = 'Error al confirmar la compra.';
-                }
-            } else {
-                $response['status'] = 'error';
-                $response['message'] = 'Error al modificar el estado de la compra.';
-            }
-        } else {
-            $response['status'] = 'error';
-            $response['message'] = 'Estado de compra no encontrado.';
-        }
-
-        return $response;
+                    $compraConfirmada=true;
+                } 
+            } 
+        } 
+        return $compraConfirmada;
     }
 
     /**

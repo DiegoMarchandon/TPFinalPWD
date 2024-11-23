@@ -22,7 +22,11 @@ date_default_timezone_set('America/Argentina/Buenos_Aires');
 
 header('Content-Type: application/json');
 // voy creando el arreglo asociativo que voy a pasar como respuesta en formato JSON
-$response = [];
+$response = [
+    'status' => 'error',
+    'message' => 'Error al cancelar la compra.',
+    'redirect' => '../Home/login.php'
+];
 
 $session = new Session();
 $fechaFin = date('Y-m-d H:i:s');
@@ -49,11 +53,7 @@ if ($cancelacionExitosa) {
         $response['toEmail'] = $UsuarioActual['usmail'];
         $response['redirect'] = '../Home/carrito.php';
     }
-} else {
-    $response['status'] = 'error';
-    $response['message'] = 'Error al cancelar la compra.';
-    $response['redirect'] = '../Home/login.php';
-}
+} 
 
 echo json_encode($response);
 exit;

@@ -16,33 +16,37 @@ if (!$isAjax && (!$isPostOrGet || !$isValidToken)) {
     echo json_encode(['status' => 'error', 'message' => 'Solicitud no válida.']);
     exit;
 }
-
+// Configurar la zona horaria a Argentina
+date_default_timezone_set('America/Argentina/Buenos_Aires');
+//--------------------------------------------------------------------------------------------
 header('Content-Type: application/json');
 // voy creando el arreglo asociativo que voy a pasar como respuesta en formato JSON
 $response = [
-    'status' => 'default',
-    'message' => 'Parte inicial del action',
+    'status' => 'error',
+    'message' => 'Error al confirmar la compra.',
     'redirect' => '../Home/carrito.php'
 ];
 
-// Configurar la zona horaria a Argentina
-date_default_timezone_set('America/Argentina/Buenos_Aires');
-
 $session = new Session();
 $fechaFin = date('Y-m-d H:i:s');
-$idUsuarioActual = $session->getUsuario()->getIdusuario();
+$UsuarioActual = $session->getUsuario();
 
 $ABMcompraEstado = new ABMCompraEstado;
-$compraIniciada = $ABMcompraEstado->buscarCompraIniciada($idUsuarioActual);
+$compraIniciada = $ABMcompraEstado->buscarCompraIniciada($UsuarioActual->getIdusuario());
 
 if ($compraIniciada !== null) {
-    $idCompra = $compraIniciada->getIdcompra();
-    $response = $ABMcompraEstado->confirmarCompra($idCompra, $fechaFin);
-} else {
-    $response['status'] = 'error';
-    $response['message'] = 'No hay compras iniciadas.';
-}
-
+    $compraIniciada = dismount($compraIniciada);
+    $idCompra = $compraIniciada['idcompra'];
+    $CompraConfirmada = $ABMcompraEstado->confirmarCompra($idCompra, $fechaFin);
+    if($CompraConfirmada){
+        $UsuarioActual = dismount($UsuarioActual);
+        $response['status'] = 'success';
+        $response['message'] = 'Compra confirmada.';
+        $response['toName'] = $UsuarioActual['usnombre'];
+        $response['toEmail'] = $UsuarioActual['usmail'];
+        $response['redirect'] = '../Home/carrito.php';
+    }
+} 
 echo json_encode($response);
 exit;
 ?>
