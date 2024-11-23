@@ -40,12 +40,13 @@ if ($cancelacionExitosa) {
     if($datos['comprasRol'] === 'deposito'){
         $compra = new ABMCompra();
         $usuario = $compra->clienteAsociadoALaCompra($datos['idcompra']);
-        $response['toName'] = $usuario->getUsnombre();
-        $response['toEmail'] = $usuario->getUsmail();
+        $response['toName'] = $usuario['name'];
+        $response['toEmail'] = $usuario['email'];
         $response['redirect'] = '../Home/ordenes.php';
     }else{
-        $response['toName'] = $UsuarioActual->getUsnombre();
-        $response['toEmail'] = $UsuarioActual->getUsmail();
+        $UsuarioActual = dismount($UsuarioActual);
+        $response['toName'] = $UsuarioActual['usnombre'];
+        $response['toEmail'] = $UsuarioActual['usmail'];
         $response['redirect'] = '../Home/carrito.php';
     }
 } else {

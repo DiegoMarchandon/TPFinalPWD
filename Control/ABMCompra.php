@@ -273,7 +273,12 @@ class ABMCompra {
             $objCompra = $objCompra[0];
             $cliente = $objCompra->getObjUsuario();
         }
-        return $cliente;
+        $datosCliente=[
+            'name' => $cliente->getUsnombre(),
+            'email' => $cliente->getUsmail()
+        ];
+
+        return  $datosCliente;
     }
     
 }
