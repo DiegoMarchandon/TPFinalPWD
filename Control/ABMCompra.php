@@ -261,5 +261,20 @@ class ABMCompra {
         }
         return $bandera;
     }
+    /**
+     * Obtener el usuario asociado a una compra
+     * @param int $idCompra
+     * @return mixed|null
+     */
+    public function clienteAsociadoALaCompra($idCompra) {
+        $cliente = null;
+        $objCompra = $this->buscar(['idcompra' => $idCompra]);
+        if (count($objCompra) > 0) {
+            $objCompra = $objCompra[0];
+            $cliente = $objCompra->getObjUsuario();
+        }
+        return $cliente;
+    }
+    
 }
 ?>

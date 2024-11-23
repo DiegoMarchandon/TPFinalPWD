@@ -16,11 +16,9 @@ if (!$isAjax && (!$isPostOrGet || !$isValidToken)) {
     echo json_encode(['status' => 'error', 'message' => 'Solicitud no válida.']);
     exit;
 }
-
-
 // Configurar la zona horaria a Argentina
 date_default_timezone_set('America/Argentina/Buenos_Aires');
-//---------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------
 
 header('Content-Type: application/json');
 // voy creando el arreglo asociativo que voy a pasar como respuesta en formato JSON
@@ -28,36 +26,32 @@ $response = [];
 
 $session = new Session();
 $fechaFin = date('Y-m-d H:i:s');
-$idUsuarioActual = $session->getUsuario()->getIdusuario();
+$UsuarioActual = $session->getUsuario();
 
 $datos = darDatosSubmitted();
 
 $ABMcompraEstado = new ABMCompraEstado;
-//$response = $ABMcompraEstado->cancelarCompra($datos, $fechaFin, $idUsuarioActual);
+$cancelacionExitosa = $ABMcompraEstado->cancelarCompra($datos, $fechaFin, $UsuarioActual->getIdusuario());
 
-$cancelacion = $ABMcompraEstado->cancelarCompra($datos, $fechaFin, $idUsuarioActual);
+if ($cancelacionExitosa) {
+    $response['status'] = 'success';
+    $response['message'] = 'operacion exitosa';
 
-if($cancelacion) {
     if($datos['comprasRol'] === 'deposito'){
-        $response = [
-            'status' => 'success',
-            'message' => 'operacion exitosa',
-            'redirect' => '../Home/ordenes.php'
-        ];
+        $compra = new ABMCompra();
+        $usuario = $compra->clienteAsociadoALaCompra($datos['idcompra']);
+        $response['toName'] = $usuario->getUsnombre();
+        $response['toEmail'] = $usuario->getUsmail();
+        $response['redirect'] = '../Home/ordenes.php';
     }else{
-        $response = [
-            'status' => 'success',
-            'message' => 'operacion exitosa',
-            'redirect' => '../Home/carrito.php'
-        ];
+        $response['toName'] = $UsuarioActual->getUsnombre();
+        $response['toEmail'] = $UsuarioActual->getUsmail();
+        $response['redirect'] = '../Home/carrito.php';
     }
-        
 } else {
-    $response = [
-        'status' => 'error',
-        'message' => 'error al cancelar la compra',
-        'redirect' => '../Home/login.php'
-    ];
+    $response['status'] = 'error';
+    $response['message'] = 'Error al cancelar la compra.';
+    $response['redirect'] = '../Home/login.php';
 }
 
 echo json_encode($response);
