@@ -84,7 +84,24 @@ function verificarFormulario(event) {
 
                 if (!response.nombreExiste && !response.emailExiste) {
                     if (hashPassword()) {
-                        form.submit();
+                        // Enviar el formulario y manejar la respuesta
+                        $.ajax({
+                            url: form.action,
+                            method: form.method,
+                            data: $(form).serialize(),
+                            success: function(response) {
+                                if (response.status === 'success') {
+                                    //setTimeout(function() {
+                                        window.location.href = response.redirect;
+                                    //}, 1500); // Esperar 1.5 segundos antes de redirigir
+                                } else {
+                                    mensajeDiv.innerHTML = '<div class="alert alert-danger">' + response.message + '</div>';
+                                }
+                            },
+                            error: function() {
+                                mensajeDiv.innerHTML = '<div class="alert alert-danger">Error al registrar el usuario. Por favor, inténtelo de nuevo.</div>';
+                            }
+                        });
                     }
                 }
             },

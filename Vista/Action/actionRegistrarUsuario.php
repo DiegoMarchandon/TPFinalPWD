@@ -17,45 +17,22 @@ if (!$isAjax && (!$isPostOrGet || !$isValidToken)) {
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $datos = darDatosSubmitted();
+header('Content-Type: application/json');
+$response = [
+    'status' => 'error',
+    'message' => 'No se pudo registrar el usuario. Nombre o email ya están en la base de datos.',
+    'redirect' => '../Home/registrarUsuario.php'
+];
 
-    $abmUsuario = new ABMUsuario();
+$datos = darDatosSubmitted();
+$abmUsuario = new ABMUsuario();
+$usuarioRegistrado = $abmUsuario->registrarUsuario($datos);
 
-    // Verificar si se está realizando una verificación AJAX
-    if (isset($datos['verificar']) && $datos['verificar'] == true) {
-        $response = [
-            'nombreExiste' => false,
-            'emailExiste' => false
-        ];
-
-        // Verificar si el nombre de usuario ya existe en la base de datos
-        if (isset($datos['usnombre'])) {
-            $usuariosConMismoNombre = $abmUsuario->buscar(['usnombre' => $datos['usnombre']]);
-            if (count($usuariosConMismoNombre) > 0) {
-                $response['nombreExiste'] = true;
-            }
-        }
-
-        // Verificar si el email ya existe en la base de datos
-        if (isset($datos['usmail'])) {
-            $usuariosConMismoEmail = $abmUsuario->buscar(['usmail' => $datos['usmail']]);
-            if (count($usuariosConMismoEmail) > 0) {
-                $response['emailExiste'] = true;
-            }
-        }
-
-        echo json_encode($response);
-        exit();
-    }
-
-    $response = $abmUsuario->registrarUsuario($datos);
-
-    if ($response['status'] === 'success') {
-        header('Location: ../Home/login.php?registro=exitoso'); // Redirigir al login con mensaje de éxito
-    } else {
-        echo $response['message'];
-        echo '<br><a href="../Home/registrarUsuario.php">Volver al registro</a>';
-    }
-}
+if ($usuarioRegistrado) {
+    $response['status'] = 'success';
+    $response['message'] = 'Registro exitoso.';
+    $response['redirect'] = '../Home/login.php?registro=exitoso';
+} 
+echo json_encode($response);
+exit;
 ?>

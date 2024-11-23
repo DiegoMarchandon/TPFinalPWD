@@ -10,7 +10,7 @@ $datos = darDatosSubmitted();
     <h1 class="text-center">Iniciar Sesión</h1>
     <div id="mensaje" class="text-center"></div>
     <?php
-    if (isset($datos['registro']) && $datos['registro'] == 'exitoso') {
+    if (isset($_GET['registro']) && $_GET['registro'] == 'exitoso') {
         echo '<div class="alert alert-success text-center">Cuenta creada exitosamente. Ahora puede iniciar sesión.</div>';
     }
     ?>

@@ -260,56 +260,50 @@ class ABMUsuario {
     /**
      * Registrar un nuevo usuario
      * @param array $datos
-     * @return array
+     * @return bool
      */
     public function registrarUsuario($datos) {
-        $response = [
-            'status' => 'default',
-            'message' => 'Parte inicial del action'
-        ];
+        $usuarioRegistrado = false;
 
         // Verificar si el nombre de usuario ya existe
         $usuarioExistente = $this->buscar(['usnombre' => $datos['usnombre']]);
-        if (count($usuarioExistente) > 0) {
-            $response['status'] = 'error';
-            $response['message'] = 'El nombre de usuario no está disponible.';
-            return $response;
+        if (count($usuarioExistente) == 0) {
+
+            // Verificar si el correo electrónico ya está asociado a una cuenta
+            $emailExistente = $this->buscar(['usmail' => $datos['usmail']]);
+            if (count($emailExistente) == 0) {
+                
+                // Verificar si la clave 'uspass' está presente en el array $datos
+                if (isset($datos['uspass'])) {
+                    // Obtener la contraseña hasheada
+                    $hashedPassword = $datos['uspass'];
+
+                    $param = [
+                        'usnombre' => $datos['usnombre'],
+                        'uspass' => $hashedPassword, // contraseña hasheada
+                        'usmail' => $datos['usmail'],
+                    ];
+
+                    if ($this->alta($param)) {
+                        // Obtener el ID del usuario recien creado
+                        $usuarioNuevo = $this->buscar(['usnombre' => $datos['usnombre']]);
+                        $idUsuario = $usuarioNuevo[0]->getIdUsuario();
+
+                        // Verificar si el usuario ya tiene el rol asignado
+                        $abmUsuarioRol = new ABMUsuarioRol();
+                        $usuarioRolExistente = $abmUsuarioRol->buscar(['idusuario' => $idUsuario, 'idrol' => 3]);
+                        if (count($usuarioRolExistente) == 0) {
+                            // Asignar el rol de "Usuario" por defecto
+                            $abmUsuarioRol->alta(['idusuario' => $idUsuario, 'idrol' => 3]); // el id 3 es de "Cliente" que se le asignara a todos los que se registren por defecto
+                        }
+
+                        $usuarioRegistrado = true;
+                    }
+                }
+            }
         }
 
-        // Verificar si el correo electrónico ya existe
-        $emailExistente = $this->buscar(['usmail' => $datos['usmail']]);
-        if (count($emailExistente) > 0) {
-            $response['status'] = 'error';
-            $response['message'] = 'El correo electrónico ya está asociado a una cuenta.';
-            return $response;
-        }
-
-        // Obtener la contraseña hasheada
-        $hashedPassword = $datos['uspass'];
-
-        $param = [
-            'usnombre' => $datos['usnombre'],
-            'uspass' => $hashedPassword, // contraseña hasheada
-            'usmail' => $datos['usmail'],
-        ];
-
-        if ($this->alta($param)) {
-            // Obtener el ID del usuario recien creado
-            $usuarioNuevo = $this->buscar(['usnombre' => $datos['usnombre']]);
-            $idUsuario = $usuarioNuevo[0]->getIdUsuario();
-
-            // Asignar el rol de "Usuario" por defecto
-            $abmUsuarioRol = new ABMUsuarioRol();
-            $abmUsuarioRol->alta(['idusuario' => $idUsuario, 'idrol' => 3]); // el id 3 es de "Cliente" que se le asignara a todos los que se registren por defecto
-
-            $response['status'] = 'success';
-            $response['message'] = 'Registro exitoso.';
-        } else {
-            $response['status'] = 'error';
-            $response['message'] = 'Error al registrar el usuario.';
-        }
-
-        return $response;
+        return $usuarioRegistrado;   
     }
     /**
      * Actualizar los datos de un usuario
