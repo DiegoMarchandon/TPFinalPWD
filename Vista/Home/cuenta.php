@@ -74,6 +74,7 @@ $ABMUsuario = new ABMUsuario;
         <!-- Botón de Enviar -->
         <button type="submit" class="btn btn-primary">Cambiar Datos</button>
     </form>
+    <div id="mensaje" class="text-center mt-3"></div>
 </div>
 
 <script>
@@ -224,10 +225,40 @@ $(document).ready(function(){
                     // Enviar el formulario con las contraseñas hasheadas
                     $('#contraseñaActual').val(passHash);
                     $('#nuevaContraseña').val(newPassHash);
-                    $('#modificarDatos').submit();
+
+                    // Crear la solicitud AJAX para actualizar los datos
+                    $.ajax({
+                        url: '../Action/actualizarLogin.php', // Ruta al script en Action
+                        method: 'POST',
+                        data: {
+                            nombreActual: actualName,
+                            nuevoNombre: newName,
+                            contraseñaActual: passHash,
+                            nuevaContraseña: newPassHash,
+                            emailActual: actualEmail,
+                            nuevoEmail: newEmail,
+                            form_security_token: 'valor_esperado' // Token de seguridad
+                        },
+                        success: function(response){
+                            console.log(response); 
+                            if (response.status === 'success') {
+                                $('#mensaje').html('<div class="alert alert-success">Datos actualizados con éxito.</div>');
+                                setTimeout(function() {
+                                    window.location.href = response.redirect;
+                                }, 1500); // Esperar 1.5 segundos antes de redirigir
+                            } else {
+                                $('#mensaje').html('<div class="alert alert-danger">' + response.message + '</div>');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.log(xhr.responseText); 
+                            $('#mensaje').html('<div class="alert alert-danger">Error al actualizar los datos. Por favor, inténtelo de nuevo.</div>');
+                        }
+                    });
                 }
             },
-            error: function() {
+            error: function(xhr, status, error) {
+                console.log(xhr.responseText); 
                 console.log('Error al recibir los datos.');
             }
         });

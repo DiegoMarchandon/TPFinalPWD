@@ -308,14 +308,11 @@ class ABMUsuario {
     /**
      * Actualizar los datos de un usuario
      * @param array $datos
-     * @return array
+     * @return bool
      */
     public function actualizarUsuario($datos) {
-        $response = [
-            'status' => 'default',
-            'message' => 'Parte inicial del action'
-        ];
-
+        $usuarioActualizado = false;
+        
         // Buscar el usuario actual por nombre de usuario
         $userActual = $this->buscarArray(['usnombre' => $datos['nombreActual']]);
 
@@ -323,13 +320,13 @@ class ABMUsuario {
             $userActual = $userActual[0];
 
             // Si el campo está vacío, se mantiene el nombre actual del usuario
-            $nombreUsuario = $datos['nuevoNombre'] === '' ? $userActual['usnombre'] : $datos['nuevoNombre'];
+            $nombreUsuario = isset($datos['nuevoNombre']) && $datos['nuevoNombre'] !== '' ? $datos['nuevoNombre'] : $userActual['usnombre'];
 
             // Si el campo de la contraseña está vacío, se mantiene la contraseña actual del usuario
-            $hashedPassword = $datos['nuevaContraseña'] === '' || $datos['nuevaContraseñaConfirm'] === '' ? $userActual['uspass'] : $datos['nuevaContraseña'];
+            $hashedPassword = isset($datos['nuevaContraseña']) && isset($datos['nuevaContraseñaConfirm']) && $datos['nuevaContraseña'] !== '' && $datos['nuevaContraseñaConfirm'] !== '' ? $datos['nuevaContraseña'] : $userActual['uspass'];
 
             // Si el campo del email está vacío, se mantiene el email actual del usuario
-            $email = $datos['nuevoEmail'] === '' ? $userActual['usmail'] : $datos['nuevoEmail'];
+            $email = isset($datos['nuevoEmail']) && $datos['nuevoEmail'] !== '' ? $datos['nuevoEmail'] : $userActual['usmail'];
 
             $param = [
                 'idusuario' => $userActual['idusuario'],
@@ -340,18 +337,11 @@ class ABMUsuario {
             ];
 
             if ($this->modificacion($param)) {
-                $response['status'] = 'success';
-                $response['message'] = 'Actualización exitosa';
-            } else {
-                $response['status'] = 'error';
-                $response['message'] = 'Error al actualizar el usuario.';
-            }
-        } else {
-            $response['status'] = 'error';
-            $response['message'] = 'Usuario no encontrado.';
-        }
+                $usuarioActualizado = true;
+            } 
+        } 
 
-        return $response;
+        return $usuarioActualizado;
     }
     /**
      * Deshabilitar un usuario

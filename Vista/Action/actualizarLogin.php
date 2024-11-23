@@ -16,17 +16,25 @@ if (!$isAjax && (!$isPostOrGet || !$isValidToken)) {
     exit;
 }
 
+header('Content-Type: application/json');
+$response = [
+    'status' => 'error',
+    'message' => 'No se pudo modificar el usuario. Nombre o email ya están en la base de datos.',
+    'redirect' => '../Home/cuenta.php'
+];
+
 $session = new Session();
 $abmUsuario = new ABMUsuario();
 
 $datos = darDatosSubmitted();
 
-$response = $abmUsuario->actualizarUsuario($datos);
+$usuarioActualizado = $abmUsuario->actualizarUsuario($datos);
 
-if ($response['status'] === 'success') {
-    header('Location: ../Home/cuenta.php?mensaje=actualizacion_exitosa');
-} else {
-    echo $response['message'];
-    echo '<br><a href="../Home/cuenta.php">Volver a intentar</a>';
+if ($usuarioActualizado) {
+    $response['status'] = 'success';
+    $response['message'] = 'Actualización exitosa.';
+    $response['redirect'] = '../Home/cuenta.php';
 }
+echo json_encode($response);
+exit;
 ?>
