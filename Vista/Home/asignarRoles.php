@@ -2,9 +2,6 @@
 <?php
 include_once '../../configuracion.php';
 
-//$session = new Session();
-//$abmUsuario = new ABMUsuario();
-
 // creo un objeto de la clase abmUsuarioRol para llamar a la funcion verificarRolUsuario
 $abmUsuarioRol = new ABMUsuarioRol(); 
 
@@ -18,7 +15,6 @@ if (!$usuarioPermitido) {
     header('Location: ../Home/login.php');
     exit();
 }
-
 
 $nombreUsuarioSesion = $session->getUsuario()->getUsNombre();
 
@@ -79,16 +75,15 @@ $(document).ready(function() {
             method: 'POST',
             data: {
                 id: idUsuario,
-                rol: idRol
+                rol: idRol,
+                form_security_token: 'valor_esperado' // Token de seguridad
             },
             success: function(response) {
                 const mensajeDiv = document.getElementById('mensaje');
-                if (response.mensaje === 'rol_existente') {
-                    mensajeDiv.innerHTML = '<div class="alert alert-warning text-center">Este Usuario ya posee este rol.</div>';
-                } else if (response.mensaje === 'asignacion_exitosa') {
+                if (response.status === 'success') {
                     mensajeDiv.innerHTML = '<div class="alert alert-success text-center">Rol modificado con éxito.</div>';
-                } else if (response.error) {
-                    mensajeDiv.innerHTML = '<div class="alert alert-danger text-center">' + response.error + '</div>';
+                } else {
+                    mensajeDiv.innerHTML = '<div class="alert alert-danger text-center">' + response.message + '</div>';
                 }
             },
             error: function() {

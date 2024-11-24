@@ -17,21 +17,19 @@ if (!$isAjax && (!$isPostOrGet || !$isValidToken)) {
 }
 
 header('Content-Type: application/json');
+$response = [
+    'status' => 'error',
+    'message' => 'Error en la solicitud.'
+];
 
 $datos = darDatosSubmitted();
-$response = [];
 
-// Depuración: agregar los datos recibidos a la respuesta
-$response['debug']['datos'] = $datos;
+$abmUsuarioRol = new ABMUsuarioRol();
+$rolAsignado = $abmUsuarioRol->asignarRolUnico($datos);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($datos['id']) && isset($datos['rol'])) {
-    $abmUsuarioRol = new ABMUsuarioRol();
-    $datos['idusuario'] = $datos['id']; // Se espera que el ID del usuario esté en 'id'
-    $datos['idrol'] = $datos['rol'];  // Se espera que el ID del rol esté en 'rol'
-    $response = array_merge($response, $abmUsuarioRol->asignarRolUnico($datos));
-} else {
-    $response['status'] = 'error';
-    $response['message'] = 'Método no permitido o parámetros faltantes.';
+if($rolAsignado){
+    $response['status'] = 'success';
+    $response['message'] = 'Rol asignado correctamente.';
 }
 
 echo json_encode($response);

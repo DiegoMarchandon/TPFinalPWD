@@ -264,10 +264,11 @@ class ABMUsuarioRol {
      * @return array
      */
     public function asignarRolUnico($datos) {
-        $response = [
-            'status' => 'default',
-            'message' => 'Parte inicial del action'
-        ];
+
+        $rolAsignado = false;
+
+        $datos['idusuario'] = $datos['id']; // Se espera que el ID del usuario esté en 'id'
+        $datos['idrol'] = $datos['rol'];  // Se espera que el ID del rol esté en 'rol'
 
         $idUsuario = $datos['idusuario'];
         $idRol = $datos['idrol'];
@@ -288,14 +289,10 @@ class ABMUsuarioRol {
         ];
 
         if ($this->alta($param)) {
-            $response['status'] = 'success';
-            $response['message'] = 'Rol asignado exitosamente.';
-        } else {
-            $response['status'] = 'error';
-            $response['message'] = 'Error al asignar el rol.';
-        }
+            $rolAsignado = true;
+        } 
 
-        return $response;
+        return $rolAsignado;
     }
 }
 ?>
