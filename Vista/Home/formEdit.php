@@ -55,6 +55,7 @@ $usuario = $abmUsuario->buscar(['idusuario' => $idUsuario])[0];
         <input type="hidden" name="usdeshabilitado" value="<?php echo $usuario->getUsDeshabilitado(); ?>">
         <button type="submit" class="btn btn-primary mt-3">Actualizar</button>
     </form>
+    <div id="mensaje" class="text-center mt-3"></div>
 </div>
 
 <script>
@@ -77,13 +78,32 @@ function verificarFormulario(event) {
     var form = document.getElementById('actualizarForm');
     var nombreField = document.getElementById('usnombre');
     var emailField = document.getElementById('usmail');
+    var mensajeDiv = document.getElementById('mensaje');
 
     // Validar el formulario
     if (form.checkValidity() === false) {
         event.stopPropagation();
     } else {
         if (hashPassword()) {
-            form.submit();
+            // Enviar el formulario utilizando AJAX
+            $.ajax({
+                url: form.action,
+                method: form.method,
+                data: $(form).serialize(),
+                success: function(response) {
+                    if (response.status === 'success') {
+                        mensajeDiv.innerHTML = '<div class="alert alert-success text-center">Datos modificados correctamente.</div>';
+                        setTimeout(function() {
+                            window.location.href = response.redirect;
+                        }, 1500); // Esperar 1.5 segundos antes de redirigir
+                    } else {
+                        mensajeDiv.innerHTML = '<div class="alert alert-danger text-center">' + response.message + '</div>';
+                    }
+                },
+                error: function() {
+                    mensajeDiv.innerHTML = '<div class="alert alert-danger text-center">Error al actualizar los datos. Asegúrate de que el nombre o email no estén en la base de datos.</div>';
+                }
+            });
         }
     }
 

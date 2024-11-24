@@ -1,15 +1,26 @@
 <?php
 include_once '../../configuracion.php';
 
+header('Content-Type: application/json');
+$response = [
+    'status' => 'error',
+    'message' => 'Error al modificar el usuario. Asegúrate de que el nombre o email no estén en la base de datos.',
+    'redirect' => '../Home/formEdit.php'
+];
+
 $session = new Session();
 $abmUsuario = new ABMUsuario();
 $datos = darDatosSubmitted();
 
-$response = $abmUsuario->modificarUsuario($datos);
-
-if ($response['status'] === 'success') {
-    header('Location: ../Home/actualizarUsuario.php?mensaje=actualizacion_exitosa');
-} else {
-    header('Location: ../Home/actualizarUsuario.php?mensaje=error_al_modificar');
+$usuarioModificado = $abmUsuario->modificarUsuario($datos);
+if ($usuarioModificado) {
+    $response = [
+        'status' => 'success',
+        'message' => 'Usuario modificado correctamente.',
+        'redirect' => '../Home/formEdit.php'
+    ];
 }
+
+echo json_encode($response);
+exit();
 ?>

@@ -25,19 +25,24 @@ if (!$session->activa() || !$session->validar()) {
     exit();
 }
 
+header('Content-Type: application/json');
+
+$response = [
+    'status' => 'error',
+    'message' => 'Error al intentar eliminar el usuario',
+    'redirect' => '../Home/actualizarUsuario.php'
+];
+
 $abmUsuario = new ABMUsuario();
 $datos = darDatosSubmitted(); 
-$response = [];
 
-if (isset($datos['id'])) {
-    $response = $abmUsuario->deshabilitarUsuario($datos['id']);
-    if ($response['status'] === 'success') {
-        header('Location: ../Home/actualizarUsuario.php?mensaje=eliminacion_exitosa');
-    } else {
-        echo $response['message'];
-        echo '<br><a href="../Home/actualizarUsuario.php">Volver a intentar</a>';
-    }
+$deshabilitado = $abmUsuario->deshabilitarUsuario($datos['id']);
+if ($deshabilitado) {
+    $response['status'] = 'success';
+    $response['message'] = 'Usuario eliminado correctamente';
+    $response['redirect'] = '../Home/actualizarUsuario.php';
 }
 
+echo json_encode($response);
 exit();
 ?>

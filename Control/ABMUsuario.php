@@ -346,14 +346,11 @@ class ABMUsuario {
     /**
      * Deshabilitar un usuario
      * @param int $idUsuario
-     * @return array
+     * @return bool
      */
     public function deshabilitarUsuario($idUsuario) {
-        $response = [
-            'status' => 'default',
-            'message' => 'Parte inicial del action'
-        ];
-
+        $deshabilitado = false;
+        
         $usuario = $this->buscar(['idusuario' => $idUsuario]);
         if (count($usuario) > 0) {
             $usuario = $usuario[0];
@@ -366,30 +363,20 @@ class ABMUsuario {
             ];
 
             if ($this->modificacion($param)) {
-                $response['status'] = 'success';
-                $response['message'] = 'Usuario deshabilitado exitosamente.';
-            } else {
-                $response['status'] = 'error';
-                $response['message'] = 'Error al deshabilitar el usuario.';
+                $deshabilitado = true;
             }
-        } else {
-            $response['status'] = 'error';
-            $response['message'] = 'Usuario no encontrado.';
-        }
+        } 
 
-        return $response;
+        return $deshabilitado;
     }
     /**
      * Modificar los datos de un usuario
      * @param array $datos
-     * @return array
+     * @return bool
      */
     public function modificarUsuario($datos) {
-        $response = [
-            'status' => 'default',
-            'message' => 'Parte inicial del action'
-        ];
-
+        $usuarioModificado = false;
+        
         $userActual = $this->buscarArray(['idusuario' => $datos['idusuario']]);
 
         // Verificar si se encontró el usuario
@@ -432,24 +419,14 @@ class ABMUsuario {
                 }
             }
 
-            if ($datosExistentes) {
-                $response['status'] = 'error';
-                $response['message'] = 'El nombre de usuario o el email ya existen.';
-            } else {
+            if (!$datosExistentes) {
                 if ($this->modificacion($param)) {
-                    $response['status'] = 'success';
-                    $response['message'] = 'Actualización exitosa.';
-                } else {
-                    $response['status'] = 'error';
-                    $response['message'] = 'Error al actualizar el usuario.';
+                    $usuarioModificado = true;
                 }
-            }
-        } else {
-            $response['status'] = 'error';
-            $response['message'] = 'Usuario no encontrado.';
-        }
+            } 
+        } 
 
-        return $response;
+        return $usuarioModificado;
     }
 
     /**

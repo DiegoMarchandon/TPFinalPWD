@@ -16,36 +16,22 @@ if (!$usuarioPermitido) {
     exit();
 }
 
-//$session = new Session();
-$abmUsuario = new ABMUsuario();
-
-// Obtener el ID del usuario en la sesion
-//$idUsuarioSesion = $session->getUsuario()->getIdUsuario();
 $nombreUsuarioSesion = $session->getUsuario()->getUsNombre();
+
+$abmUsuario = new ABMUsuario();
 
 // Separar usuarios habilitados y deshabilitados
 $usuariosSeparados = $abmUsuario->separarUsuariosHabilitadosYDeshabilitados();
 $usuariosHabilitados = $usuariosSeparados['habilitados'];
 $usuariosDeshabilitados = $usuariosSeparados['deshabilitados'];
+?>
 
-$datos= darDatosSubmitted();
-?>
-<?php
-    if (isset($datos['mensaje'])) {
-        if ($datos['mensaje'] == 'error_al_modificar') {
-            echo '<div class="alert alert-danger text-center">El nombre de usuario o el email ya existen.</div>';
-        } elseif ($datos['mensaje'] == 'actualizacion_exitosa') {
-            echo '<div class="alert alert-success text-center">Actualización exitosa.</div>';
-        } elseif ($datos['mensaje'] == 'eliminacion_exitosa') {
-            echo '<div class="alert alert-success text-center">Eliminación exitosa.</div>';
-        }
-    }
-?>
 <div class="container mt-5">
     <h1 class="text-center">Lista de Usuarios</h1>
     <div class="mb-4">
         <h3 class="text-left">Administrador: <?php echo $nombreUsuarioSesion; ?></h3>
     </div>
+    <div id="mensaje" class="text-center"></div>
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
@@ -67,11 +53,7 @@ $datos= darDatosSubmitted();
                     echo "<div class='btn-group' role='group'>";
                     echo "<a href='formEdit.php?id=" . $usuario->getIdUsuario() . "' class='btn btn-warning btn-sm'>Editar</a>";
                     if ($usuario->getIdUsuario() !== $idUsuarioSesion) { // No permitir eliminar al administrador de la sesión
-                        echo "<form action='../Action/eliminarLogin.php' method='POST' style='display:inline;'>";
-                        echo "<input type='hidden' name='id' value='" . $usuario->getIdUsuario() . "'>";
-                        echo "<input type='hidden' name='form_security_token' value='valor_esperado'>"; // Token de seguridad
-                        echo "<button type='submit' class='btn btn-danger btn-sm'>Eliminar</button>";
-                        echo "</form>";
+                        echo "<button class='btn btn-danger btn-sm eliminar-usuario' data-id='" . $usuario->getIdUsuario() . "'>Eliminar</button>";
                     }
                     echo "</div>";
                     echo "</td>";
@@ -110,5 +92,37 @@ $datos= darDatosSubmitted();
         </div>
     <?php endif; ?> 
 </div>
+
+<script>
+$(document).ready(function() {
+    $('.eliminar-usuario').on('click', function() {
+        var idUsuario = $(this).data('id');
+
+        $.ajax({
+            url: '../Action/eliminarLogin.php',
+            method: 'POST',
+            data: {
+                id: idUsuario,
+                form_security_token: 'valor_esperado' // Token de seguridad
+            },
+            success: function(response) {
+                const mensajeDiv = document.getElementById('mensaje');
+                if (response.status === 'success') {
+                    mensajeDiv.innerHTML = '<div class="alert alert-success text-center">Usuario eliminado correctamente.</div>';
+                    setTimeout(function() {
+                        window.location.href = response.redirect;
+                    }, 1500); // Esperar 1.5 segundos antes de redirigir
+                } else {
+                    mensajeDiv.innerHTML = '<div class="alert alert-danger text-center">' + response.message + '</div>';
+                }
+            },
+            error: function() {
+                const mensajeDiv = document.getElementById('mensaje');
+                mensajeDiv.innerHTML = '<div class="alert alert-danger text-center">Error al intentar eliminar el usuario. Por favor, inténtelo de nuevo.</div>';
+            }
+        });
+    });
+});
+</script>
 
 <?php include_once("../estructura/footer.php"); ?>
