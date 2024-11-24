@@ -209,17 +209,9 @@ class ABMProducto {
      * @return array
      */
     public function actualizarStock($datos) {
-        $response = [
-            'status' => 'default',
-            'message' => 'Parte inicial del action',
-            'redirect' => '../Home/stock.php'
-        ];
-
+        
+        $stockActualizado = false;
         $productoBuscado = $this->buscarArray(['idproducto' => $datos['idproducto']]);
-
-        // Verifico la existencia de productos reservados con ese id. Si los hay, verifico que el nuevo stock no sea inferior a la cantidad de productos reservados. 
-        $prodsReservados = $this->productosReservados($datos['idproducto']);
-        $response['prodsReservados'] = $prodsReservados;
 
         if ($datos['nuevoStock'] > 0) {
             if (count($productoBuscado) > 0) {
@@ -231,22 +223,12 @@ class ABMProducto {
                     'procantstock' => $datos['nuevoStock']
                 ];
                 if ($this->modificacion($param)) {
-                    $response['status'] = 'success';
-                    $response['message'] = 'Actualización de stock exitosa';
-                } else {
-                    $response['status'] = 'error';
-                    $response['message'] = 'Error al actualizar el stock del producto.';
+                    $stockActualizado = true;
                 }
-            } else {
-                $response['status'] = 'error';
-                $response['message'] = 'Producto no encontrado.';
-            }
-        } else {
-            $response['status'] = 'error';
-            $response['message'] = 'El nuevo stock debe ser mayor a 0.';
-        }
+            } 
+        } 
 
-        return $response;
+        return $stockActualizado;
     }
 
 }
