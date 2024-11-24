@@ -432,11 +432,11 @@ class ABMUsuario {
     /**
      * Verificar el login de un usuario
      * @param array $datos
-     * @return array
+     * @return bool
      */
     public function verificarLogin($datos) {
-        $response = [];
-
+        $loginVerificado = false;
+        
         $nombreUsuario = $datos['nombreUsuario'];
         $psw = $datos['uspass'];
 
@@ -452,39 +452,33 @@ class ABMUsuario {
                 // Autenticación exitosa, iniciar sesión
                 $session = new Session();
                 if ($session->iniciar($nombreUsuario, $hashedPassword)) {
-                    // Verificar el rol del usuario
-                    $abmUsuarioRol = new ABMUsuarioRol();
-                    $rolesUsuario = $abmUsuarioRol->buscar(['idusuario' => $usuario->getIdUsuario()]);
-                    $idRolUsuario = null;
-                    foreach ($rolesUsuario as $usuarioRol) {
-                        $idRolUsuario = $usuarioRol->getObjRol()->getIdrol();
-                        break; // Asumimos que un usuario tiene un solo rol
-                    }
+                    $loginVerificado = true;
+                } 
+            } 
+        } 
 
-                    // Redirigir según el rol del usuario
-                    if ($idRolUsuario == 3) {
-                        $response['redirect'] = '../Home/productos.php';
-                    } elseif ($idRolUsuario == 1 || $idRolUsuario == 2) {
-                        $response['redirect'] = '../Home/paginaSegura.php';
-                    } else {
-                        $response['error'] = 'Rol de usuario no válido.';
-                    }
+        return $loginVerificado;
+    }
 
-                    $response['success'] = 'Inicio de sesión exitoso.';
-                } else {
-                    // Error al iniciar sesión
-                    $response['error'] = 'Error al iniciar sesión. Por favor, inténtelo de nuevo.';
-                }
-            } else {
-                // Contraseña Incorrecta
-                $response['error'] = 'Credenciales incorrectas. Por favor, inténtelo de nuevo.';
+    /**
+     * Obtener el rol de un usuario por nombre de usuario
+     * @param string $nombreUsuario
+     * @return int|null
+     */
+    public function obtenerRolUsuario($nombreUsuario) {
+        // Buscar el usuario por nombre de usuario
+        $usuario = $this->buscar(['usnombre' => $nombreUsuario]);
+
+        if (count($usuario) > 0) {
+            $usuario = $usuario[0];
+            // Verificar el rol del usuario
+            $abmUsuarioRol = new ABMUsuarioRol();
+            $rolesUsuario = $abmUsuarioRol->buscar(['idusuario' => $usuario->getIdUsuario()]);
+            if (count($rolesUsuario) > 0) {
+                return $rolesUsuario[0]->getObjRol()->getIdrol(); // Asumimos que un usuario tiene un solo rol
             }
-        } else {
-            // Usuario no encontrado
-            $response['error'] = 'Credenciales incorrectas. Por favor, inténtelo de nuevo.';
         }
-
-        return $response;
+        return null;
     }
 
 }

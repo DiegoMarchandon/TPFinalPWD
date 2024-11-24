@@ -2,7 +2,6 @@
 include_once '../../configuracion.php';
 include_once("../estructura/header.php");
 
-// Usar la función darDatosSubmitted para obtener los datos
 $datos = darDatosSubmitted();
 ?>
 
@@ -61,14 +60,15 @@ function verificarLogin(event) {
             method: 'POST',
             data: {
                 nombreUsuario: nombreUsuario,
-                uspass: hashedPassword
+                uspass: hashedPassword,
+                form_security_token: 'valor_esperado' // Token de seguridad
             },
             success: function(response) {
                 const mensajeDiv = document.getElementById('mensaje');
-                if (response.error) {
-                    mensajeDiv.innerHTML = '<div class="alert alert-danger text-center">' + response.error + '</div>';
-                } else if (response.success) {
-                    mensajeDiv.innerHTML = '<div class="alert alert-success text-center">' + response.success + '</div>';
+                if (response.status === 'error') {
+                    mensajeDiv.innerHTML = '<div class="alert alert-danger text-center">' + response.message + '</div>';
+                } else if (response.status === 'success') {
+                    mensajeDiv.innerHTML = '<div class="alert alert-success text-center">' + response.message + '</div>';
                     window.location.href = response.redirect;
                 }
             },

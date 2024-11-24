@@ -17,15 +17,29 @@ if (!$isAjax && (!$isPostOrGet || !$isValidToken)) {
 }
 
 header('Content-Type: application/json');
+$response = [
+    'status' => 'error',
+    'message' => 'Error al verificar el login'
+];
 
-// Verificar que el método sea POST
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $datos = darDatosSubmitted();
+$datos = darDatosSubmitted();
 
-    $abmUsuario = new ABMUsuario();
-    $response = $abmUsuario->verificarLogin($datos);
-
-    echo json_encode($response);
-    exit;
+$abmUsuario = new ABMUsuario();
+$loginVerificado = $abmUsuario->verificarLogin($datos);
+if ($loginVerificado) {
+    $response['status'] = 'success';
+    $response['message'] = 'Login verificado';
+    // Obtener el rol del usuario
+    $idRolUsuario = $abmUsuario->obtenerRolUsuario($datos['nombreUsuario']);
+    if ($idRolUsuario == 1 || $idRolUsuario == 2) {
+        $response['redirect'] = '../Home/paginaSegura.php';
+    } else {
+        $response['redirect'] = '../Home/productos.php';
+    }
+} else {
+    $response['message'] = 'Credenciales incorrectas. Por favor, inténtelo de nuevo.';
 }
+
+echo json_encode($response);
+exit;
 ?>

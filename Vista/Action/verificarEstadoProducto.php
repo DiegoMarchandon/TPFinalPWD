@@ -15,12 +15,12 @@ if (!$isAjax && (!$isPostOrGet || !$isValidToken)) {
     header('Location: ../Home/login.php');
     exit;
 }
-
-if (isset($_POST['idproducto'])) {
+$datos = darDatosSubmitted();
+if (isset($datos['idproducto'])) {
     $session = new Session();
     // id del usuario actual
     $idUsuario = $session->getUsuario()->getIdusuario();
-    $idProducto = $_POST['idproducto'];
+    $idProducto = $datos['idproducto'];
 
     $ABMcompraitem = new ABMCompraItem();
     $estado = $ABMcompraitem->verificarEstadoProducto($idProducto, $idUsuario);
