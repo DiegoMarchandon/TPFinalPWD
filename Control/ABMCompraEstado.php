@@ -490,6 +490,51 @@ public function buscarCompraIniciada($idusuario) {
 
         return $cancelacionExitosa;
     }
+    /**
+     * Obtener todos los datos necesarios
+     * @return array
+     */
+    public function obtenerDatos() {
+        $ABMCompra = new ABMCompra;
+        $ABMUsuario = new ABMUsuario;
+        $ABMProducto = new ABMProducto;
+        $ABMCompraitem = new ABMCompraItem;
+        $ABMUsuarioRol = new ABMUsuarioRol;
+        $ABMCompraestado = new ABMCompraEstado;
+
+        $arrAsocUsuariosRol = [];
+        $arrUsuariosActivos = [];
+        $arrCompraEstados = [];
+        $arrVentas = [];
+
+        foreach($ABMUsuarioRol->buscarArray(null) as $usRol){
+            $arrAsocUsuariosRol[] = ['idusuario' => $usRol['objUsuario']->getIdusuario(),'idrol' => $usRol['objRol']->getIdrol()];
+        }
+
+        foreach($ABMUsuario->buscarArray(null) as $usuario){
+            $arrUsuariosActivos[] = $usuario['usdeshabilitado'];
+        }
+
+        foreach($ABMCompraestado->buscarArray(null) as $CompraEstado){
+            $arrCompraEstados[] = $CompraEstado['objCompraEstadoTipo']->getIdcompraestadotipo();
+        }
+
+        $arrVentas = $ABMCompraestado->ventas();
+
+        $datos = [
+            'compras' => $ABMCompra->buscarArray(null),
+            'usuarios' => $ABMUsuario->buscarArray(null),
+            'cantUsuariosActivos' => $arrUsuariosActivos, 
+            'ventas' => $arrVentas,
+            'productos' => $ABMProducto->buscarArray(null),
+            'compraitem' => $ABMCompraitem->buscarArray(null),
+            'usuariorol' => $arrAsocUsuariosRol,
+            'colCompraEstados' => $arrCompraEstados,
+            'compraestado' => $ABMCompraestado->buscarArray(null)
+        ];
+
+        return $datos;
+    }
 
 }
 ?>
