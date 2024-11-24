@@ -15,6 +15,14 @@ if (!$isAjax && (!$isPostOrGet || !$isValidToken)) {
     header('Location: ../Home/login.php');
     exit;
 }
+
+header('Content-Type: application/json');
+$response = [
+    'status' => 'error',
+    'estado' => null,
+    'message' => 'Error al verificar el estado del producto.'
+];
+
 $datos = darDatosSubmitted();
 if (isset($datos['idproducto'])) {
     $session = new Session();
@@ -25,7 +33,15 @@ if (isset($datos['idproducto'])) {
     $ABMcompraitem = new ABMCompraItem();
     $estado = $ABMcompraitem->verificarEstadoProducto($idProducto, $idUsuario);
 
-    echo $estado; // Devuelve el estado como respuesta
+    if ($estado !== null) {
+        $response['status'] = 'success';
+        $response['estado'] = $estado;
+        $response['message'] = 'Estado del producto verificado correctamente.';
+    } else {
+        $response['message'] = 'No se pudo verificar el estado del producto.';
+    }
 }
 
+echo json_encode($response);
+exit();
 ?>

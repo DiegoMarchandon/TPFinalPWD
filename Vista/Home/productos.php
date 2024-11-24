@@ -46,10 +46,6 @@ $ABMcompraitem = new ABMCompraItem;
 
 <script>
     $(document).ready(function(){
-        // Vaciar el carrito en localStorage al cargar la página
-        // localStorage.removeItem('carrito');
-
-        // let colProductos = [];
         var colIMGS = [
             '../imagenes/notebookIMG1.jpg',
             '../imagenes/notebookIMG2.jpg',
@@ -74,61 +70,44 @@ $ABMcompraitem = new ABMCompraItem;
                 productos.forEach(function(producto, index){
                     var imgSrc = colIMGS[index % colIMGS.length];
 
-                    // Enviar petición para verificar el estado del producto (si el producto mostrado ya tiene un estado de 1, el botón se bloquea para que no pueda agregar más)
+                    // Crear el contenedor del producto
+                    var productCard = $(`
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <img src="${imgSrc}" class="card-img-top" alt="Product 1">
+                                <div class="card-body">
+                                    <h5 class="card-title">` + producto.pronombre + `</h5>
+                                    <p class="card-text">` + producto.prodetalle + `</p>
+                                    <p class="text-success">precio (unidad): $` + producto.precioprod + `.00</p>
+                                    <div class="form-group">
+                                        <div class=" d-flex justify-content-between">
+                                            <label for="cantidadSelect">Cantidad:</label>
+                                            <small class="text-muted cantStock">Stock disponible: ` + producto.procantstock + ` unidades</small>
+                                        </div>
+                                        <select class="form-select cantidadSelect">
+                                            ` + itemStock(producto.procantstock) + `
+                                        </select>
+                                    </div>
+                                    <button class="btn btn-primary m-2" data-id="` + producto.idproducto + `">Agregar al carrito</button>
+                                </div>
+                            </div>
+                        </div>`);
+
+                    // Enviar petición para verificar el estado del producto
                     $.ajax({
                         url: '../Action/verificarEstadoProducto.php', // Ruta del archivo PHP creado
                         method: 'POST',
-                        data: { idproducto: producto.idproducto },
-                        success: function(estado) {
-                        // Determinar si se deshabilita el botón según el estado retornado
-                        var disabledAttr = estado == 1 ? 'disabled' : '';
-
-                        $('#prodContainer').append(`
-                            <div class="col-md-4 mb-4">
-                                <div class="card">
-                                    <img src="${imgSrc}" class="card-img-top" alt="Product 1">
-                                    <div class="card-body">
-                                        <h5 class="card-title">` + producto.pronombre + `</h5>
-                                        <p class="card-text">` + producto.prodetalle + `</p>
-                                        <p class="text-success">precio (unidad): $` + producto.precioprod + `.00</p>
-                                        <div class="form-group">
-                                            <div class=" d-flex justify-content-between">
-                                                <label for="cantidadSelect">Cantidad:</label>
-                                                <small class="text-muted cantStock">Stock disponible: ` + producto.procantstock + ` unidades</small>
-                                            </div>
-                                            <select class="form-select cantidadSelect">
-                                                ` + itemStock(producto.procantstock) + `
-                                            </select>
-                                        </div>
-                                        <button class="btn btn-primary m-2" data-id="` + producto.idproducto + `" ${disabledAttr}>Agregar al carrito</button>
-                                    </div>
-                                </div>
-                            </div>`);
+                        data: { idproducto: producto.idproducto, form_security_token: 'valor_esperado' },
+                        success: function(response) {
+                            // Determinar si se deshabilita el botón según el estado retornado
+                            if (response.estado == 1) {
+                                productCard.find('.btn-primary').attr('disabled', 'disabled');
+                            }
                         }
-                    })
-                    // })});
+                    });
 
-                    /* $('#prodContainer').append(`
-                    <div class="col-md-4 mb-4">
-                        <div class="card">
-                            <img src="${imgSrc}" class="card-img-top" alt="Product 1">
-                            <div class="card-body">
-                                <h5 class="card-title">`+producto.pronombre+`</h5>
-                                <p class="card-text">`+producto.prodetalle+`</p>
-                                <p class="text-success">precio (unidad): $`+producto.precioprod+`.00</p>
-                                <div class="form-group">
-                                    <div class=" d-flex justify-content-between">
-                                        <label for="cantidadSelect">Cantidad:</label>
-                                        <small class="text-muted cantStock">Stock disponible: ` + producto.procantstock + ` unidades</small>
-                                    </div>
-                                    <select class="form-select cantidadSelect">
-                                        ` + itemStock(producto.procantstock) + `
-                                    </select>
-                                </div>
-                                <button class="btn btn-primary m-2" data-id="`+producto.idproducto+`">Agregar al carrito</button>
-                            </div>
-                        </div>
-                    </div>`); */
+                    // Añadir el contenedor del producto al DOM
+                    $('#prodContainer').append(productCard);
                 });
             }
         });
@@ -159,9 +138,6 @@ $ABMcompraitem = new ABMCompraItem;
                     prodCantSelec: parseInt(productoCantSelec, 10),
                     prodIMG: productoIMG
                 };
-
-                // colProductos.push(objProducto);
-                // localStorage.setItem('carrito', JSON.stringify(colProductos));
 
                 // Enviar datos a la base de datos
                 $.ajax({

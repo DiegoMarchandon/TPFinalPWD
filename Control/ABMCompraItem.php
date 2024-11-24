@@ -262,15 +262,14 @@ class ABMCompraItem {
         $resultado = ['productosCarrito' => $productosCarrito, 'totalCarrito' => $totalCarrito];
         return $resultado;
     }
-     /**
+    /**
      * Verificar el estado de un producto
      * @param int $idProducto
      * @param int $idUsuario
-     * @return string
+     * @return string|null
      */
     public function verificarEstadoProducto($idProducto, $idUsuario) {
-        $response = '';
-
+        $estado = null;
         // Verificar que existan compraitem con ese idproducto
         $compraItem = $this->buscarArray(['idproducto' => $idProducto]);
         if (isset($compraItem[0])) {
@@ -284,15 +283,10 @@ class ABMCompraItem {
             if (count($ABMcompra->buscar(['idcompra' => $idCompra, 'idusuario' => $idUsuario])) > 0) {
                 // Obtener el estado del compraitem
                 $estado = $this->estadoCompraItem($idProducto);
-                $response = $estado;
-            } else {
-                $response = 'La compra no pertenece al usuario actual.';
-            }
-        } else {
-            $response = 'No existe el compraitem con ese idproducto.';
-        }
+            } 
+        } 
 
-        return $response;
+        return $estado;
     }
 
 
